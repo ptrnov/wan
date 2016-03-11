@@ -32,6 +32,12 @@ $this->title = Yii::t('app', 'www.wanindoprima.co.id');
 			<?= Html::csrfMetaTags() ?>
 			<title><?= Html::encode($this->title) ?></title>
 			<title><?= Html::encode($this->mddPage) ?></title> 
+			<!-- tambahan variable untuk template Author: --ptr.nov-- !-->
+            <title><?= Html::encode($this->sideMenu) ?></title>
+            <title><?= Html::encode($this->sideCorp) ?></title>
+			<?php if (!Yii::$app->user->isGuest) { ?>
+            <meta http-equiv="refresh" content="<?php echo Yii::$app->params['sessionTimeoutSeconds'];?>;"/>
+			<?php } ?>				
 			<?php $this->head() ?>
 		</head>
 		<?php

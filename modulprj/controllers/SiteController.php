@@ -5,13 +5,11 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use common\models\LoginForm;
-use common\components\AmbilkeyComponent;
+use Yii\web\User;
 use yii\filters\VerbFilter;
-
-
-
-
-
+use modulprj\master\models\Karyawan;
+use modulprj\master\models\KaryawanSearch;
+use modulprj\sistem\models\UserloginSearch;
 /**
  * Site controller
  */
@@ -20,7 +18,6 @@ class SiteController extends Controller
     /**
      * @inheritdoc
      */
-
     public function behaviors()
     {
         return [
@@ -28,7 +25,7 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        // Author: -ptr.nov- : Permission Allow No Login |index|error|login
+                        /* Author: -ptr.nov- : Permission Allow No Login |index|error|login */
                         'actions' => ['index', 'error','login'],
                         'allow' => true,
                     ],
@@ -59,24 +56,59 @@ class SiteController extends Controller
             ],
         ];
     }
-
+    public $corpOne;
     public function actionIndex()
     {
         /* Author: -ptr.nov- : Split Index Before/After Login */
         if (\Yii::$app->user->isGuest) {
             $model = new LoginForm();
-            return $this->render('_index_nologin', [
+            return $this->render('index_nologin', [
                 'model' => $model,
             ]);
         } else {
-            return $this->render('index');
+            //$ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();'1.1215.1227'
+            $ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
+            // $model = $this->findModel1($ModelUser->emp->KAR_ID);
+             $model = $this->findModel1('1.1215.1227');
+            $searchModel1 = new KaryawanSearch();
+           // $dataProvider = $searchModel1->search_empid($ModelUser->emp->KAR_ID);
+            $dataProvider = $searchModel1->search_empid('1.1215.1227');
+            // echo  \yii\helpers\Json::encode($dataProvider);
+            //print_r($dataProvider->getModels());
+            return $this->render('index', [
+                'model' => $model,
+                'dataProvider'=>$dataProvider->getModels(),
+            ]);
         }
     }
+	
+	public function beforeAction($action)
+	{
 
+		if (!parent::beforeAction($action)) {
+			return false;
+		}
+		
+		if ( !Yii::$app->user->isGuest)  {
+			if (Yii::$app->session['userSessionTimeout'] < time()) {
+				Yii::$app->user->logout();
+				$this->redirect(array('/site/login'));
+			} else {
+				Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);				
+				return true; 
+			}
+		} else {
+			return true;
+		}
+	}
+	
+	
+	
     public function actionLogin()
     {
+		Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
         if (!\Yii::$app->user->isGuest) {
-           // return $this->goHome();
+            return $this->goHome();
         }
 
         $model = new LoginForm();
@@ -85,20 +117,31 @@ class SiteController extends Controller
         } else {
             //return $this->render('login', [
             //    'model' => $model,
-            // ]);
-            // SHOW MODEL render via Ajax Author: -ptr.nov-
+           // ]);
             $js='$("#modal_login").modal("show")';
             $this->getView()->registerJs($js);
-            $pk_emp=''; //Yii::$app->ambilkonci->getKey_Employe();
-            //echo $pk_emp;
-            return $this->render('login',['model' => $model,'pk_emp'=>$pk_emp]); //'mdl'=>$test1]);
+            return $this->render('login',['model' => $model]);
         }
     }
 
+	 protected  function afterLogin(){
+		 
+		 yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']); 
+	 }
+	
     public function actionLogout()
     {
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+	
+	protected function findModel1($id)
+    {
+        if (($model = Karyawan::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }
