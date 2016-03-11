@@ -25,7 +25,7 @@ class Agama extends \yii\db\ActiveRecord
 	/* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{attpayroll.agama}}';
+        return '{{agama}}';
     }
 
 	/* [3] RULE SCENARIO -> DetailView */

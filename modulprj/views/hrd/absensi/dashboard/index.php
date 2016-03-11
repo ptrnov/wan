@@ -22,7 +22,7 @@ use kartik\builder\Form;
 //CLASS Chart GoogleChart
 use scotthuangzl\googlechart\GoogleChart;
 
-use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
 $this->mddPage = 'absensi';
 $this->title = Yii::t('app', 'Absensi Dashboard ');

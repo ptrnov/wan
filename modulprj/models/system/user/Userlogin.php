@@ -12,12 +12,12 @@ class Userlogin extends \yii\db\ActiveRecord
 	 public static function getDb()
 	{
 		/* Author -ptr.nov- : HRD | Dashboard I */
-		return \Yii::$app->db1;  
+		return \Yii::$app->db;  
 	}
 	
     public static function tableName()
     {
-        return '{{wnd_admin.user}}';
+        return '{{user}}';
     }
 
     public function rules()

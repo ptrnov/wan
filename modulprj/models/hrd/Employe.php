@@ -21,13 +21,13 @@ class Employe extends \yii\db\ActiveRecord
     public static function getDb()
 	{
 		/* Author -ptr.nov- : HRD */
-		return \Yii::$app->db1;
+		return \Yii::$app->db;
 	}
 	
 	/* [2] TABLE SELECT */
 	public static function tableName()
     {
-        return '{{attpayroll.a0001}}';
+        return '{{a0001}}';
     }   
     
 	/* [3] RULE SCENARIO -> DetailView */

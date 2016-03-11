@@ -20,13 +20,13 @@ class Karyawan extends \yii\db\ActiveRecord{
     public static function getDb()
     {
         /* Author -ptr.nov- : HRD */
-        return \Yii::$app->db1;
+        return \Yii::$app->db;
     }
 
     /* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{attpayroll.karyawan}}';
+        return '{{karyawan}}';
     }
 
     /* [3] RULE SCENARIO -> DetailView */

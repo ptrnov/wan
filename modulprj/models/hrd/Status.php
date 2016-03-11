@@ -19,13 +19,13 @@ class Status extends \yii\db\ActiveRecord
     public static function getDb()
     {
         /* Author -ptr.nov- */
-        return \Yii::$app->db1;
+        return \Yii::$app->db;
     }
 	
 	/* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{attpayroll.kar_stt}}';
+        return '{{kar_stt}}';
     }
 
 	/* [3] RULE SCENARIO -> DetailView */

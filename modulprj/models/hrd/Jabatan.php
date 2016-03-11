@@ -19,13 +19,13 @@ class Jabatan extends \yii\db\ActiveRecord
     public static function getDb()
     {
         /* Author -ptr.nov- : UMUM */
-        return \Yii::$app->db1;
+        return \Yii::$app->db;
     }
 	
 	/* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{attpayroll.jabatan}}';
+        return '{{jabatan}}';
 	}
 
 	/* [3] RULE SCENARIO -> DetailView */

@@ -20,13 +20,13 @@ class Finger extends \yii\db\ActiveRecord
     public static function getDb()
     {
         /* Author -ptr.nov- :UMUM */
-        return \Yii::$app->db1;
+        return \Yii::$app->db;
     }
 	
 	/* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{attpayroll.kar_finger}}';
+        return '{{kar_finger}}';
     }
 
 	/* [3] RULE SCENARIO -> DetailView */

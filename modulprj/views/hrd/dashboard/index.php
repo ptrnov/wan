@@ -20,7 +20,7 @@ use kartik\builder\Form;
 //use miloschuman\highcharts\Highcharts;
 //use yii\web\JsExpression;
 
-use backend\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
 
 //CLASS Chart GoogleChart

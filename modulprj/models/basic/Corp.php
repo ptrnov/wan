@@ -25,7 +25,7 @@ class Corp extends \yii\db\ActiveRecord
 	/* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{attpayroll.corp}}';
+        return '{{corp}}';
     }
 
 	/* [3] RULE SCENARIO -> DetailView */

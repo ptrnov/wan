@@ -67,7 +67,7 @@ class UserloginSearch extends Userlogin
     {
 		$model = Userlogin::find()->select('*')
 				->joinWith('emp',true,'LEFT JOIN')
-				->Where(['wnd_admin.user.id' => $id]);
+				->Where(['user.id' => $id]);
 				//->one();
 		if ($model !== null) {
             return $model;
