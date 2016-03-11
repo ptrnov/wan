@@ -99,7 +99,7 @@ $this->title = Yii::t('app', 'www.wanindoprima.co.id');
                                     */
 									//$menuItemsNoLogin[] = ['label' => Icon::show('sitemap') .'e-Recruitment', 'url' => ['/site/login7']];
 									//$menuItemsNoLogin[] = ['label' => Icon::show('comments') .'e-Helpdesk', 'url' => ['/site/login8']];
-									$menuItemsNoLogin[] = ['label' => Icon::show('info-circle') .'FAQ', 'url' => ['/site/faq']];
+									$menuItemsNoLogin[] = ['label' => Icon::show('info-circle') .'FAQ', 'url' => ['#']];//['/site/faq']];
                                     $menuItemsNoLogin[] = ['label' => Icon::show('user').'User', 'url' => ['/site/login'],];
 
                                     NavBar::begin([
@@ -132,18 +132,18 @@ $this->title = Yii::t('app', 'www.wanindoprima.co.id');
 									 // equivalent to the above
 									  [
 										'content' => '<img src="'.Yii::getAlias('@path_carousel') . '/Cover.jpg" style="width:100%; height:100%"/>',
-										//'options' =>[ 'style' =>'width: 100%; height: 300px;'],
+										'options' =>[ 'style' =>'width: 100%; height: 300px;'],
 									  ],
 									[
 										'content' => '<img src="'.Yii::getAlias('@path_carousel') . '/carousel2.jpg" style="width:100%; height:100%"/>',
-										//'options' =>[ 'style' =>'width: 100% ; height: 300px;'],
+										'options' =>[ 'style' =>'width: 100% ; height: 300px;'],
 									  ],
 									  
 									  // the item contains both the image and the caption
 									  [
 										  'content' => '<img src="'.Yii::getAlias('@path_carousel') . '/carousel3.jpg" style="width:100%;height:100%"/>',
 										  //'caption' => '<h4>This is title</h4><p>This is the caption text</p>',
-										 //'options' =>[ 'style' =>'width: 100%; height: 300px;'],
+										 'options' =>[ 'style' =>'width: 100%; height: 300px;'],
 										
 									  ],
 								  ],
