@@ -100,7 +100,7 @@ $formlogin= FormGrid::widget([
 	 
     Modal::begin([
         'id' => 'modal_login',
-        'header' => '<img src="http://server_absen/adminLogin.png" style="width:70px; height:50px"/>',
+        'header' => '<img src="'.\Yii::getAlias("@web").'/adminLogin.png" style="width:70px; height:50px"/>',
 		'size' => Modal::SIZE_SMALL,
         'options' => ['class'=>'slide'],
 		'headerOptions'=>[

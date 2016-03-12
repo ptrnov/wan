@@ -27,7 +27,7 @@ $this->title = 'wandindo';
 						<div class="navbar navbar-inverse navbar-fixed-top headroom" ></div>
 						<?php
 						NavBar::begin([
-							'brandLabel' => '<img src="http://wan.int/wanindo.png" class="navbar-fixed-top" style="backgroud-color:red; width:150px; height:80px; margin-left:50px; margin-top:10px"/>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>Under Maintenance !!</h5> </div>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>info@lukison.com / Support: 021888888</h5> </div>',
+							'brandLabel' => '<img src="'.Yii::getAlias("@web").'/wanindo.png" class="navbar-fixed-top" style="backgroud-color:red; width:150px; height:80px; margin-left:50px; margin-top:10px"/>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>Under Maintenance !!</h5> </div>',//.'<div class=" navbar-fixed-top pull-right" style="margin-left:20%; margin-top:10px; color:black"><h5>info@lukison.com / Support: 021888888</h5> </div>',
 							'options' => [
 								   'class' =>  'navbar navbar-inverse navbar-fixed-top headroom',
 							],
