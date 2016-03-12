@@ -1,4 +1,6 @@
 <?php
+
+use \Yii;
 use kartik\helpers\Html;
 use yii\bootstrap\Carousel;
 use kartik\form\ActiveForm;
@@ -63,11 +65,11 @@ $this->title = 'wandindo';
 			 * Author: -ptr.nov-, 
 			 */
 			if (!Yii::$app->user->isGuest) {
-				$ModelUserAttr = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
+				$modelUser=\Yii::$app->getUserOpt->Profile_user();
 				//print_r($ModelUserAttr);
 				//echo $ModelUserAttr->emp->EMP_IMG;
-				$MainAvatar = '';// $ModelUserAttr->emp->EMP_IMG;
-				$MainUserProfile = '';//$ModelUserAttr->emp->EMP_NM;// . ' '. $ModelUserAttr->emp->EMP_NM_BLK;
+				$MainAvatar =$modelUser['EMP_IMG'];
+				$MainUserProfile = $modelUser['KAR_NM'];'';//$ModelUserAttr->emp->EMP_NM;// . ' '. $ModelUserAttr->emp->EMP_NM_BLK;
 			
 			}
 			$corp="<p class='pull-left'>&copy; LukisonGroup <?= date('Y') ?></p>";
@@ -144,7 +146,7 @@ $this->title = 'wandindo';
                             <!-- User Login -->
                                 <div class="user-panel">
                                     <div class="pull-left" style="text-align: left">
-                                        <img src="<?= Yii::getAlias('@web') .'/upload/hrd/'. $MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
+                                        <img src="<?= Yii::getAlias('@web') .'/upload/hrd/Employee/'. $MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
                                     </div>
                                     <div class="pull-left info" style="margin-left: 40px" >
                                         <p><?php echo $MainUserProfile; ?></p>

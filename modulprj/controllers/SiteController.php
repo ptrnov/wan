@@ -66,7 +66,10 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         } else {
-			return $this->render('index');
+			$modelUser=Yii::$app->getUserOpt->Profile_user();
+			return $this->render('index',[
+				'model'=>$modelUser,
+			]);
         }
     }
 	

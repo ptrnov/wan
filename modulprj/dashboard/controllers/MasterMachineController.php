@@ -43,7 +43,11 @@ class MasterMachineController extends Controller
 		/*	variable content View Employe Author: -ptr.nov- */
        // $searchModel_Dept = new DeptSearch();
 		//$dataProvider_Dept = $searchModel_Dept->search(Yii::$app->request->queryParams);
-		
+		//print_r(Yii::$app->getUserOpt->Profile_user());
+		//$modelUser=Yii::$app->getUserOpt->Profile_user();
+		//$model=$modelUser[0];
+		//echo $modelUser['KAR_NM'];
+		//echo $dataUser[]->id;
 		return $this->render('index');
     }
 	
