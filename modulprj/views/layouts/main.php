@@ -10,7 +10,7 @@ use kartik\icons\Icon;
 use dmstr\widgets\Alert;
 use modulprj\sistem\models\UserloginSearch;
 //use modulprj\sistem\models\M1000;	
-use modulprj\models\system\side_menu\M1000;			
+use modulprj\sistem\models\M1000;			
 //use modulprj\assets\AppAsset;
 use mdm\admin\components\MenuHelper;
 use yii\bootstrap\Modal;

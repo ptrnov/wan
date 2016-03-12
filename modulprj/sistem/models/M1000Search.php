@@ -1,5 +1,5 @@
 <?php
-namespace lukisongroup\sistem\models;
+namespace modulprj\sistem\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;

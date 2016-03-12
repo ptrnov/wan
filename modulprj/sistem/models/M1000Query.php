@@ -1,5 +1,5 @@
 <?php
-namespace lukisongroup\sistem\models;
+namespace modulprj\sistem\models;
 /**
  * This is the ActiveQuery class for [[M1000]].
  *

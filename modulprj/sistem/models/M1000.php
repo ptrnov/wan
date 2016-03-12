@@ -1,5 +1,5 @@
 <?php
-namespace lukisongroup\sistem\models;
+namespace modulprj\sistem\models;
 use Yii;
 /**
  * This is the model class for table "m1000".
@@ -29,7 +29,7 @@ class M1000 extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db4');
+        return Yii::$app->get('db');
     }
     /**
      * @inheritdoc
