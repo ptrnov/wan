@@ -86,7 +86,7 @@ $this->title = 'wandindo';
 				<?php $this->beginBody(); ?>
                 <div class="wrapper">
                     <header class="main-header">
-                        <a  class="logo bg-red">
+                        <a  class="logo">
                             <?php
                            // echo Html::img('http://modulprj.com/favicon.ico', ['width'=>'20']);
                             ?>
@@ -154,7 +154,18 @@ $this->title = 'wandindo';
                                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                                     </div>
                                 </div>
-                            
+                             <div class="user-panel bg-red">
+                                <!-- /.Company Select Dashboard -->
+                                 <p>
+                                    <?php
+                                        if ($this->sideCorp != '') {
+                                            echo $this->sideCorp;
+                                        }else{
+                                            echo 'Home';
+                                        };
+                                    ?>
+                                 </p>
+                            </div>
                                
                             <!-- /.User Login -->
                             <!-- search form -->

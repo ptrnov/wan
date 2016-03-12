@@ -29,8 +29,8 @@ AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.n
 
 /*Title page Modul*/
 $this->mddPage = 'hrd';
-$this->title = Yii::t('app', 'Employe');
 $this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp="Employee"; 
 
 /*variable Dropdown*/
 $Combo_Dept = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');//->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');

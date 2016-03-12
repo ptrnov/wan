@@ -24,6 +24,7 @@ AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.n
 $this->sideMenu ='hrd';
 $this->title = Yii::t('app', 'Personalia');
 $this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp="PESONALIA";
 echo "HRD - PESONALIA"
 ?>
 
