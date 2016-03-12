@@ -20,7 +20,7 @@ use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
 
 /*Title page Modul*/
-$this->mddPage = 'setting';
+$this->sideMenu ='setting';
 $this->title = Yii::t('app', 'Setting');
 $this->params['breadcrumbs'][] = $this->title;
 //echo "Setting Corp"
