@@ -66,19 +66,7 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         } else {
-            //$ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();'1.1215.1227'
-            $ModelUser = UserloginSearch::findUserAttr(Yii::$app->user->id)->one();
-            // $model = $this->findModel1($ModelUser->emp->KAR_ID);
-             $model = $this->findModel1('1.1215.1227');
-            $searchModel1 = new KaryawanSearch();
-           // $dataProvider = $searchModel1->search_empid($ModelUser->emp->KAR_ID);
-            $dataProvider = $searchModel1->search_empid('1.1215.1227');
-            // echo  \yii\helpers\Json::encode($dataProvider);
-            //print_r($dataProvider->getModels());
-            return $this->render('index', [
-                'model' => $model,
-                'dataProvider'=>$dataProvider->getModels(),
-            ]);
+			return $this->render('index');
         }
     }
 	

@@ -27,7 +27,7 @@ class UserloginSearch extends Userlogin
         return [
             [['username','EMP_ID','email'], 'string'],
             [['email','avatar','avatarImage'], 'string'],
-			[['id','status','created_at','updated_at'],'integer'],
+			[['id','EMP_STS','status','created_at','updated_at'],'integer'],
 			[['POSITION_SITE','POSITION_LOGIN'], 'safe'],
         ];
     }
@@ -64,7 +64,7 @@ class UserloginSearch extends Userlogin
 	public function attributes()
 	{
 		/*Author -ptr.nov- add related fields to searchable attributes */
-		return array_merge(parent::attributes(), ['emp.EMP_IMG','emp.KAR_NM']);
+		return array_merge(parent::attributes(), ['emp.KAR_ID','emp.EMP_IMG','emp.KAR_NM']);
 	}
 	
 	/** 
@@ -77,7 +77,7 @@ class UserloginSearch extends Userlogin
 		$model = Userlogin::find()->select('*')
 				->joinWith('emp',true,'LEFT JOIN')
 				//->Where(['dbm001.user.id' => $id]);
-				->Where("user.id=".$id." AND EMP_STS<>'3'");
+				->Where("user.id=".$id." AND Karyawan.EMP_STS<>'3'");
 				
 				//->one();
 		if ($model !== null) {

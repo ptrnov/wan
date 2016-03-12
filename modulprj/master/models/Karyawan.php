@@ -44,6 +44,7 @@ class Karyawan extends \yii\db\ActiveRecord{
             [['LVL_ID'], 'integer'],                            //JOIN TABLE    //gridview
             [['JAB_ID'], 'integer'],                            //JOIN TABLE    //gridview
             [['KAR_STS'], 'integer'],                           //JOIN TABLE    //gridview
+            [['EMP_STS'], 'integer'],                           //JOIN TABLE    //gridview
             [['KAR_KTP'], 'string'],
             [['KAR_ALMT'], 'string'],
             [['KAR_TLP'], 'string'],
