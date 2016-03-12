@@ -144,7 +144,7 @@ $this->title = 'wandindo';
                             <!-- User Login -->
                                 <div class="user-panel">
                                     <div class="pull-left" style="text-align: left">
-                                        <img src="<?= Yii::getAlias('@HRD_EMP_UploadUrl') .'/'. $MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
+                                        <img src="<?= Yii::getAlias('@web') .'/upload/hrd/'. $MainAvatar; ?>" class="img-circle" alt="Cinque Terre" width="80" height="80"/>
                                     </div>
                                     <div class="pull-left info" style="margin-left: 40px" >
                                         <p><?php echo $MainUserProfile; ?></p>

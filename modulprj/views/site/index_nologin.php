@@ -40,7 +40,7 @@ $this->title = 'My Yii Application';
 					<div class="col-md-12">						
 						<h4 class="page-head-line">HIRS PT. Wanindo Prima</h4>
 						<p>
-							Human Resource Information System, PT. Wanindo Prima meenunjang sistem HRD dalam penanganan Absensi dan Payroll sehingga dapat memudakan, input data, monitoring
+							Human Resource Information System, PT. Wanindo Prima menunjang sistem HRD dalam penanganan Absensi dan Payroll sehingga dapat memudakan, penginputan data, monitoring
 							dan analisa akan setiap prosess yang berkaitan dengan karyawan PT. Wanindo Prima.
 						</p>
 				</div>
