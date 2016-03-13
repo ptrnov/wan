@@ -2,10 +2,10 @@
 
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use modulprj\models\basic\Cbg;
-use modulprj\models\hrd\Dept;
-use modulprj\models\hrd\Jabatan;
-use modulprj\models\hrd\Status;
+use modulprj\master\models\Cbg;
+use modulprj\master\models\Dept;
+use modulprj\master\models\Jabatan;
+use modulprj\master\models\Status;
 use yii\web\UploadedFil;
 
 use kartik\detail\DetailView;
@@ -50,7 +50,6 @@ $this->mddPage = 'hrd';
                 //'value'=>('<img src =' . Yii::getAlias('@HRD_EMP_UploadUrl') .'/'. $model->EMP_IMG. ' height="100" width="100"' . '>' )
                 'value'=>Yii::getAlias('@HRD_EMP_UploadUrl') .'/'.$model->EMP_IMG,
                 'format'=>['image',['width'=>'100','height'=>'120']],
-                //'format'=>'raw',
                 'type' => DetailView::INPUT_FILEINPUT,
                 'widgetOptions'=>[
                             'pluginOptions' => [

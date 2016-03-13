@@ -10,6 +10,7 @@ use Yii;
 use modulprj\master\models\cbg;
 use yii\web\UploadedFile;
 //use modulprj\models\hrd\Dept;
+use modulprj\master\models\Golongan;
 
 
 class Karyawan extends \yii\db\ActiveRecord{
@@ -177,6 +178,12 @@ class Karyawan extends \yii\db\ActiveRecord{
     public function getStsOne()
     {
         return $this->hasOne(Status::className(), ['KAR_STS_ID' => 'KAR_STS']);
+    }
+	
+	 /* Join Class Table Golongan Employe */
+    public function getGolonganOne()
+    {
+        return $this->hasOne(Golongan::className(), ['TT_GRP_ID' => 'GRP_ID']);
     }
 
     /*Function RANDOM FILE IMAGE Author: -ptr.nov-*/

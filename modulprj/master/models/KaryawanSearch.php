@@ -22,6 +22,8 @@ class KaryawanSearch extends Karyawan
     public $cabOne;
     public $jabOne;
     public $stsOne;
+    public $golonganOne;
+	
     //public $emp;
      //public $pen;
 	 //public $user;
@@ -34,7 +36,7 @@ class KaryawanSearch extends Karyawan
 	{
 		//Author -ptr.nov- add related fields to searchable attributes
         //return array_merge(parent::attributes(), ['corpOne.CORP_NM','deptOne.DEP_NM','jabOne.JAB_NM','sttOne.STS_NM']);
-        return array_merge(parent::attributes(), ['deptOne.DEP_NM','cabOne.CAB_NM','jabOne.JAB_NM','stsOne.KAR_STS_NM']);
+        return array_merge(parent::attributes(), ['deptOne.DEP_NM','cabOne.CAB_NM','jabOne.JAB_NM','stsOne.KAR_STS_NM','golonganOne.TT_GRP_NM']);
     }
 
 
@@ -42,7 +44,7 @@ class KaryawanSearch extends Karyawan
     public function rules()
     {
         return [
-            [['KAR_ID', 'KAR_NM','KAR_TGLM','KAR_TGLK'], 'safe'],
+            [['KAR_ID', 'KAR_NM','KAR_TGLM','KAR_TGLK','golonganOne.TT_GRP_NM'], 'safe'],
 			//[['KAR_ID','EMP_CORP_ID'], 'string', 'max' => 10],
 			//[['corpOne.CORP_NM','deptOne.DEP_NM','jabOne.JAB_NM','sttOne.STS_NM'], 'safe'],
             // JOIIN ATTRIBUTE --
@@ -66,6 +68,7 @@ class KaryawanSearch extends Karyawan
                          ->JoinWith('cabOne',true,'left JOIN')
 						 ->JoinWith('jabOne',true,'left JOIN')
 						 ->JoinWith('stsOne',true,'left JOIN')
+						 ->JoinWith('golonganOne',true,'left JOIN')
 						 ->where('karyawan.KAR_STS<> 3');
 						 // SUB JOIN
 						//$query->leftJoin(['company'=>$queryCop],'company.CORP_ID=a0001.EMP_CORP_ID');//->orderBy(['company.CORP_ID'=>SORT_ASC]);
@@ -104,6 +107,11 @@ class KaryawanSearch extends Karyawan
                  'asc' => ['kar_stt.KAR_STS_NM' => SORT_ASC],
                  'desc' => ['kar_stt.KAR_STS_NM' => SORT_DESC],
              ];
+			// SORTING STATUS Author -ptr.nov-
+            $dataProvider->sort->attributes['golonganOne.TT_GRP_NM'] = [
+                'asc' => ['timetable_grp.TT_GRP_NM' => SORT_ASC],
+                'desc' => ['timetable_grp.TT_GRP_NM' => SORT_DESC],
+            ];
 
 		// [5.3] LOAD VALIDATION PARAMS
 			//LOAD FARM VER 1
@@ -120,6 +128,7 @@ class KaryawanSearch extends Karyawan
 			// FILTER COLUMN Author -ptr.nov-
 			 $query->andFilterWhere(['like', 'KAR_ID', $this->KAR_ID])
 					->andFilterWhere(['like', 'KAR_NM', $this->KAR_NM])
+                    ->andFilterWhere(['like', 'timetable_grp.TT_GRP_NM', $this->getAttribute('golonganOne.TT_GRP_NM')])
                     ->andFilterWhere(['like', 'departemen.DEP_NM', $this->getAttribute('deptOne.DEP_NM')])
                     ->andFilterWhere(['like', 'cabang.CAB_NM', $this->getAttribute('cabOne.CAB_NM')])
                     ->andFilterWhere(['like', 'jabatan.JAB_NM', $this->getAttribute('jabOne.JAB_NM')])

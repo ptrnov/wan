@@ -34,7 +34,6 @@ $this->sideCorp="Employee";
 
 /*variable Dropdown*/
 $Combo_Dept = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');//->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
-$ComboDept = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');//->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
 $Combo_Cab=ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
 $Combo_Jab = ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
 $Combo_Status = ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
@@ -44,17 +43,12 @@ $Combo_Status = ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM
 //$side_menu=\yii\helpers\Json::decode(M1000::find()->findMenu('hrd')->one()->jval);
 
 
-	
-	/* foreach($columnAttribute as $key =>$value[])
-			{
-				//print_r($value[0]['FIELD'].','.$value[0]['SIZE']);			
-				//print_r($value[$key]['FIELD'].','.$value[$key]['SIZE']);			
-			}  */
-	/* private function filterPilih(){
-		return $Combo_Dept;
-	}; */	
-		
-	
+
+
+
+
+
+
 
 
 
@@ -68,9 +62,7 @@ $tab_employe_active= GridView::widget([
     'id'=>'active',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
-	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],				
-    'columns' => $dinamkkColumn,
-	/* [
+    'columns' => [
         //['class' => 'yii\grid\SerialColumn'],
         [
             'class' => 'yii\grid\ActionColumn',
@@ -149,7 +141,7 @@ $tab_employe_active= GridView::widget([
         ],
         //['class' => 'yii\grid\CheckboxColumn'],
         //['class' => '\kartik\grid\RadioColumn'],
-    ], */
+    ],
     'panel'=>[
         //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
         'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
