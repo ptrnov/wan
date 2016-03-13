@@ -58,7 +58,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 								'heading' => '<div>Employee Dashboard</div>',
 								'body'=>$prof,
 							],
-							Html::TYPE_DANGER
+							Html::TYPE_INFO
 						);
 						?>
 				</div>

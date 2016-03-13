@@ -72,7 +72,7 @@ $this->title = 'wandindo';
 				$MainUserProfile = $modelUser['KAR_NM'];'';//$ModelUserAttr->emp->EMP_NM;// . ' '. $ModelUserAttr->emp->EMP_NM_BLK;
 			
 			}
-			$corp="<p class='pull-left'>&copy; LukisonGroup <?= date('Y') ?></p>";
+			$corp="<p class='pull-left'>&copy; PT. Wanindo Prima <?= date('Y') ?></p>";
 		?>
 		
 		<! - NOT LOGIN- Author : -ptr.nov- >
@@ -250,7 +250,7 @@ $this->title = 'wandindo';
                        </div>
                     </div>
                 </div>
-                <div class="box-footer bg-black" style="color: blue">
+                <div class="box-footer bg-red" style="color: blue">
                     <p> <?php echo $corp .'-'. date('Y') ?></p>
                 </div>
 
