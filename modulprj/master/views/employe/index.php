@@ -43,113 +43,15 @@ $Combo_Status = ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM
 
 //$side_menu=\yii\helpers\Json::decode(M1000::find()->findMenu('hrd')->one()->jval);
 
-
-	
-	/* foreach($columnAttribute as $key =>$value[])
-			{
-				//print_r($value[0]['FIELD'].','.$value[0]['SIZE']);			
-				//print_r($value[$key]['FIELD'].','.$value[$key]['SIZE']);			
-			}  */
-	/* private function filterPilih(){
-		return $Combo_Dept;
-	}; */	
-		
-	
-
-
-
-
-
-
-
-    //print_r($dataProvider);												/*SHOW ARRAY YII Author: -Devandro-*/
-	//echo  \yii\helpers\Json::encode($dataProvider->getModels());			/*SHOW ARRAY JESON Author: -ptr.nov-*/
 $tab_employe_active= GridView::widget([
     'id'=>'active',
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
 	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],				
     'columns' => $dinamkkColumn,
-	/* [
-        //['class' => 'yii\grid\SerialColumn'],
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{view}',
-            //'template' => '{view} {update}',
-            //Yii::t('app', 'Emplo'),
-        ],
-
-        [
-            // Author -ptr.nov- image
-           'attribute' => 'PIC',
-           'format' => 'html', //'format' => 'image',
-           'value'=>function($data){
-                        return Html::img(Yii::getAlias('@HRD_EMP_UploadUrl') . '/'. $data->EMP_IMG, ['width'=>'40']);
-                    },
-        ],
-
-         'KAR_ID',
-         'KAR_NM',
-
-        [
-            //--DEPARMENT-- Author -ptr.nov-
-            'attribute' =>'deptOne.DEP_NM',
-            'filter' => $Combo_Dept,
-        ],
-        [
-            //--CABANG-- Author -ptr.nov-
-            'attribute' =>'cabOne.CAB_NM',
-            'filter' => $Combo_Cab,
-        ],
-        [
-            //--JABATAN-- Author -ptr.nov-
-            'attribute' =>'jabOne.JAB_NM',
-            'filter' => $Combo_Jab,
-        ],
-        [
-            //--STSTUS-- Author -ptr.nov-
-            'attribute' =>'stsOne.KAR_STS_NM',
-            'filter' => $Combo_Status,
-        ],
-        [
-            'attribute' =>'KAR_TGLM',
-            'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-            'filterWidgetOptions' =>([
-                'attribute' =>'KAR_TGLM',
-                'presetDropdown'=>TRUE,
-                'convertFormat'=>true,
-                'pluginOptions'=>[
-                    'format'=>'Y-m-d',
-                    'separator' => ' TO ',
-                    'opens'=>'left'
-                ],
-            //'pluginEvents' => [
-            //	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
-            //]
-            ]),
-
-        ],
-        [
-            'attribute' =>'KAR_TGLK',
-            'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-            'filterWidgetOptions' =>([
-                    'attribute' =>'KAR_TGLK',
-                    'presetDropdown'=>TRUE,
-                    'convertFormat'=>true,
-                    'pluginOptions'=>[
-                        'format'=>'Y-m-d',
-                        'separator' => ' TO ',
-                        'opens'=>'left'
-                    ],
-                    //'pluginEvents' => [
-                    //	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
-                    //]
-                ]),
-
-        ],
-        //['class' => 'yii\grid\CheckboxColumn'],
-        //['class' => '\kartik\grid\RadioColumn'],
-    ], */
+	'toolbar' => [
+		'{export}',
+	],	
     'panel'=>[
         //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
         'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
@@ -158,7 +60,7 @@ $tab_employe_active= GridView::widget([
         //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
         'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
                 ['modelClass' => 'Karyawan',]),
-                ['create'], ['class' => 'btn btn-success']),
+                ['create'], ['class' => 'btn btn-success btn-sm']),
     ],
     'pjax'=>true,
     'pjaxSettings'=>[

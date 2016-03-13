@@ -37,7 +37,6 @@ use modulprj\master\models\Golongan;
  */
 class EmployeController extends Controller
 {
-	//private $filterWidgetOpt=[];
     public function behaviors()
     {
         return [
@@ -72,212 +71,14 @@ class EmployeController extends Controller
 			['ID' =>4, 'ATTR' =>['FIELD'=>'jabOne.JAB_NM','SIZE' => '20px','label'=>'Jabatan','align'=>'left']],
 			['ID' =>5, 'ATTR' =>['FIELD'=>'stsOne.KAR_STS_NM','SIZE' => '20px','label'=>'Status','align'=>'left']],
 			['ID' =>6, 'ATTR' =>['FIELD'=>'golonganOne.TT_GRP_NM','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
-			['ID' =>7, 'ATTR' =>['FIELD'=>'KAR_TGLM','SIZE' => '10px','label'=>'Join.Date','align'=>'center']],
-			
-		  
+			['ID' =>7, 'ATTR' =>['FIELD'=>'KAR_TGLM','SIZE' => '10px','label'=>'Join.Date','align'=>'center']]	  
 		];	
 		$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 			
 		return $valFields;
 	}
 	
-	/*
-	 * GRIDVIEW COLUMN
-	 * @author ptrnov [ptr.nov@gmail.com]
-	 * @since 1.2
-	*/	
-	public function gvColumn(){
-		$attDinamik =[];
-		/*NO ATTRIBUTE*/
-		$attDinamik[] =[			
-				'class'=>'kartik\grid\SerialColumn',
-				'contentOptions'=>['class'=>'kartik-sheet-style'],
-				'width'=>'10px',
-				'header'=>'No.',
-				'headerOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'10px',
-						'font-family'=>'verdana, arial, sans-serif',
-						'font-size'=>'9pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>'center',
-						'width'=>'10px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'9pt',
-					]
-				],					
-		];
-		/*ACTION ATTRIBUTE*/
-		$attDinamik[]=[
-			'class'=>'kartik\grid\ActionColumn',
-			'dropdown' => true,
-			'template' => '{view}{update}{edit}{price}{lihat}',
-			'dropdownOptions'=>['class'=>'pull-left dropdown'],
-			'buttons' => [
-				'view' =>function($url, $model, $key){
-						return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-													['/master/barang/view','id'=>$model->KAR_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-view",
-													'data-title'=> $model->KAR_ID,
-													]). '</li>' . PHP_EOL;
-				},
-				'update' =>function($url, $model, $key){
-						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-													['update','id'=>$model->KAR_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-create",
-													'data-title'=> $model->KAR_ID,
-													]). '</li>' . PHP_EOL;
-				},
-				'edit' =>function($url, $model, $key){
-						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
-													['createalias','id'=>$model->KAR_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-create",
-													'data-title'=> $model->KAR_ID,
-													]). '</li>' . PHP_EOL;
-				},
-				'price' =>function($url, $model, $key) {
-						//$gF=getPermissionEmp()->GF_ID;
-						//if ($gF<=4){
-							return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Price List Items'),
-													['/master/barang/login-price-view'],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-price",
-													]). '</li>' . PHP_EOL;
-						//}
-				},
-				'lihat' =>function($url, $model, $key) {
-					//$gF=getPermissionEmp()->GF_ID;
-					//if ($gF<=4){
-						return  '<li>' . Html::a('<span class="fa fa-user"></span>'.Yii::t('app', 'Alias Data List'),
-												['/master/barang/loginalias'],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#modal-alias",
-												]). '</li>' . PHP_EOL;
-					//}
-				},
-			],
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'height'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],
-		
-		];
-		
-		/*OTHER ATTRIBUTE*/
-		foreach($this->gvAttribute() as $key =>$value[]){
-			$filterWidgetOpt='';
-			//$filterInputOpt='';
-			if ($value[$key]['FIELD']=='deptOne.DEP_NM'){				
-				//$gvfilterType=GridView::FILTER_SELECT2;
-				//$gvfilterType=false;
-				$gvfilter = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');	
-				/* $filterWidgetOpt=[				
-					'pluginOptions'=>['allowClear'=>true],	
-					//'placeholder'=>'Any author'					
-				]; */
-				//$filterInputOpt=['placeholder'=>'Any author'];
-			}elseif($value[$key]['FIELD']=='cabOne.CAB_NM'){
-				$gvfilterType=false;
-				$gvfilter =ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
-			}elseif($value[$key]['FIELD']=='jabOne.JAB_NM'){
-				$gvfilterType=false;
-				$gvfilter =ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
-			}elseif($value[$key]['FIELD']=='stsOne.KAR_STS_NM'){
-				$gvfilterType=false;
-				$gvfilter =ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
-			}elseif($value[$key]['FIELD']=='golonganOne.TT_GRP_NM'){
-				$gvfilterType=false;
-				$gvfilter=ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
-			}elseif($value[$key]['FIELD']=='KAR_TGLM'){
-				$gvfilterType=GridView::FILTER_DATE_RANGE;
-				$gvfilter=true;
-				$filterWidgetOpt=[
-					'attribute' =>'KAR_TGLM',
-					'presetDropdown'=>TRUE,
-					'convertFormat'=>true,
-						'pluginOptions'=>[
-							'format'=>'Y-m-d',
-							'separator' => '-',
-							'opens'=>'left'
-						],
-				];
-			}else{
-				$gvfilterType=false;
-				$gvfilter=true;
-				$filterWidgetOpt=false;		
-				//$filterInputOpt=false;						
-			};				
-				
-			$attDinamik[]=[		
-				'attribute'=>$value[$key]['FIELD'],
-				'label'=>$value[$key]['label'],
-				'filterType'=>$gvfilterType,
-				'filter'=>$gvfilter,
-				'filterWidgetOptions'=>$filterWidgetOpt,	
-				//'filterInputOptions'=>$filterInputOpt,				
-				'hAlign'=>'right',
-				'vAlign'=>'middle',
-				//'mergeHeader'=>true,
-				'noWrap'=>true,			
-				'headerOptions'=>[		
-						'style'=>[									
-						'text-align'=>'center',
-						'width'=>$value[$key]['FIELD'],
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						'background-color'=>'rgba(97, 211, 96, 0.3)',
-					]
-				],  
-				'contentOptions'=>[
-					'style'=>[
-						'text-align'=>$value[$key]['align'],
-						//'width'=>'12px',
-						'font-family'=>'tahoma, arial, sans-serif',
-						'font-size'=>'8pt',
-						//'background-color'=>'rgba(13, 127, 3, 0.1)',
-					]
-				],
-				//'pageSummaryFunc'=>GridView::F_SUM,
-				//'pageSummary'=>true,
-				'pageSummaryOptions' => [
-					'style'=>[
-							'text-align'=>'right',		
-							//'width'=>'12px',
-							'font-family'=>'tahoma',
-							'font-size'=>'8pt',	
-							'text-decoration'=>'underline',
-							'font-weight'=>'bold',
-							'border-left-color'=>'transparant',		
-							'border-left'=>'0px',									
-					]
-				],	
-			];	
-		}	
-		
-		return $attDinamik;
-	}
+	
 	
 	
 	
@@ -287,8 +88,11 @@ class EmployeController extends Controller
     public function actionIndex()
     {
 		/*COMBO FILTER*/
-		
-		
+		$filterDept=ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
+		$filterCbg=ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
+		$filterJab=ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
+		$filterStt=ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
+		$filterGol=ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
 		/*	variable content View Side Menu Author: -Eka- */
 		//set menu side menu index - Array Jeson Decode
        // $side_menu=M1000::find()->findMenu('sss_berita_acara')->one()->jval;
@@ -310,13 +114,16 @@ class EmployeController extends Controller
         
 		return $this->render('index', [
 			'searchModel' => $searchModel,
-			'dinamkkColumn'=>$this->gvColumn(),			
+			'gvAttribute'=>$this->gvAttribute(),			
 			//'columnAttribute'=>$this->gvAttribute(),		
             'dataProvider' => $dataProvider,
             'searchModel1' => $searchModel1,  
             'dataProvider1' => $dataProvider1,  
-			//'ComboDept'=>$ComboDept,
-			
+			'filterDept'=>$filterDept,
+			'filterCbg'=>$filterCbg,
+			'filterJab'=>$filterJab,
+			'filterStt'=>$filterStt,
+			'filterGol'=>$filterGol,			
         ]);
     }
 

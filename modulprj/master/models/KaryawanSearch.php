@@ -138,13 +138,13 @@ class KaryawanSearch extends Karyawan
 		//[5.4] FILTER WHERE LIKE (date)
 			// FILTER COLUMN DATE RANGE Author -ptr.nov-
 			if(isset($this->KAR_TGLM) && $this->KAR_TGLM!=''){
-				$date_explode = explode("TO", $this->KAR_TGLM);
+				$date_explode = explode("-", $this->KAR_TGLM);
 				$date1 = trim($date_explode[0]);
 				$date2= trim($date_explode[1]);
 				$query->andFilterWhere(['between', 'karyawan.KAR_TGLM', $date1,$date2]);
 			}
             if(isset($this->KAR_TGLK) && $this->KAR_TGLK!=''){
-                $date_explode = explode("TO", $this->KAR_TGLK);
+                $date_explode = explode("-", $this->KAR_TGLK);
                 $date1 = trim($date_explode[0]);
                 $date2= trim($date_explode[1]);
                 $query->andFilterWhere(['between', 'karyawan.KAR_TGLK', $date1,$date2]);
@@ -223,13 +223,13 @@ class KaryawanSearch extends Karyawan
         //[5.4] FILTER WHERE LIKE (date)
         // FILTER COLUMN DATE RANGE Author -ptr.nov-
         if(isset($this->KAR_TGLM) && $this->KAR_TGLM!=''){
-            $date_explode = explode("TO", $this->KAR_TGLM);
+            $date_explode = explode("-", $this->KAR_TGLM);
             $date1 = trim($date_explode[0]);
             $date2= trim($date_explode[1]);
             $query->andFilterWhere(['between', 'karyawan.KAR_TGLM', $date1,$date2]);
         }
         if(isset($this->KAR_TGLK) && $this->KAR_TGLK!=''){
-            $date_explode = explode("TO", $this->KAR_TGLK);
+            $date_explode = explode("-", $this->KAR_TGLK);
             $date1 = trim($date_explode[0]);
             $date2= trim($date_explode[1]);
             $query->andFilterWhere(['between', 'karyawan.KAR_TGLK', $date1,$date2]);
