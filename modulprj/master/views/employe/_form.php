@@ -89,7 +89,7 @@ use yii\helpers\Url;
 		?>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-plus"></i>&nbsp;&nbsp;Tambah Barang' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+				<?= Html::submitButton($model->isNewRecord ? '&nbsp;&nbsp;Save' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 			</div>
 		</div>
 
