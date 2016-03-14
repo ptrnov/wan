@@ -16,6 +16,7 @@ use modulprj\master\models\Golongan;
 class Karyawan extends \yii\db\ActiveRecord{
 
     public $upload_file;
+	public $cabID;
 
     /* [1] SOURCE DB */
     public static function getDb()

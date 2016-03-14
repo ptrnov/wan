@@ -15,30 +15,31 @@ namespace modulprj\master\controllers;
 	use yii\filters\VerbFilter;
 	use yii\helpers\ArrayHelper;
 /* VARIABLE PRIMARY JOIN/SEARCH/FILTER/SORT Author: -ptr.nov- */
-	use modulprj\master\models\Karyawan;			/* TABLE CLASS JOIN */
-	use modulprj\master\models\KaryawanSearch;	    /* TABLE CLASS SEARCH */
-    use common\components\GcodeComponent;
+	  use common\components\GcodeComponent;
     use yii\helpers\Json;
 	use yii\web\UploadedFile;
 	use kartik\grid\GridView;
 	use kartik\date\DatePicker;
 	use kartik\helpers\Html;
 	
-/*COMBO*/	
+/*Array COMBO*/	
+use modulprj\master\models\Karyawan;
+use modulprj\master\models\KaryawanSearch;	    /* TABLE CLASS SEARCH */
+  
 use modulprj\master\models\Dept;
-use modulprj\master\models\cbg;
+use modulprj\master\models\Cbg;
 use modulprj\master\models\Jabatan;
 use modulprj\master\models\Status;
 use modulprj\master\models\Golongan;
-
-
+	
+	
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
 class EmployeController extends Controller
 {
-	//private $filterWidgetOpt=[];
-    public function behaviors()
+	
+	public function behaviors()
     {
         return [
             'verbs' => [
@@ -50,6 +51,29 @@ class EmployeController extends Controller
             ],
         ];
     }
+
+	public function aryDept(){ 
+		return ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
+	}
+	public function aryCbg(){ 
+		return ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
+	}
+	public function aryCbgID(){ 
+		return ArrayHelper::map(Cbg::find()->all(), 'CAB_ID','CAB_NM');
+	}
+	public function aryJab(){ 
+		return ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
+	}
+	public function aryStt(){ 
+		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
+	}
+	public function aryGol(){ 
+		return ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
+	}
+	
+	
+	
+
 
 	
 	/*
@@ -72,7 +96,7 @@ class EmployeController extends Controller
 			['ID' =>4, 'ATTR' =>['FIELD'=>'jabOne.JAB_NM','SIZE' => '20px','label'=>'Jabatan','align'=>'left']],
 			['ID' =>5, 'ATTR' =>['FIELD'=>'stsOne.KAR_STS_NM','SIZE' => '20px','label'=>'Status','align'=>'left']],
 			['ID' =>6, 'ATTR' =>['FIELD'=>'golonganOne.TT_GRP_NM','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
-			['ID' =>7, 'ATTR' =>['FIELD'=>'KAR_TGLM','SIZE' => '10px','label'=>'Join.Date','align'=>'center']],
+			//['ID' =>7, 'ATTR' =>['FIELD'=>'KAR_TGLM','SIZE' => '10px','label'=>'Join.Date','align'=>'center']],
 			
 		  
 		];	
@@ -81,12 +105,348 @@ class EmployeController extends Controller
 		return $valFields;
 	}
 	
+	
+    /**
+     * ACTION INDEX
+     */
+    public function actionIndex()
+    {	/*	variable content View Employe Author: -ptr.nov- */
+		/* if (Yii::$app->request->isGet){
+			$result = Yii::$app->request->isGet;
+			//$id=$result['id'];
+			//$test=$result['kd']!=false?$_GET['kd']:'0';
+			print_r($result['KAR_ID']);
+			// if($result!=''){
+				// $searchModel = new KaryawanSearch($result);
+				// $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+			// }else{
+				// $searchModel = new KaryawanSearch();
+				// $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+			// }
+			
+			 $searchModel = new KaryawanSearch(['KAR_ID'=>$result]);
+			 //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		}else{
+			$searchModel = new KaryawanSearch();
+			//$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		} */
+			
+		/*
+		 * SEARCH FIRST AND DIRECT 
+		 * @author piter [ptr.nov@gmail.com]
+		 * @since 1.2
+		*/
+		$paramCari=Yii::$app->getRequest()->getQueryParam('id');
+		if ($paramCari!=''){
+			$cari=['KAR_ID'=>$paramCari];			
+		}else{
+			$cari='';			
+		};
+		
+		//print_r($cari);
+		
+		$searchModel = new KaryawanSearch($cari);
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+		//variable content View Additional Author: -ptr.nov-
+        $searchModel1 = new KaryawanSearch();
+        $dataProvider1 = $searchModel1->searchresign(Yii::$app->request->queryParams);
+
+		//SHOW ARRAY YII Author: -Devandro-
+		
+		//die();
+		//SHOW ARRAY JESON Author: -ptr.nov-
+		//echo  \yii\helpers\Json::encode($dataProvider->getModels());
+        
+		return $this->render('index', [
+			'searchModel' => $searchModel,
+			'dinamkkColumn'=>$this->gvColumn(),			
+			//'columnAttribute'=>$this->gvAttribute(),		
+            'dataProvider' => $dataProvider,
+            'searchModel1' => $searchModel1,  
+            'dataProvider1' => $dataProvider1,  
+			//'ComboDept'=>$ComboDept,			
+        ]);
+    }
+
+    /**
+	 * ACTION VIEW -> $id=PrimaryKey
+     */
+    public function actionView($id)
+    {
+
+        $model = $this->findModel($id);;
+		if ($model->load(Yii::$app->request->post())){
+			$upload_file=$model->uploadFile();
+			var_dump($model->validate());
+			if($model->validate()){
+				if($model->save()) {
+					if ($upload_file !== false) {
+						$path=$model->getUploadedFile();
+                        //print_r($path);
+						//$upload_file->saveAs($path);
+                        $path1=str_replace('****','',$path);
+                        $upload_file->saveAs($path1);
+					}
+					return $this->redirect(['view', 'id' => $model->KAR_ID]);
+				} 
+			}
+		}
+        return $this->render('view', [
+            'model' => $model,
+        ]);
+
+
+    }
+
+    /**
+     * ACTION CREATE note | $id=PrimaryKey -> TRIGER FROM VIEW  -ptr.nov-
+     */
+    public function actionCreate()
+    {
+		$model = new Karyawan();
+		if ($model->load(Yii::$app->request->post()) ) {
+			$result = \Yii::$app->request->post();
+			$kd = Yii::$app->ambilkonci->getKey_Employe($result['Karyawan']['CAB_ID']);
+			$model->KAR_ID = $kd;
+			$model->KAR_TGLM=date('Y-m-d');
+			//$model->KAR_NM=
+			if($model->validate()){
+				//$model->CREATED_BY = Yii::$app->user->identity->username;
+				//$image = $model->uploadImage();
+				if ($model->save()) {
+					// upload only if valid uploaded file instance found
+					/* if ($image !== false) {
+						$path = $model->getImageFile();
+						$image->saveAs($path);
+					} */
+				}
+			}
+			 return $this->redirect(['index','id'=>$model->KAR_ID]);
+		}else {
+            return $this->renderAjax('create', [
+                'model' => $model,
+				'aryCbgID'=>$this->aryCbgID()
+            ]);
+        }
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+                //$EMP_ID='DDPX';
+               // $EMP_ID = Yii::$app->request->getIsPost('ssss');
+                //$file_name = Yii::app()->request->getParam( 'file' );
+                //$EMP_ID1=(string)$_POST(MyParam1);
+                //print_r('ok'.$EMP_ID);
+
+        /*
+                //$EMP_ID=$_GET['KAR_ID'];
+                //$generate_key_emp1= Yii::$app->ambilkonci->getKey_Employe($EMP_ID);
+                if ($EMP_ID!='') {
+                    $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe($EMP_ID);
+                }else{
+                    $generate_key_emp =$EMP_ID;
+                };
+
+                if (Yii::$app->request->post('name')) {
+                    //$EMP_ID = Yii::$app->request->post('editableKey');
+                   //$model = Employe::findOne($EMP_ID);
+
+                    // store a default json response as desired by editable
+                    //$out = Json::encode(['output'=>'', 'message'=>'']);
+
+                    $enerate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+                    //return $generate_key_emp;
+                    //$post = [];
+                    //$posted = current($_POST['Employe']);
+                    //$post['Employe'] = $posted;
+                    //$out = Json::encode(['output'=>$output, 'message'=>'']);
+                    //echo $out;
+                    return $enerate_key_emp;
+                }
+
+
+                if (isset($_POST['depdrop_parents'])) {
+                   // $parents = $_POST['depdrop_parents'];
+                    //if ($parents != null) {
+                     //   $cab_id = $parents[0];
+                      //  $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe($cab_id);
+                       // print_r($generate_key_emp);
+                    //}
+                    $enerate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+                }
+                //$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+
+
+        $model = new Karyawan();
+
+
+
+
+        if (Yii::$app->request->isAjax) {
+            //Yii::$app->response->format = Response::FORMAT_JSON;
+            $generate_key_emp = Yii::$app->ambilkonci->getKey_Employe('DDPX');
+
+
+
+        }
+
+       */
+        //$_GET['foo']
+       // print_r($_GET[$id]);
+       /*  $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('HO');
+        //$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+        $model = new Karyawan();
+        if ($model->load(Yii::$app->request->post())){
+			$upload_file=$model->uploadFile();
+			var_dump($model->validate());
+			if($model->validate()){
+				if($model->save()) {
+					if ($upload_file !== false) {
+						$path=$model->getUploadedFile();
+                        $path1=str_replace('*','',$path);
+						$upload_file->saveAs($path1);
+					}
+					return $this->redirect(['view', 'id' => $model->KAR_ID]);
+				} 
+			}
+		}else {
+
+            return $this->render('create', [
+                'model' => $model,
+                'gkey_emp' => $generate_key_emp,
+            ]);
+        }
+       // print_r($EMP_ID); */
+
+    }
+
+    protected function performAjaxValidation($model)
+    {
+        if(isset($_POST['ajax']) && $_POST['ajax']==='user-form')
+        {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+
+
+
+
+
+
+
+
+    /**
+     * ACTION UPDATE -> $id=PrimaryKey
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->KAR_ID]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * ACTION DELETE -> $id=PrimaryKey | CHANGE STATUS -> lihat Standart table status | Jangan dihapus dari record
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * CLASS TABLE FIND PrimaryKey
+     * Example:  Employe::find()
+     */
+    protected function findModel($id)
+    {
+        if (($model = Karyawan::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+	// THE CONTROLLER
+	public function actionSubcat() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			//print_r($parents);
+			if ($parents != null) {
+				$cat_id = $parents[0];
+				$generate_key_emp1= Yii::$app->ambilkonci->getKey_Employe($cat_id);
+				//$out = self::getSubCatList($cat_id);
+				// the getSubCatList function will query the database based on the
+				// cat_id and return an array like below:
+			   // $out = self::getSubCatList1($cat_id);
+				$data=[
+						'out'=>[
+							//['id'=>$generate_key_emp1, 'name'=> $generate_key_emp1],
+							['id'=> $generate_key_emp1, 'name'=>$generate_key_emp1, 'options'=> ['style'=>['color'=>'red'],'disabled'=>false]],
+							//['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+							],
+						'selected'=>$generate_key_emp1,
+					];
+			   // $selected = self::getSubcat($cat_id);
+
+				echo Json::encode(['output'=>$data['out'], 'selected'=>$data['selected']]);
+				return;
+			}
+		}
+		echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+		
+    public function actionProd() {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $ids = $_POST['depdrop_parents'];
+            print_r($ids);
+            $cat_id = empty($ids[0]) ? null : $ids[0];
+            if ($cat_id != null) {
+                $data = self::getProdList($cat_id);
+                /**
+                 * the getProdList function will query the database based on the
+                 * cat_id and sub_cat_id and return an array like below:
+                 *  [
+                 *      'out'=>[
+                 *          ['id'=>'<prod-id-1>', 'name'=>'<prod-name1>'],
+                 *          ['id'=>'<prod_id_2>', 'name'=>'<prod-name2>']
+                 *       ],
+                 *       'selected'=>'<prod-id-1>'
+                 *  ]
+                 */
+
+                echo Json::encode(['output'=>$data['out'], 'selected'=>$data['selected']]);
+                return;
+            }
+        }
+        echo Json::encode(['output'=>'', 'selected'=>'']);
+    }
+	
+	
 	/*
 	 * GRIDVIEW COLUMN
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.2
 	*/	
-	public function gvColumn(){
+	public function gvColumn() {
 		$attDinamik =[];
 		/*NO ATTRIBUTE*/
 		$attDinamik[] =[			
@@ -184,7 +544,7 @@ class EmployeController extends Controller
 			],
 		
 		];
-		
+			
 		/*OTHER ATTRIBUTE*/
 		foreach($this->gvAttribute() as $key =>$value[]){
 			$filterWidgetOpt='';
@@ -192,7 +552,7 @@ class EmployeController extends Controller
 			if ($value[$key]['FIELD']=='deptOne.DEP_NM'){				
 				//$gvfilterType=GridView::FILTER_SELECT2;
 				//$gvfilterType=false;
-				$gvfilter = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');	
+				$gvfilter =$this->aryDept();
 				/* $filterWidgetOpt=[				
 					'pluginOptions'=>['allowClear'=>true],	
 					//'placeholder'=>'Any author'					
@@ -200,21 +560,21 @@ class EmployeController extends Controller
 				//$filterInputOpt=['placeholder'=>'Any author'];
 			}elseif($value[$key]['FIELD']=='cabOne.CAB_NM'){
 				$gvfilterType=false;
-				$gvfilter =ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
+				$gvfilter =$this->aryCbg();
 			}elseif($value[$key]['FIELD']=='jabOne.JAB_NM'){
 				$gvfilterType=false;
-				$gvfilter =ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
+				$gvfilter =$this->aryJab();
 			}elseif($value[$key]['FIELD']=='stsOne.KAR_STS_NM'){
 				$gvfilterType=false;
-				$gvfilter =ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
+				$gvfilter =$this->aryStt();
 			}elseif($value[$key]['FIELD']=='golonganOne.TT_GRP_NM'){
 				$gvfilterType=false;
-				$gvfilter=ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
-			}elseif($value[$key]['FIELD']=='KAR_TGLM'){
+				$gvfilter=$this->aryGol();
+			}/* elseif($value[$key]['FIELD']=='KAR_TGLM'){
 				$gvfilterType=GridView::FILTER_DATE_RANGE;
 				$gvfilter=true;
 				$filterWidgetOpt=[
-					'attribute' =>'KAR_TGLM',
+					//'attribute' =>'KAR_TGLM',
 					'presetDropdown'=>TRUE,
 					'convertFormat'=>true,
 						'pluginOptions'=>[
@@ -223,7 +583,7 @@ class EmployeController extends Controller
 							'opens'=>'left'
 						],
 				];
-			}else{
+			} */else{
 				$gvfilterType=false;
 				$gvfilter=true;
 				$filterWidgetOpt=false;		
@@ -278,279 +638,5 @@ class EmployeController extends Controller
 		
 		return $attDinamik;
 	}
-	
-	
-	
-    /**
-     * ACTION INDEX
-     */
-    public function actionIndex()
-    {
-		/*COMBO FILTER*/
-		
-		
-		/*	variable content View Side Menu Author: -Eka- */
-		//set menu side menu index - Array Jeson Decode
-       // $side_menu=M1000::find()->findMenu('sss_berita_acara')->one()->jval;
-        //$side_menu=json_decode($side_menu,true);
-
-		/*	variable content View Employe Author: -ptr.nov- */
-        $searchModel = new KaryawanSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-		//variable content View Additional Author: -ptr.nov-
-        $searchModel1 = new KaryawanSearch();
-        $dataProvider1 = $searchModel1->searchresign(Yii::$app->request->queryParams);
-
-		//SHOW ARRAY YII Author: -Devandro-
-		//print_r($dataProvider->getModels());
-		
-		//SHOW ARRAY JESON Author: -ptr.nov-
-		//echo  \yii\helpers\Json::encode($dataProvider->getModels());
-        
-		return $this->render('index', [
-			'searchModel' => $searchModel,
-			'dinamkkColumn'=>$this->gvColumn(),			
-			//'columnAttribute'=>$this->gvAttribute(),		
-            'dataProvider' => $dataProvider,
-            'searchModel1' => $searchModel1,  
-            'dataProvider1' => $dataProvider1,  
-			//'ComboDept'=>$ComboDept,
-			
-        ]);
-    }
-
-    /**
-	 * ACTION VIEW -> $id=PrimaryKey
-     */
-    public function actionView($id)
-    {
-
-        $model = $this->findModel($id);;
-		if ($model->load(Yii::$app->request->post())){
-			$upload_file=$model->uploadFile();
-			var_dump($model->validate());
-			if($model->validate()){
-				if($model->save()) {
-					if ($upload_file !== false) {
-						$path=$model->getUploadedFile();
-                        //print_r($path);
-						//$upload_file->saveAs($path);
-                        $path1=str_replace('****','',$path);
-                        $upload_file->saveAs($path1);
-					}
-					return $this->redirect(['view', 'id' => $model->KAR_ID]);
-				} 
-			}
-		}
-        return $this->render('view', [
-            'model' => $model,
-        ]);
-
-
-    }
-
-    /**
-     * ACTION CREATE note | $id=PrimaryKey -> TRIGER FROM VIEW  -ptr.nov-
-     */
-    public function actionCreate()
-    {
-                $EMP_ID='DDPX';
-               // $EMP_ID = Yii::$app->request->getIsPost('ssss');
-                //$file_name = Yii::app()->request->getParam( 'file' );
-                //$EMP_ID1=(string)$_POST(MyParam1);
-                //print_r('ok'.$EMP_ID);
-
-        /*
-                //$EMP_ID=$_GET['KAR_ID'];
-                //$generate_key_emp1= Yii::$app->ambilkonci->getKey_Employe($EMP_ID);
-                if ($EMP_ID!='') {
-                    $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe($EMP_ID);
-                }else{
-                    $generate_key_emp =$EMP_ID;
-                };
-
-                if (Yii::$app->request->post('name')) {
-                    //$EMP_ID = Yii::$app->request->post('editableKey');
-                   //$model = Employe::findOne($EMP_ID);
-
-                    // store a default json response as desired by editable
-                    //$out = Json::encode(['output'=>'', 'message'=>'']);
-
-                    $enerate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
-                    //return $generate_key_emp;
-                    //$post = [];
-                    //$posted = current($_POST['Employe']);
-                    //$post['Employe'] = $posted;
-                    //$out = Json::encode(['output'=>$output, 'message'=>'']);
-                    //echo $out;
-                    return $enerate_key_emp;
-                }
-
-
-                if (isset($_POST['depdrop_parents'])) {
-                   // $parents = $_POST['depdrop_parents'];
-                    //if ($parents != null) {
-                     //   $cab_id = $parents[0];
-                      //  $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe($cab_id);
-                       // print_r($generate_key_emp);
-                    //}
-                    $enerate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
-                }
-                //$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
-
-
-        $model = new Karyawan();
-
-
-
-
-        if (Yii::$app->request->isAjax) {
-            //Yii::$app->response->format = Response::FORMAT_JSON;
-            $generate_key_emp = Yii::$app->ambilkonci->getKey_Employe('DDPX');
-
-
-
-        }
-
-       */
-        //$_GET['foo']
-       // print_r($_GET[$id]);
-        $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('HO');
-        //$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
-        $model = new Karyawan();
-        if ($model->load(Yii::$app->request->post())){
-			$upload_file=$model->uploadFile();
-			var_dump($model->validate());
-			if($model->validate()){
-				if($model->save()) {
-					if ($upload_file !== false) {
-						$path=$model->getUploadedFile();
-                        $path1=str_replace('*','',$path);
-						$upload_file->saveAs($path1);
-					}
-					return $this->redirect(['view', 'id' => $model->KAR_ID]);
-				} 
-			}
-		}else {
-
-            return $this->render('create', [
-                'model' => $model,
-                'gkey_emp' => $generate_key_emp,
-            ]);
-        }
-       // print_r($EMP_ID);
-
-    }
-
-    protected function performAjaxValidation($model)
-    {
-        if(isset($_POST['ajax']) && $_POST['ajax']==='user-form')
-        {
-            echo CActiveForm::validate($model);
-            Yii::app()->end();
-        }
-    }
-
-
-
-
-
-
-
-
-    /**
-     * ACTION UPDATE -> $id=PrimaryKey
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->KAR_ID]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * ACTION DELETE -> $id=PrimaryKey | CHANGE STATUS -> lihat Standart table status | Jangan dihapus dari record
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * CLASS TABLE FIND PrimaryKey
-     * Example:  Employe::find()
-     */
-    protected function findModel($id)
-    {
-        if (($model = Karyawan::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-// THE CONTROLLER
-        public function actionSubcat() {
-            $out = [];
-            if (isset($_POST['depdrop_parents'])) {
-                $parents = $_POST['depdrop_parents'];
-                //print_r($parents);
-                if ($parents != null) {
-                    $cat_id = $parents[0];
-                    $generate_key_emp1= Yii::$app->ambilkonci->getKey_Employe($cat_id);
-                    //$out = self::getSubCatList($cat_id);
-                    // the getSubCatList function will query the database based on the
-                    // cat_id and return an array like below:
-                   // $out = self::getSubCatList1($cat_id);
-                    $data=[
-                            'out'=>[
-                                //['id'=>$generate_key_emp1, 'name'=> $generate_key_emp1],
-                                ['id'=> $generate_key_emp1, 'name'=>$generate_key_emp1, 'options'=> ['style'=>['color'=>'red'],'disabled'=>false]],
-                                //['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
-                                ],
-                            'selected'=>$generate_key_emp1,
-                        ];
-                   // $selected = self::getSubcat($cat_id);
-
-                    echo Json::encode(['output'=>$data['out'], 'selected'=>$data['selected']]);
-                    return;
-                }
-            }
-            echo Json::encode(['output'=>'', 'selected'=>'']);
-        }
-    public function actionProd() {
-        $out = [];
-        if (isset($_POST['depdrop_parents'])) {
-            $ids = $_POST['depdrop_parents'];
-            print_r($ids);
-            $cat_id = empty($ids[0]) ? null : $ids[0];
-            if ($cat_id != null) {
-                $data = self::getProdList($cat_id);
-                /**
-                 * the getProdList function will query the database based on the
-                 * cat_id and sub_cat_id and return an array like below:
-                 *  [
-                 *      'out'=>[
-                 *          ['id'=>'<prod-id-1>', 'name'=>'<prod-name1>'],
-                 *          ['id'=>'<prod_id_2>', 'name'=>'<prod-name2>']
-                 *       ],
-                 *       'selected'=>'<prod-id-1>'
-                 *  ]
-                 */
-
-                echo Json::encode(['output'=>$data['out'], 'selected'=>$data['selected']]);
-                return;
-            }
-        }
-        echo Json::encode(['output'=>'', 'selected'=>'']);
-    }
 	
 }

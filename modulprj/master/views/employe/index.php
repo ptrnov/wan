@@ -7,6 +7,8 @@
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\Breadcrumbs;
+use yii\bootstrap\Modal;
+
 
 /* TABLE CLASS DEVELOPE -> |DROPDOWN,PRIMARYKEY-> ATTRIBUTE */
 use modulprj\master\models\karyawan;
@@ -53,14 +55,16 @@ $tab_employe_active= GridView::widget([
 		'{export}',
 	],	
     'panel'=>[
-        //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
-        'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
-        //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
-            //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
-        //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
-        'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
-                ['modelClass' => 'Karyawan',]),
-                ['create'], ['class' => 'btn btn-success btn-sm']),
+        'heading'=>'<h3 class="panel-title">Employee List</h3>',
+		'type'=>'warning',
+		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
+								['modelClass' => 'Kategori',]),'/master/employe/create',[
+									'data-toggle'=>"modal",
+									'data-target'=>"#modal-create",
+									'class' => 'btn btn-success btn-sm'
+								]
+						),
+		'showFooter'=>false,
     ],
     'pjax'=>true,
     'pjaxSettings'=>[
@@ -162,8 +166,6 @@ $tab_employe_resign= GridView::widget([
                 ]),
 
         ],
-        //['class' => 'yii\grid\CheckboxColumn'],
-        //['class' => '\kartik\grid\RadioColumn'],
     ],
     'panel'=>[
         //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
@@ -171,6 +173,7 @@ $tab_employe_resign= GridView::widget([
         //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
         //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
         //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
+		
 
     ],
     'pjax'=>true,
@@ -232,5 +235,33 @@ $tab_employe_resign= GridView::widget([
 
 	]);
 
-?>
 
+?>
+<?php
+
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-create').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-create',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Employee</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
+
+
+?>
