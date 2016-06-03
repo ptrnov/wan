@@ -69,7 +69,7 @@ class KaryawanSearch extends Karyawan
 						 ->JoinWith('jabOne',true,'left JOIN')
 						 ->JoinWith('stsOne',true,'left JOIN')
 						 ->JoinWith('golonganOne',true,'left JOIN')
-						 ->where('karyawan.KAR_STS<> 3');
+						 ->where('karyawan.KAR_STS<>3');
 						 // SUB JOIN
 						//$query->leftJoin(['company'=>$queryCop],'company.CORP_ID=a0001.EMP_CORP_ID');//->orderBy(['company.CORP_ID'=>SORT_ASC]);
 						 //->andFilterWhere(['EMP_ID'=>'006']);

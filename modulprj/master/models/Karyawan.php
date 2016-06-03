@@ -12,11 +12,20 @@ use yii\web\UploadedFile;
 //use modulprj\models\hrd\Dept;
 use modulprj\master\models\Golongan;
 
+Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/hrd/Employee/';
+Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/hrd/Employee/';
 
 class Karyawan extends \yii\db\ActiveRecord{
 
     public $upload_file;
 	public $cabID;
+	
+	public $image;
+	
+	public $vKarId;
+	public $vKarNm;
+	public $vCabID;
+	public $vIMAGE;
 
     /* [1] SOURCE DB */
     public static function getDb()
@@ -37,13 +46,13 @@ class Karyawan extends \yii\db\ActiveRecord{
         return [
             //--Emp Identity--
             [['EMP_IMG'], 'string', 'max' => 50],
-            [['KAR_ID','KAR_NM'], 'required'],
+            [['KAR_ID','KAR_NM','CAB_ID'], 'required'],
             [['KAR_ID'], 'string','max' => 15],                                 //gridview
             [['KAR_NM'], 'string', 'max' => 50],                                //gridview
             [['DEP_ID'], 'integer'],                            //JOIN TABLE    //gridview
             [['CORP_ID'], 'string'],                            //JOIN TABLE    //gridview
             [['CAB_ID'], 'string'],                            //JOIN TABLE    //gridview
-            [['LVL_ID'], 'integer'],                            //JOIN TABLE    //gridview
+            /* [['LVL_ID'], 'integer'],                            //JOIN TABLE    //gridview
             [['JAB_ID'], 'integer'],                            //JOIN TABLE    //gridview
             [['KAR_STS'], 'integer'],                           //JOIN TABLE    //gridview
             [['EMP_STS'], 'integer'],                           //JOIN TABLE    //gridview
@@ -51,11 +60,11 @@ class Karyawan extends \yii\db\ActiveRecord{
             [['KAR_ALMT'], 'string'],
             [['KAR_TLP'], 'string'],
             [['KAR_HP'], 'string'],
-            [['KAR_TGL'], 'date','format' => 'yyyy-mm-dd'],
+            //[['KAR_TGL'], 'date','format' => 'yyyy-mm-dd'],
             [['KAR_AGM'], 'string'],
             [['KAR_STSK'], 'string'],
-            [['KAR_TGLM'], 'date','format' => 'yyyy-mm-dd'],                    //gridview
-            [['KAR_TGLK'], 'date','format' => 'yyyy-mm-dd'],                    //gridview
+            //[['KAR_TGLM'], 'date','format' => 'yyyy-mm-dd'],                    //gridview
+            //[['KAR_TGLK'], 'date','format' => 'yyyy-mm-dd'],                    //gridview
             [['KAR_STSP'], 'string'],
             [['KAR_MAILP'], 'string'],
             [['KAR_MAILK'], 'string'],
@@ -81,9 +90,10 @@ class Karyawan extends \yii\db\ActiveRecord{
             [['STT_OT_DPN'], 'integer'],                         //JOIN TABLE
             [['PEN_ID'], 'integer'],                             //JOIN TABLE
             [['KAR_KET'], 'string'],                            //JOIN TABLE
-            [['AGAMA_ID'], 'integer'],
+            [['AGAMA_ID'], 'integer'], */
 
-            [['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png,jpeg', 'mimeTypes'=>'image/jpg,image/jpeg, image/png',],
+           // [['upload_file'], 'file', 'skipOnEmpty' => true,'extensions'=>'jpg,png,jpeg', 'mimeTypes'=>'image/jpg,image/jpeg, image/png',],
+			[['image'], 'file', 'extensions'=>'jpg, gif, png']
         ];
     }
 
@@ -103,7 +113,7 @@ class Karyawan extends \yii\db\ActiveRecord{
             'CAB_ID' => Yii::t('app', 'Cabang :'),
             'LVL_ID' => Yii::t('app', 'OT.Level'),
             'JAB_ID' => Yii::t('app', 'Jabatan    :'),
-            'KAR_STS' => Yii::t('app', 'Status Pekerjaan   :'),
+            'KAR_STS' => Yii::t('app', 'Status Pekerjaan   :'), //STATUS PEKERJAAn
             'KAR_STSK'  => Yii::t('app', 'Status Karyawan :'),
             'KAR_TGLM' => Yii::t('app', 'Tgl.Masuk    :'),
             'KAR_TGLK'  => Yii::t('app', 'Tgl.Keluar  :'),
@@ -120,10 +130,10 @@ class Karyawan extends \yii\db\ActiveRecord{
             'KAR_AGM' => Yii::t('app', 'Agama   :'),
             'AGAMA_ID'  => Yii::t('app', 'AGAMA_ID  :'),
             'KAR_TLP' => Yii::t('app', 'Tlp :'),
-            'STT_ID'  => Yii::t('app', 'Status'),
-            'JML_ANAK'  => Yii::t('app', 'JML_ANAK'),
+            'STT_ID'  => Yii::t('app', 'Status :'), //STATUS PERNIKAHAN
+            'JML_ANAK'  => Yii::t('app', 'Jumlah.Anak	:'),
             'KAR_HP' => Yii::t('app', 'Handphone    :'),
-            'NPWP'  => Yii::t('app', 'NPWP'),
+            'NPWP'  => Yii::t('app', 'NPWP	:'),
             'KAR_NPWP'  => Yii::t('app', 'KAR_NPWP'),
             'KAR_MAILP' => Yii::t('app', 'Email.Pribadi :'),
             'KAR_KOTA'  => Yii::t('app', 'Kota'),
@@ -145,7 +155,7 @@ class Karyawan extends \yii\db\ActiveRecord{
             'NO_REK' => Yii::t('app', 'Bank Reg :'),
 
            // lain-lain
-            'KAR_KET'  => Yii::t('app', 'KAR_KET    :'),
+            'KAR_KET'  => Yii::t('app', 'Catatan    :'),
 
 
             /*Image Temporary Upload*/
@@ -187,20 +197,54 @@ class Karyawan extends \yii\db\ActiveRecord{
         return $this->hasOne(Golongan::className(), ['TT_GRP_ID' => 'GRP_ID']);
     }
 
-    /*Function RANDOM FILE IMAGE Author: -ptr.nov-*/
-    public function uploadFile(){
+    /*Function RANDOM FILE image Author: -ptr.nov-*/
+   /*  public function uploadFile(){
         $image=UploadedFile::getInstance($this,'upload_file');
         if(empty($image)){
             return false;
         }
         $this->EMP_IMG = time().'.'.$image->extension;
         return $image;
-    }
+    } */
 
     /*Function path/default image Author: -ptr.nov-*/
-    public function getUploadedFile(){
+    /* public function getUploadedFile(){
         $pic = isset($this->EMP_IMG) ? $this->EMP_IMG : 'default.jpg';
         //$ppthw = Yii::$app
         return Yii::$app->params['HRD_EMP_UploadUrl'].$pic;
+    } */
+	
+	public function getImageFile()
+    {
+        return isset($this->EMP_IMG) ? Yii::$app->params['uploadPath'] . $this->EMP_IMG : null;
+    }
+
+    public function getImageUrl()
+    {
+        // return a default image placeholder if your source image is not found
+        $image = isset($this->EMP_IMG) ? $this->EMP_IMG : 'default.jpg';
+        return Yii::$app->params['uploadUrl'] . $image;
+    }
+
+	public function uploadImage() {
+        // get the uploaded file instance. for multiple file uploads
+        // the following data will return an array (you may need to use
+        // getInstances method)
+        $image = UploadedFile::getInstance($this, 'image');
+
+        // if no image was uploaded abort the upload
+        if (empty($image)) {
+            return false;
+        }
+
+        // store the source file name
+        //$this->filename = $image->name;
+        $ext = end((explode(".", $image->name)));
+
+        // generate a unique file name
+        $this->EMP_IMG = 'wan-'.date('ymdHis').".{$ext}"; //$image->name;//Yii::$app->security->generateRandomString().".{$ext}";
+
+        // the uploaded image instance
+        return $image;
     }
 } 

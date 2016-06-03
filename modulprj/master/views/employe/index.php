@@ -24,7 +24,7 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
-use kartik\sidenav\SideNav;
+//use kartik\sidenav\SideNav;
 
 use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
@@ -33,17 +33,6 @@ AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.n
 $this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp="Employee"; 
-
-/*variable Dropdown*/
-$Combo_Dept = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');//->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
-$ComboDept = ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');//->orderBy('SORT')->asArray()->all(), 'DEP_NM','DEP_NM');
-$Combo_Cab=ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
-$Combo_Jab = ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
-$Combo_Status = ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
-
-//$Combo_Corp = ArrayHelper::map(Corp::find()->orderBy('SORT')->asArray()->all(), 'CORP_NM','CORP_NM');
-
-//$side_menu=\yii\helpers\Json::decode(M1000::find()->findMenu('hrd')->one()->jval);
 
 $tab_employe_active= GridView::widget([
     'id'=>'active',
@@ -83,6 +72,8 @@ $tab_employe_active= GridView::widget([
         'showConfirmAlert'=>false,
         'target'=>GridView::TARGET_BLANK
     ],
+	//'floatHeader'=>false,
+	 'floatHeaderOptions'=>['scrollingTop'=>'200'] 
 ]);
 
 $tab_employe_resign= GridView::widget([
@@ -113,22 +104,22 @@ $tab_employe_resign= GridView::widget([
         [
             //--DEPARMENT-- Author -ptr.nov-
             'attribute' =>'deptOne.DEP_NM',
-            'filter' => $Combo_Dept,
+            'filter' => $aryDept,
         ],
         [
             //--CABANG-- Author -ptr.nov-
             'attribute' =>'cabOne.CAB_NM',
-            'filter' => $Combo_Cab,
+            'filter' => $aryCbgID,
         ],
         [
             //--JABATAN-- Author -ptr.nov-
             'attribute' =>'jabOne.JAB_NM',
-            'filter' => $Combo_Jab,
+            'filter' => $aryJab,
         ],
         [
             //--STSTUS-- Author -ptr.nov-
             'attribute' =>'stsOne.KAR_STS_NM',
-            'filter' => $Combo_Status,
+            'filter' => $aryStt,
         ],
         [
             'attribute' =>'KAR_TGLM',
@@ -238,7 +229,11 @@ $tab_employe_resign= GridView::widget([
 
 ?>
 <?php
-
+	/*
+	 * CREATE EMPLOYEE JS
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
 	$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#modal-create').on('show.bs.modal', function (event) {
@@ -262,6 +257,123 @@ $tab_employe_resign= GridView::widget([
 		],
     ]);
     Modal::end();
+	
+	/*
+	 * EDIT EMPLOYEE TITLE
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#edit-title').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'edit-title',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">COMPANY IDENTIFICATION</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
 
+	/*
+	 * EDIT EMPLOYEE PROFILE
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#edit-profile').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'edit-profile',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">EMPLOYEE IDENTITY</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
+	
+	
+	/*
+	 * EDIT DATA PAYROLL
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#edit-payroll').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'edit-payroll',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Edit Payrol Data</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
+	
+	/*
+	 * EDIT EMPLOYEE VIEW ALL
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modal-view').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modal-view',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h5 class="modal-title"><b>VIEW EMPLOYEE</b></h5></div>',
+		'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
 
 ?>

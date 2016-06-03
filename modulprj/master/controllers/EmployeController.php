@@ -11,6 +11,11 @@ namespace modulprj\master\controllers;
 /* VARIABLE BASE YII2 Author: -YII2- */
 	use Yii;
 	use yii\web\Controller;
+	use yii\web\Request;
+	use yii\web\Response;
+	use yii\helpers\Url;
+	use yii\widgets\Pjax;
+
 	use yii\web\NotFoundHttpException;
 	use yii\filters\VerbFilter;
 	use yii\helpers\ArrayHelper;
@@ -43,7 +48,7 @@ class EmployeController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(['Employe','Karyawan']),
+                'class' => VerbFilter::className(),
                 'actions' => [
                     //'delete' => ['post'],
 					'save' => ['post'],
@@ -55,6 +60,9 @@ class EmployeController extends Controller
 	public function aryDept(){ 
 		return ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
 	}
+	public function aryDeptID(){ 
+		return ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
+	}
 	public function aryCbg(){ 
 		return ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
 	}
@@ -64,17 +72,21 @@ class EmployeController extends Controller
 	public function aryJab(){ 
 		return ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
 	}
+	public function aryJabID(){ 
+		return ArrayHelper::map(Jabatan::find()->all(), 'JAB_ID','JAB_NM');
+	}
 	public function aryStt(){ 
 		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
+	}
+	public function arySttID(){ 
+		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_ID','KAR_STS_NM');
 	}
 	public function aryGol(){ 
 		return ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
 	}
-	
-	
-	
-
-
+	public function aryGolID(){ 
+		return ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
+	}
 	
 	/*
 	 * PENGUNAAN DALAM GRID
@@ -165,7 +177,11 @@ class EmployeController extends Controller
             'dataProvider' => $dataProvider,
             'searchModel1' => $searchModel1,  
             'dataProvider1' => $dataProvider1,  
-			//'ComboDept'=>$ComboDept,			
+			'aryDept'=>$this->aryDept(),
+			'aryCbgID'=>$this->aryCbgID(),
+			'aryJab'=>$this->aryJab(),
+			'aryStt'=>$this->aryStt(),
+			'aryGol'=>$this->aryGol(),			
         ]);
     }
 
@@ -174,8 +190,17 @@ class EmployeController extends Controller
      */
     public function actionView($id)
     {
-
-        $model = $this->findModel($id);;
+        $model = $this->findModel($id);
+		
+		$DeptMDL=Dept::find()->where(['DEP_ID'=>$model->DEP_ID])->orderBy('DEP_NM')->one();
+			$modelDept=$DeptMDL!=''?$DeptMDL->DEP_NM:'none';
+		$CbgMDL = Cbg::find()->where(['CAB_ID'=>$model->CAB_ID])->orderBy('CAB_NM')->one();
+			$modelCbg = $CbgMDL!=''?$CbgMDL->CAB_NM:'none';
+		$JabMDL = Jabatan::find()->where(['JAB_ID'=>$model->JAB_ID])->orderBy('JAB_NM')->one();
+			$modelJab = $JabMDL!=''?$JabMDL->JAB_NM:'none';
+		$sttMDL = Status::find()->where(['KAR_STS_ID'=>$model->KAR_STS])->orderBy('KAR_STS_NM')->one();		
+			$modelStatus = $sttMDL!=''?$sttMDL->KAR_STS_NM:'none';
+		
 		if ($model->load(Yii::$app->request->post())){
 			$upload_file=$model->uploadFile();
 			var_dump($model->validate());
@@ -192,10 +217,16 @@ class EmployeController extends Controller
 				} 
 			}
 		}
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $model,
+			'aryDept'=>$this->aryDept(),
+			'modelDept'=>$modelDept,
+			'modelCbg'=>$modelCbg,
+			'modelJab'=>$modelJab,
+			'modelStatus'=>$modelStatus,
+			'aryCbgID'=>$this->aryCbgID(),
         ]);
-
+   
 
     }
 
@@ -213,13 +244,13 @@ class EmployeController extends Controller
 			//$model->KAR_NM=
 			if($model->validate()){
 				//$model->CREATED_BY = Yii::$app->user->identity->username;
-				//$image = $model->uploadImage();
+				$image = $model->uploadImage();
 				if ($model->save()) {
 					// upload only if valid uploaded file instance found
-					/* if ($image !== false) {
+					if ($image !== false) {
 						$path = $model->getImageFile();
 						$image->saveAs($path);
-					} */
+					} 
 				}
 			}
 			 return $this->redirect(['index','id'=>$model->KAR_ID]);
@@ -338,28 +369,151 @@ class EmployeController extends Controller
         }
     }
 
+	public function actionEditIdentity($id){
+        $model = $this->findModel($id);
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_form_edit_identity', [
+					'model' => $model,
+					'aryCbgID'=>$this->aryCbgID(),
+				]); 				
+		}else{
+				
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					//$model->save();
+					$image = $model->uploadImage();
+					if ($model->save()) {
+						// upload only if valid uploaded file instance found
+						if ($image !== false) {
+							$path = $model->getImageFile();
+							$image->saveAs($path);
+						} 
+					}
+					return $this->redirect(['index','id'=>$model->KAR_ID]);			
+				}
+			}	
+		}
+	}
 
+	public function actionEditTitel($id)
+    {
+        $model = $this->findModel($id);
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_form_edit_title', [
+					'model' => $model,
+					'aryCbgID'=>$this->aryCbgID(),
+				]); 				
+		}else{
+				
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					//$model->save();
+					$image = $model->uploadImage();
+					if ($model->save()) {
+						// upload only if valid uploaded file instance found
+						if ($image !== false) {
+							$path = $model->getImageFile();
+							$image->saveAs($path);
+						} 
+					}
+					return $this->redirect(['index','id'=>$model->KAR_ID]);
+					/* if(Yii::$app->request->isAjax){
+						$model->load(Yii::$app->request->post());
+						return Json::encode(\yii\widgets\ActiveForm::validate($model));
+					} */				
+				}
+			}	
+		}
+		
+		
+		/* if(Yii::$app->request->isAjax){
+			$model->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($model));
+		}else{
+			
+		// print_r($model);
+			if ($model->load(Yii::$app->request->post()) && $model->save()) {
+				return $this->redirect(['index','id'=>$model->KAR_ID]);
+			} else {
+				return $this->renderAjax('_form_edit_title', [
+					'model' => $model,
+					'aryCbgID'=>$this->aryCbgID(),
+				]); 
+			}
+        } */
+		
+		
+		
+    }
 
-
-
-
-
-
+	public function actionEditTitelSave($id)
+    {
+        $model = $this->findModel($id);
+		
+		/* if(Yii::$app->request->isAjax){
+			$model->load(Yii::$app->request->post());
+			return Json::encode(\yii\widgets\ActiveForm::validate($model));
+		}else{ */
+			
+		// print_r($model);
+			if ($model->load(Yii::$app->request->post()) && $model->save()) {
+				return $this->redirect(['index','id'=>$model->KAR_ID]);
+			}
+        //} 
+		
+		
+		
+    }
+	
+	
+	
+	
+	
     /**
      * ACTION UPDATE -> $id=PrimaryKey
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->KAR_ID]);
+   /*  public function actionEditTitel($id){
+        
+		$model = $this->findModel($id);		
+		
+        //if ($model->load(Yii::$app->request->post())) {	
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			//$hsl = \Yii::$app->request->post();
+			//$model->KAR_NM = $hsl['Karyawan']['KAR_NM'];
+			//$model->save();		
+			//$image = $model->uploadImage();
+			// if ($model->save()) {
+				// upload only if valid uploaded file instance found
+				// if ($image !== false) {
+					// $path = $model->getImageFile();
+					// $image->saveAs($path);
+				// }  
+				// print_r(Yii::$app->request->post());
+				// die();
+				
+			// } 
+            //return $this->redirect(['view', 'id' => $model->KAR_ID]);
+			return $this->redirect(['index','id'=>$model->KAR_ID]);
         } else {
-            return $this->render('update', [
+            //return $this->renderAjax('_form_edit_title', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
+				'aryDept'=>$this->aryDept(),
+				'aryCbgID'=>$this->aryCbgID(),
+				'aryJab'=>$this->aryJab(),
+				'aryStt'=>$this->aryStt(),
+				'aryGol'=>$this->aryGol(),	
             ]);
-        }
-    }
+        }	
+	} */
 
     /**
      * ACTION DELETE -> $id=PrimaryKey | CHANGE STATUS -> lihat Standart table status | Jangan dihapus dari record
@@ -476,52 +630,50 @@ class EmployeController extends Controller
 		$attDinamik[]=[
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
-			'template' => '{view}{update}{edit}{price}{lihat}',
+			'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
 			'dropdownOptions'=>['class'=>'pull-left dropdown'],
-			'buttons' => [
+			'buttons' => [				
+				'edit0' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Identity'),
+													['/master/employe/edit-identity','id'=>$model->KAR_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-title",
+													'data-title'=> $model->KAR_ID,
+													]). '</li>' . PHP_EOL;
+				},
+				'edit1' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Title'),
+													['/master/employe/edit-titel','id'=>$model->KAR_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-title",
+													'data-title'=> $model->KAR_ID,
+													]). '</li>' . PHP_EOL;
+				},
+				'edit2' =>function($url, $model, $key){
+						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Set Profile'),
+													['/master/employe/edit','id'=>$model->KAR_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-profile",
+													'data-title'=> $model->KAR_ID,
+													]). '</li>' . PHP_EOL;
+				},
+				'edit3' =>function($url, $model, $key) {
+						//$gF=getPermissionEmp()->GF_ID;
+						//if ($gF<=4){
+							return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Set Payroll'),
+													['/master/employe/edit','id'=>$model->KAR_ID],[
+													'data-toggle'=>"modal",
+													'data-target'=>"#edit-payroll",
+													]). '</li>' . PHP_EOL;
+						//}
+				},
 				'view' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'View'),
-													['/master/barang/view','id'=>$model->KAR_ID],[
+													['/master/employe/view','id'=>$model->KAR_ID],[
 													'data-toggle'=>"modal",
 													'data-target'=>"#modal-view",
 													'data-title'=> $model->KAR_ID,
 													]). '</li>' . PHP_EOL;
-				},
-				'update' =>function($url, $model, $key){
-						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
-													['update','id'=>$model->KAR_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-create",
-													'data-title'=> $model->KAR_ID,
-													]). '</li>' . PHP_EOL;
-				},
-				'edit' =>function($url, $model, $key){
-						return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Create Kode Alias'),
-													['createalias','id'=>$model->KAR_ID],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-create",
-													'data-title'=> $model->KAR_ID,
-													]). '</li>' . PHP_EOL;
-				},
-				'price' =>function($url, $model, $key) {
-						//$gF=getPermissionEmp()->GF_ID;
-						//if ($gF<=4){
-							return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Price List Items'),
-													['/master/barang/login-price-view'],[
-													'data-toggle'=>"modal",
-													'data-target'=>"#modal-price",
-													]). '</li>' . PHP_EOL;
-						//}
-				},
-				'lihat' =>function($url, $model, $key) {
-					//$gF=getPermissionEmp()->GF_ID;
-					//if ($gF<=4){
-						return  '<li>' . Html::a('<span class="fa fa-user"></span>'.Yii::t('app', 'Alias Data List'),
-												['/master/barang/loginalias'],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#modal-alias",
-												]). '</li>' . PHP_EOL;
-					//}
 				},
 			],
 			'headerOptions'=>[
