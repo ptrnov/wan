@@ -8,23 +8,11 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\Breadcrumbs;
 use yii\bootstrap\Modal;
-
-
-/* TABLE CLASS DEVELOPE -> |DROPDOWN,PRIMARYKEY-> ATTRIBUTE */
-use modulprj\master\models\karyawan;
-use modulprj\master\models\Dept;
-use modulprj\master\models\cbg;
-use modulprj\master\models\Jabatan;
-use modulprj\master\models\Status;
-use modulprj\sistem\models\M1000;
-
-/*	KARTIK WIDGET -> Penambahan componen dari yii2 dan nampak lebih cantik*/
 use kartik\grid\GridView;
 use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
-//use kartik\sidenav\SideNav;
 
 use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
@@ -34,171 +22,33 @@ $this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp="Employee"; 
 
-$tab_employe_active= GridView::widget([
-    'id'=>'active',
-    'dataProvider' => $dataProvider,
-    'filterModel' => $searchModel,
-	'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],				
-    'columns' => $dinamkkColumn,
-	'toolbar' => [
-		'{export}',
-	],	
-    'panel'=>[
-        'heading'=>'<h3 class="panel-title">Employee List</h3>',
-		'type'=>'warning',
-		'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
-								['modelClass' => 'Kategori',]),'/master/employe/create',[
-									'data-toggle'=>"modal",
-									'data-target'=>"#modal-create",
-									'class' => 'btn btn-success btn-sm'
-								]
-						),
-		'showFooter'=>false,
-    ],
-    'pjax'=>true,
-    'pjaxSettings'=>[
-        'options'=>[
-            'enablePushState'=>false,
-            'id'=>'active',
-        ],
-    ],
-    'hover'=>true, //cursor select
-    'responsive'=>true,
-    'bordered'=>true,
-    'striped'=>true,
-    //'autoXlFormat'=>true,
-    'export'=>[//export like view grid --ptr.nov-
-        'fontAwesome'=>true,
-        'showConfirmAlert'=>false,
-        'target'=>GridView::TARGET_BLANK
-    ],
-	//'floatHeader'=>false,
-	 'floatHeaderOptions'=>['scrollingTop'=>'200'] 
-]);
-
-$tab_employe_resign= GridView::widget([
-    'id'=>'resign',
-    'dataProvider' => $dataProvider1,
-    'filterModel' => $searchModel1,
-    'columns' => [
-        //['class' => 'yii\grid\SerialColumn'],
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{view}',
-            //'template' => '{view} {update}',
-            //Yii::t('app', 'Emplo'),
-        ],
-
-        [
-            // Author -ptr.nov- image
-            'attribute' => 'PIC',
-            'format' => 'html', //'format' => 'image',
-            'value'=>function($data){
-                    return Html::img(Yii::getAlias('@HRD_EMP_UploadUrl') . '/'. $data->EMP_IMG, ['width'=>'40']);
-                },
-        ],
-
-        'KAR_ID',
-        'KAR_NM',
-
-        [
-            //--DEPARMENT-- Author -ptr.nov-
-            'attribute' =>'deptOne.DEP_NM',
-            'filter' => $aryDept,
-        ],
-        [
-            //--CABANG-- Author -ptr.nov-
-            'attribute' =>'cabOne.CAB_NM',
-            'filter' => $aryCbgID,
-        ],
-        [
-            //--JABATAN-- Author -ptr.nov-
-            'attribute' =>'jabOne.JAB_NM',
-            'filter' => $aryJab,
-        ],
-        [
-            //--STSTUS-- Author -ptr.nov-
-            'attribute' =>'stsOne.KAR_STS_NM',
-            'filter' => $aryStt,
-        ],
-        [
-            'attribute' =>'KAR_TGLM',
-            'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-            'filterWidgetOptions' =>([
-                    'attribute' =>'KAR_TGLM',
-                    'presetDropdown'=>TRUE,
-                    'convertFormat'=>true,
-                    'pluginOptions'=>[
-                        'format'=>'Y-m-d',
-                        'separator' => ' TO ',
-                        'opens'=>'left'
-                    ],
-                    //'pluginEvents' => [
-                    //	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
-                    //]
-                ]),
-
-        ],
-        [
-            'attribute' =>'KAR_TGLK',
-            'filterType'=> \kartik\grid\GridView::FILTER_DATE_RANGE,
-            'filterWidgetOptions' =>([
-                    'attribute' =>'KAR_TGLK',
-                    'presetDropdown'=>TRUE,
-                    'convertFormat'=>true,
-                    'pluginOptions'=>[
-                        'format'=>'Y-m-d',
-                        'separator' => ' TO ',
-                        'opens'=>'left'
-                    ],
-                    //'pluginEvents' => [
-                    //	"apply.daterangepicker" => "function() { aplicarDateRangeFilter('EMP_JOIN_DATE') }",
-                    //]
-                ]),
-
-        ],
-    ],
-    'panel'=>[
-        //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
-        'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
-        //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
-        //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
-        //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
-		
-
-    ],
-    'pjax'=>true,
-    'pjaxSettings'=>[
-        'options'=>[
-            'enablePushState'=>false,
-            'id'=>'active',
-        ],
-    ],
-    'hover'=>true, //cursor select
-    'responsive'=>true,
-    'bordered'=>true,
-    'striped'=>true,
-    //'autoXlFormat'=>true,
-    'export'=>[//export like view grid --ptr.nov-
-        'fontAwesome'=>true,
-        'showConfirmAlert'=>false,
-        'target'=>GridView::TARGET_BLANK
-    ],
-]);
-
-
 	/* echo Breadcrumbs::widget([
 				'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 			]);
 	*/
+	
+	$empActive=$this->render('_employeActive',[
+		'dataProvider' => $dataProvider,
+		'searchModel' => $searchModel,
+		'dinamkkColumn'=>$dinamkkColumn,
+	]);
+	$empResign=$this->render('_employeResign',[
+		'dataProvider1' => $dataProvider1,
+		'searchModel1' => $searchModel1,
+		'aryDept'=>$aryDept,
+		'aryCbgID'=>$aryCbgID,
+		'aryJab'=>$aryJab,
+		'aryStt'=>$aryStt,
+		'aryGol'=>$aryGol,	
+	]);
 	$items=[
 		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Active','content'=>$tab_employe_active,
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Active','content'=>$empActive,//$tab_employe_active,
 			//'active'=>true,
 
 		],
 		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Resign','content'=>$tab_employe_resign,
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Resign','content'=>$empResign,
 		],
         /*
 		[
@@ -211,10 +61,7 @@ $tab_employe_resign= GridView::widget([
 			'label'=>'<i class="glyphicon glyphicon-home"></i> RATING','content'=>$strRat,//$sortImg,// ,
 		],
 		*/
-
 	];
-
-
 
 	echo TabsX::widget([
 		'items'=>$items,
@@ -225,7 +72,6 @@ $tab_employe_resign= GridView::widget([
 		//'align'=>TabsX::ALIGN_LEFT,
 
 	]);
-
 
 ?>
 <?php
@@ -280,7 +126,7 @@ $tab_employe_resign= GridView::widget([
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'edit-title',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">COMPANY IDENTIFICATION</h4></div>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-1x fa-user"></div><div><h5 class="modal-title"><b>EMPLOYEE IDENTIFICATION</b></h5></div>',
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],

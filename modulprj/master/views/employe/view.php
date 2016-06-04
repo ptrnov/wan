@@ -277,14 +277,13 @@ use common\components\ambilStatus;
 	
 
 ?>
-<div class="barang-form" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+<div class="barang-form" style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<div class="row">
 		<?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data']]);?>
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				<?=$dtUnixId?>				
 				<?=$dtCompanyData?>
-				<?=$dtPendidikan?>
-				
+				<?=$dtPendidikan?>				
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				<?=$empContact?>
