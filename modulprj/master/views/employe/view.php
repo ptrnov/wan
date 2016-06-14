@@ -102,7 +102,7 @@ AppAsset::register($this);
 			'value'=>$model->cabNm,
 			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
-				'data'=>$aryCbgID,
+				'data'=>$aryCbgId,
 				'options'=>['placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
@@ -113,19 +113,19 @@ AppAsset::register($this);
 			'value'=>$model->depNm,
 			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
-				'data'=>$aryDeptID,
+				'data'=>$aryDeptId,
 				'options'=>['placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
 		],
 		 
 		[// Jabatan - Author: -ptr.nov-
-			'attribute' =>	'JAB_ID' ,
-			'value'=>$model->jabNm,			
+			'attribute' =>	'GF_ID' ,
+			'value'=>$model->gfNm .' ['.Html::a($model->codeGolongan, '#', ['class'=>'kv-author-link']).']',			
 			'format'=>'raw',
 			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
-				'data'=>$aryJabID,
+				'data'=>$aryGfId,
 				'options'=>['placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
@@ -137,11 +137,15 @@ AppAsset::register($this);
 			'format'=>'raw',
 			'type'=>DetailView::INPUT_SELECT2,
 			'widgetOptions'=>[
-				'data'=>$arySttID,
+				'data'=>$arySttId,
 				'options'=>['placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
 			],	
-		],		
+		],	
+		[
+			'attribute' =>	'KAR_MAILK',
+			'labelColOptions' => ['style' => 'text-align:right;width: 40%']
+		], 		
 		[	// TANGGAL - MASUK  
 			'attribute' =>	'KAR_TGLM',
 			'format'=>'date',
@@ -168,12 +172,7 @@ AppAsset::register($this);
 				]
 			],
 			'inputWidth'=>'100%',
-		],
-		
-		[
-			'attribute' =>	'KAR_MAILK',
-			'labelColOptions' => ['style' => 'text-align:right;width: 40%']
-		], 
+		],		
 	];
 	
 	$attIdentity = [

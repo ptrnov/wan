@@ -11,8 +11,9 @@ use modulprj\master\models\cbg;
 use yii\web\UploadedFile;
 use yii\helpers\Html;
 //use modulprj\models\hrd\Dept;
-use modulprj\master\models\Golongan;
+use modulprj\master\models\Timetable;
 use modulprj\master\models\Pendidikan;
+use modulprj\master\models\Kepangkatan; //GROUP FUNCTION
 
 Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/hrd/Employee/';
 Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/hrd/Employee/';
@@ -52,8 +53,8 @@ class Karyawan extends \yii\db\ActiveRecord{
                                      
             [['CORP_ID'], 'string'],			
 			/* COMPANY */	
-			[['CAB_ID','KAR_MAILK'], 'string'], 
-			[['DEP_ID','JAB_ID','KAR_STS'], 'integer'], 
+			[['CAB_ID','GF_ID','KAR_MAILK'], 'string'], 
+			[['DEP_ID','KAR_STS'], 'integer'], 
 			[['KAR_TGLM','KAR_TGLK'], 'safe'],			
 			/* CONTACT */
 			[['KAR_TLP','KAR_HP','KAR_MAILP'], 'string'],		
@@ -108,11 +109,12 @@ class Karyawan extends \yii\db\ActiveRecord{
             'imageview' => Yii::t('app', ''),
 
           //--'COMPANY IDENTIFICATION--
-            'DEP_ID' => Yii::t('app', 'Dept   :'),
+            'DEP_ID' => Yii::t('app', 'Department  :'),
             'CORP_ID' => Yii::t('app', 'Corp  :'),
             'CAB_ID' => Yii::t('app', 'Cabang :'),
             'LVL_ID' => Yii::t('app', 'OT.Level'),
-            'JAB_ID' => Yii::t('app', 'Jabatan    :'),
+            //'JAB_ID' => Yii::t('app', 'Jabatan    :'),
+            'GF_ID' => Yii::t('app', 'Group Function  :'),
             'KAR_STS' => Yii::t('app', 'Status Pekerjaan   :'), //STATUS PEKERJAAn
             'KAR_STSK'  => Yii::t('app', 'Status Karyawan :'),
             'KAR_TGLM' => Yii::t('app', 'Tgl.Masuk    :'),
@@ -198,14 +200,19 @@ class Karyawan extends \yii\db\ActiveRecord{
         return $this->cabOne!=''?$this->cabOne->CAB_NM:'none';
     }
 
-    /* JABATAN JOIN | GET NAME */
-    public function getJabOne()
+  	/* JABATAN/KEPANGKATAN/GROUP FUNCTION  JOIN | GET NAME */
+    public function getGfOne()
     {
-        return $this->hasOne(Jabatan::className(), ['JAB_ID' => 'JAB_ID']);
+        return $this->hasOne(Kepangkatan::className(), ['GF_ID' => 'GF_ID']);
     }
-	public function getJabNm()
+	public function getGfNm()
     {
-        return $this->jabOne!=''?$this->jabOne->JAB_NM:'none';
+        return $this->gfOne!=''?$this->gfOne->GF_NM:'none';
+    }
+	
+	public function getCodeGolongan()
+    {
+        return $this->GF_ID . $this->JOBGRADE_ID;
     }
 	
     /* STATUS PEKERJAAN JOIN | GET NAME */
@@ -219,13 +226,13 @@ class Karyawan extends \yii\db\ActiveRecord{
     }
 	
 	/* GOLONGAN ABSENSI JOIN | GET NAME */
-    public function getGolonganOne()
+    public function getTimetableOne()
     {
-        return $this->hasOne(Golongan::className(), ['TT_GRP_ID' => 'GRP_ID']);
+        return $this->hasOne(Timetable::className(), ['TT_GRP_ID' => 'GRP_ID']);
     }
-	public function getStsNm()
+	public function getTimeTableNm()
     {
-        return $this->golonganOne!=''?$this->golonganOne->TT_GRP_NM:'none';
+        return $this->timetableOne!=''?$this->timetableOne->TT_GRP_NM:'none';
     }
 
 	

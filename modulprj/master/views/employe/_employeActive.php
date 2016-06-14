@@ -23,13 +23,13 @@ use yii\helpers\Url;
 		} 
 	*/	
 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'cabOne.CAB_NM','SIZE' => '10px','label'=>'Cabang','align'=>'left']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'KAR_ID','SIZE' => '10px','label'=>'Employee.ID','align'=>'left']],		  
-		['ID' =>2, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '20px','label'=>'Name','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'deptOne.DEP_NM','SIZE' => '20px','label'=>'Department','align'=>'left']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'jabOne.JAB_NM','SIZE' => '20px','label'=>'Jabatan','align'=>'left']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'stsOne.KAR_STS_NM','SIZE' => '20px','label'=>'Status','align'=>'left']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'golonganOne.TT_GRP_NM','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_ID','SIZE' => '10px','label'=>'Employee.ID','align'=>'left']],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '20px','label'=>'Name','align'=>'left']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'cabNm','SIZE' => '10px','label'=>'Cabang','align'=>'left']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'depNm','SIZE' => '20px','label'=>'Department','align'=>'left']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'gfNm','SIZE' => '20px','label'=>'Group Function','align'=>'left']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'stsKerjaNm','SIZE' => '20px','label'=>'Status','align'=>'left']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
 		//['ID' =>7, 'ATTR' =>['FIELD'=>'KAR_TGLM','SIZE' => '10px','label'=>'Join.Date','align'=>'center']],
 		
 	  
@@ -159,6 +159,7 @@ use yii\helpers\Url;
 				return $model['IMG64']!=''?Html::img($base64,['class'=>'img-circle','width'=>'25','height'=>'25']):Html::img($model['notImg'],['class'=>'img-circle','width'=>'25','height'=>'25']);
 			},
 			'width'=>'10px',
+			'mergeHeader'=>true,
 			'header'=>'No.',
 			'headerOptions'=>[
 				'style'=>[
@@ -183,27 +184,27 @@ use yii\helpers\Url;
 	foreach($valFields as $key =>$value[]){
 		$filterWidgetOpt='';
 		//$filterInputOpt='';
-		if ($value[$key]['FIELD']=='deptOne.DEP_NM'){				
+		if ($value[$key]['FIELD']=='depNm'){				
 			//$gvfilterType=GridView::FILTER_SELECT2;
 			//$gvfilterType=false;
-			$gvfilter =$aryDept;
+			$gvfilter =$aryDeptId;
 			/* $filterWidgetOpt=[				
 				'pluginOptions'=>['allowClear'=>true],	
 				//'placeholder'=>'Any author'					
 			]; */
 			//$filterInputOpt=['placeholder'=>'Any author'];
-		}elseif($value[$key]['FIELD']=='cabOne.CAB_NM'){
+		}elseif($value[$key]['FIELD']=='cabNm'){
 			$gvfilterType=false;
-			$gvfilter =$aryCbg;
-		}elseif($value[$key]['FIELD']=='jabOne.JAB_NM'){
+			$gvfilter =$aryCbgId;
+		}elseif($value[$key]['FIELD']=='gfNm'){
 			$gvfilterType=false;
-			$gvfilter =$aryJab;
-		}elseif($value[$key]['FIELD']=='stsOne.KAR_STS_NM'){
+			$gvfilter =$aryGfId;
+		}elseif($value[$key]['FIELD']=='stsKerjaNm'){
 			$gvfilterType=false;
-			$gvfilter =$aryStt;
-		}elseif($value[$key]['FIELD']=='golonganOne.TT_GRP_NM'){
+			$gvfilter =$arySttId;
+		}elseif($value[$key]['FIELD']=='timeTableNm'){
 			$gvfilterType=false;
-			$gvfilter=$aryGol;
+			$gvfilter=$aryTimeTableId;
 		}/* elseif($value[$key]['FIELD']=='KAR_TGLM'){
 			$gvfilterType=GridView::FILTER_DATE_RANGE;
 			$gvfilter=true;

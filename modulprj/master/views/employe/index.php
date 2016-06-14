@@ -54,23 +54,23 @@ $this->sideCorp="Employee";
 	$empActive=$this->render('_employeActive',[
 		'dataProvider' => $dataProvider,
 		'searchModel' => $searchModel,
-		//'dinamkkColumn'=>$dinamkkColumn,
-		'aryDept'=>$aryDept,
-		'aryCbgID'=>$aryCbgID,
+		'aryDeptId'=>$aryDeptId,
+		'aryCbgId'=>$aryCbgId,
 		'aryCbg'=>$aryCbg,
-		'aryJab'=>$aryJab,
-		'aryStt'=>$aryStt,
-		'aryGol'=>$aryGol,
+		'aryGfId'=>$aryGfId,
+		'arySttId'=>$arySttId,
+		'aryTimeTableId'=>$aryTimeTableId,
 	]);
+	
 	$empResign=$this->render('_employeResign',[
 		'dataProvider1' => $dataProvider1,
 		'searchModel1' => $searchModel1,
-		'aryDept'=>$aryDept,
-		'aryCbgID'=>$aryCbgID,
+		'aryDeptId'=>$aryDeptId,
+		'aryCbgId'=>$aryCbgId,
 		'aryCbg'=>$aryCbg,
-		'aryJab'=>$aryJab,
-		'aryStt'=>$aryStt,
-		'aryGol'=>$aryGol,	
+		'aryGfId'=>$aryGfId,
+		'arySttId'=>$arySttId,
+		'aryTimeTableId'=>$aryTimeTableId,
 	]); 
 	$items=[
 		[

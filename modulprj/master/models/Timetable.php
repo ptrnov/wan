@@ -12,7 +12,7 @@ use Yii;
  * @property integer $TT_GRP_STT
  * @property string $TT_GRP_DEF
  */
-class Golongan extends \yii\db\ActiveRecord
+class Timetable extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

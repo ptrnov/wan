@@ -33,9 +33,9 @@ use modulprj\master\models\KaryawanSearch;	    /* TABLE CLASS SEARCH */
   
 use modulprj\master\models\Dept;
 use modulprj\master\models\Cbg;
-use modulprj\master\models\Jabatan;
+use modulprj\master\models\Kepangkatan;
 use modulprj\master\models\Status;
-use modulprj\master\models\Golongan;
+use modulprj\master\models\Timetable;
 use modulprj\master\models\Pendidikan;
 	
 	
@@ -61,38 +61,63 @@ class EmployeController extends Controller
 	public function aryDept(){ 
 		return ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
 	}
-	public function aryDeptID(){ 
+	public function aryDeptId(){ 
 		return ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 	}
 	public function aryCbg(){ 
 		return ArrayHelper::map(Cbg::find()->all(), 'CAB_NM','CAB_NM');
 	}
-	public function aryCbgID(){ 
+	public function aryCbgId(){ 
 		return ArrayHelper::map(Cbg::find()->all(), 'CAB_ID','CAB_NM');
 	}
-	public function aryJab(){ 
-		return ArrayHelper::map(Jabatan::find()->all(), 'JAB_NM','JAB_NM');
+	public function aryGf(){ 
+		return ArrayHelper::map(Kepangkatan::find()->all(), 'GF_NM','GF_NM');
 	}
-	public function aryJabID(){ 
-		return ArrayHelper::map(Jabatan::find()->all(), 'JAB_ID','JAB_NM');
+	public function aryGfId(){ 
+		return ArrayHelper::map(Kepangkatan::find()->all(), 'GF_ID','GF_NM');
 	}
 	public function aryStt(){ 
 		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
 	}
-	public function arySttID(){ 
+	public function arySttId(){ 
 		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_ID','KAR_STS_NM');
 	}
-	public function aryGol(){ 
-		return ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
+	public function aryTimeTable(){ 
+		return ArrayHelper::map(Timetable::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
 	}
-	public function aryGolID(){ 
-		return ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
+	public function aryTimeTableId(){ 
+		return ArrayHelper::map(Timetable::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
 	}
 	public function arySchool(){ 
 		return ArrayHelper::map(Pendidikan::find()->all(), 'PEN_ID','PEN_NM');
 	}
 	
-	
+	/**
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+
 	
 	
 	
@@ -147,12 +172,12 @@ class EmployeController extends Controller
 			'dataProvider' => $dataProvider,
             'searchModel1' => $searchModel1,  
             'dataProvider1' => $dataProvider1,  
-			'aryDept'=>$this->aryDept(),
-			'aryCbgID'=>$this->aryCbgID(),
+			'aryDeptId'=>$this->aryDeptId(),
+			'aryCbgId'=>$this->aryCbgId(),
 			'aryCbg'=>$this->aryCbg(),
-			'aryJab'=>$this->aryJab(),
-			'aryStt'=>$this->aryStt(),
-			'aryGol'=>$this->aryGol(),			
+			'aryGfId'=>$this->aryGfId(),
+			'arySttId'=>$this->arySttId(),
+			'aryTimeTableId'=>$this->aryTimeTableId(),			
         ]);
     }
 
@@ -162,17 +187,6 @@ class EmployeController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-		//$model=$model->loadDefaultValues();
-        //$modelVal = new Karyawan();
-		 $post = Yii::$app->request->post();  
-		$DeptMDL=Dept::find()->where(['DEP_ID'=>$model->DEP_ID])->orderBy('DEP_NM')->one();
-			$modelDept=$DeptMDL!=''?$DeptMDL->DEP_NM:'none';
-		$CbgMDL = Cbg::find()->where(['CAB_ID'=>$model->CAB_ID])->orderBy('CAB_NM')->one();
-			$modelCbg = $CbgMDL!=''?$CbgMDL->CAB_NM:'none';
-		$JabMDL = Jabatan::find()->where(['JAB_ID'=>$model->JAB_ID])->orderBy('JAB_NM')->one();
-			$modelJab = $JabMDL!=''?$JabMDL->JAB_NM:'none';
-		$sttMDL = Status::find()->where(['KAR_STS_ID'=>$model->KAR_STS])->orderBy('KAR_STS_NM')->one();		
-			$modelStatus = $sttMDL!=''?$sttMDL->KAR_STS_NM:'none';
 		 // if(Yii::$app->request->isAjax){
 			 // $modelVal->load(Yii::$app->request->post());
 			 // return Json::encode(\yii\widgets\ActiveForm::validate($modelVal));
@@ -183,7 +197,9 @@ class EmployeController extends Controller
 			$upload_file = $model->uploadImage();
 			$data_base64 = $upload_file != ''? $this->contentBase64(file_get_contents($upload_file->tempName)): ''; 
 			//print_r($data_base64);
-			$model->IMG64 = $data_base64;
+			if ($data_base64!=''){
+				$model->IMG64 = $data_base64;
+			};
 			//$model->save(false);
 			if($model->save(false)){
 				//$model->refresh();
@@ -194,16 +210,12 @@ class EmployeController extends Controller
 		}else{
 			return $this->renderAjax('view', [
 				'model' => $model,
-				'aryDept'=>$this->aryDept(),
-				'modelDept'=>$modelDept,
-				'modelCbg'=>$modelCbg,
-				'modelJab'=>$modelJab,
-				'modelStatus'=>$modelStatus,
-				'aryCbgID'=>$this->aryCbgID(),
-				'aryDeptID'=>$this->aryDeptID(),
+				'aryCbgId'=>$this->aryCbgId(),
+				'aryDeptId'=>$this->aryDeptId(),
 				'arySchool'=>$this->arySchool(),
-				'aryJabID'=>$this->aryJabID(),
-				'arySttID'=>$this->arySttID(),
+				'aryGfId'=>$this->aryGfId(),
+				'arySttId'=>$this->arySttId(),
+				'aryTimeTableId'=>$this->aryTimeTableId(),
 			]);
 		}
 
