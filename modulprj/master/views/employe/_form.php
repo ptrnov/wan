@@ -16,7 +16,7 @@ use yii\helpers\Url;
 			'type' => ActiveForm::TYPE_HORIZONTAL,
 			'method' => 'post',
 			'id'=>'form-employe-id',
-           .'enableClientValidation' => true,
+           //'enableClientValidation' => true,
 			'options' => ['enctype' => 'multipart/form-data']
 		]);
 	?>
@@ -26,9 +26,9 @@ use yii\helpers\Url;
 			echo $form->field($model, 'CAB_ID')->dropDownList($aryCbgID,[
 				'id'=>'emp-cab',
 				'prompt'=>' -- Pilih Salah Satu --',
-			])->label('Cabang');
+			]);//->label('Cabang');
 			
-			echo $form->field($model, 'KAR_NM')->textInput(['maxlength' => true])->label('Cabang');
+			echo $form->field($model, 'KAR_NM')->textInput(['maxlength' => true]);//->label('Name');
 			
 			//INPUT FILE IMAGE
 			echo $form->field($model, 'image')->widget(FileInput::classname(), [

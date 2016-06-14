@@ -36,7 +36,6 @@ use modulprj\master\models\Cbg;
 use modulprj\master\models\Jabatan;
 use modulprj\master\models\Status;
 use modulprj\master\models\Golongan;
-use modulprj\master\models\Pendidikan;
 	
 	
 /**
@@ -88,10 +87,6 @@ class EmployeController extends Controller
 	public function aryGolID(){ 
 		return ArrayHelper::map(Golongan::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
 	}
-	public function arySchool(){ 
-		return ArrayHelper::map(Pendidikan::find()->all(), 'PEN_ID','PEN_NM');
-	}
-	
 	
 	
 	
@@ -162,7 +157,6 @@ class EmployeController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-		//$model=$model->loadDefaultValues();
         //$modelVal = new Karyawan();
 		 $post = Yii::$app->request->post();  
 		$DeptMDL=Dept::find()->where(['DEP_ID'=>$model->DEP_ID])->orderBy('DEP_NM')->one();
@@ -180,14 +174,17 @@ class EmployeController extends Controller
 		
 		//if ($model->load(\Yii::$app->request->post())){
 		if ($model->load(Yii::$app->request->post())){
-			$upload_file = $model->uploadImage();
-			$data_base64 = $upload_file != ''? $this->contentBase64(file_get_contents($upload_file->tempName)): ''; 
-			//print_r($data_base64);
-			$model->IMG64 = $data_base64;
 			//$model->save(false);
-			if($model->save(false)){
-				//$model->refresh();
-				
+			//if ($model->load($_POST) && $model->save()){
+			 // $result = \Yii::$app->request->post();				
+			 // $model->KAR_TLP=$result['Karyawan']['KAR_TLP'];
+			// $model->KAR_HP=$result['Karyawan']['KAR_HP'];
+			// $model->KAR_MAILP=$result['Karyawan']['KAR_MAILP'];
+			//$model->KAR_ALMT=$result['Karyawan']['KAR_ALMT'];			
+			// $model->save();
+			if($model->save()){
+				// echo 1;
+				//$model->refresh();				
 				return $this->redirect(['/master/employe/']);
 				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
 			};
@@ -200,16 +197,88 @@ class EmployeController extends Controller
 				'modelJab'=>$modelJab,
 				'modelStatus'=>$modelStatus,
 				'aryCbgID'=>$this->aryCbgID(),
-				'aryDeptID'=>$this->aryDeptID(),
-				'arySchool'=>$this->arySchool(),
-				'aryJabID'=>$this->aryJabID(),
-				'arySttID'=>$this->arySttID(),
 			]);
 		}
 
     }
 	
-		
+	public function actionViewContact($id)
+    {
+        $model = $this->findModel($id);
+        //$modelVal = new Karyawan();
+		 $post = Yii::$app->request->post();  
+		$DeptMDL=Dept::find()->where(['DEP_ID'=>$model->DEP_ID])->orderBy('DEP_NM')->one();
+			$modelDept=$DeptMDL!=''?$DeptMDL->DEP_NM:'none';
+		$CbgMDL = Cbg::find()->where(['CAB_ID'=>$model->CAB_ID])->orderBy('CAB_NM')->one();
+			$modelCbg = $CbgMDL!=''?$CbgMDL->CAB_NM:'none';
+		$JabMDL = Jabatan::find()->where(['JAB_ID'=>$model->JAB_ID])->orderBy('JAB_NM')->one();
+			$modelJab = $JabMDL!=''?$JabMDL->JAB_NM:'none';
+		$sttMDL = Status::find()->where(['KAR_STS_ID'=>$model->KAR_STS])->orderBy('KAR_STS_NM')->one();		
+			$modelStatus = $sttMDL!=''?$sttMDL->KAR_STS_NM:'none';
+		//if(Yii::$app->request->isAjax){
+			//$modelVal->load(Yii::$app->request->post());
+			//return Json::encode(\yii\widgets\ActiveForm::validate($modelVal));
+		if ($model->load(Yii::$app->request->post())){
+			$result = \Yii::$app->request->post();				
+			$model->KAR_TLP=$result['Karyawan']['KAR_TLP'];
+			$model->KAR_HP=$result['Karyawan']['KAR_HP'];
+			$model->KAR_MAILP=$result['Karyawan']['KAR_MAILP'];
+			$model->save();
+			return $this->redirect(['/master/employe/']);
+			//Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+		}else{
+			return $this->renderAjax('view', [
+				'model' => $model,
+				'aryDept'=>$this->aryDept(),
+				'modelDept'=>$modelDept,
+				'modelCbg'=>$modelCbg,
+				'modelJab'=>$modelJab,
+				'modelStatus'=>$modelStatus,
+				'aryCbgID'=>$this->aryCbgID(),
+			]);
+		}
+    }
+	
+	public function actionViewIndentitas($id)
+    {
+        $model = $this->findModel($id);
+        //$modelVal = new Karyawan();
+		 $post = Yii::$app->request->post();  
+		$DeptMDL=Dept::find()->where(['DEP_ID'=>$model->DEP_ID])->orderBy('DEP_NM')->one();
+			$modelDept=$DeptMDL!=''?$DeptMDL->DEP_NM:'none';
+		$CbgMDL = Cbg::find()->where(['CAB_ID'=>$model->CAB_ID])->orderBy('CAB_NM')->one();
+			$modelCbg = $CbgMDL!=''?$CbgMDL->CAB_NM:'none';
+		$JabMDL = Jabatan::find()->where(['JAB_ID'=>$model->JAB_ID])->orderBy('JAB_NM')->one();
+			$modelJab = $JabMDL!=''?$JabMDL->JAB_NM:'none';
+		$sttMDL = Status::find()->where(['KAR_STS_ID'=>$model->KAR_STS])->orderBy('KAR_STS_NM')->one();		
+			$modelStatus = $sttMDL!=''?$sttMDL->KAR_STS_NM:'none';
+		//if(Yii::$app->request->isAjax){
+			//$modelVal->load(Yii::$app->request->post());
+			//return Json::encode(\yii\widgets\ActiveForm::validate($modelVal));
+		if ($model->load(Yii::$app->request->post())){
+			$result = \Yii::$app->request->post();				
+			$model->KAR_KTP=$result['Karyawan']['KAR_KTP'];
+			$model->save();
+			return $this->redirect(['/master/employe/']);
+		    //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+		}else{
+			return $this->renderAjax('view', [
+				'model' => $model,
+				'aryDept'=>$this->aryDept(),
+				'modelDept'=>$modelDept,
+				'modelCbg'=>$modelCbg,
+				'modelJab'=>$modelJab,
+				'modelStatus'=>$modelStatus,
+				'aryCbgID'=>$this->aryCbgID(),
+			]);
+		}
+    }
+	
+	
+	
+	
+	
+	
     /**
      * ACTION CREATE note | $id=PrimaryKey -> TRIGER FROM VIEW  -ptr.nov-
      */
@@ -244,7 +313,105 @@ class EmployeController extends Controller
 				'aryCbgID'=>$this->aryCbgID()
             ]);
         }
-	}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+                //$EMP_ID='DDPX';
+               // $EMP_ID = Yii::$app->request->getIsPost('ssss');
+                //$file_name = Yii::app()->request->getParam( 'file' );
+                //$EMP_ID1=(string)$_POST(MyParam1);
+                //print_r('ok'.$EMP_ID);
+
+        /*
+                //$EMP_ID=$_GET['KAR_ID'];
+                //$generate_key_emp1= Yii::$app->ambilkonci->getKey_Employe($EMP_ID);
+                if ($EMP_ID!='') {
+                    $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe($EMP_ID);
+                }else{
+                    $generate_key_emp =$EMP_ID;
+                };
+
+                if (Yii::$app->request->post('name')) {
+                    //$EMP_ID = Yii::$app->request->post('editableKey');
+                   //$model = Employe::findOne($EMP_ID);
+
+                    // store a default json response as desired by editable
+                    //$out = Json::encode(['output'=>'', 'message'=>'']);
+
+                    $enerate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+                    //return $generate_key_emp;
+                    //$post = [];
+                    //$posted = current($_POST['Employe']);
+                    //$post['Employe'] = $posted;
+                    //$out = Json::encode(['output'=>$output, 'message'=>'']);
+                    //echo $out;
+                    return $enerate_key_emp;
+                }
+
+
+                if (isset($_POST['depdrop_parents'])) {
+                   // $parents = $_POST['depdrop_parents'];
+                    //if ($parents != null) {
+                     //   $cab_id = $parents[0];
+                      //  $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe($cab_id);
+                       // print_r($generate_key_emp);
+                    //}
+                    $enerate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+                }
+                //$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+
+
+        $model = new Karyawan();
+
+
+
+
+        if (Yii::$app->request->isAjax) {
+            //Yii::$app->response->format = Response::FORMAT_JSON;
+            $generate_key_emp = Yii::$app->ambilkonci->getKey_Employe('DDPX');
+
+
+
+        }
+
+       */
+        //$_GET['foo']
+       // print_r($_GET[$id]);
+       /*  $generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('HO');
+        //$generate_key_emp= Yii::$app->ambilkonci->getKey_Employe('DDPX');
+        $model = new Karyawan();
+        if ($model->load(Yii::$app->request->post())){
+			$upload_file=$model->uploadFile();
+			var_dump($model->validate());
+			if($model->validate()){
+				if($model->save()) {
+					if ($upload_file !== false) {
+						$path=$model->getUploadedFile();
+                        $path1=str_replace('*','',$path);
+						$upload_file->saveAs($path1);
+					}
+					return $this->redirect(['view', 'id' => $model->KAR_ID]);
+				} 
+			}
+		}else {
+
+            return $this->render('create', [
+                'model' => $model,
+                'gkey_emp' => $generate_key_emp,
+            ]);
+        }
+       // print_r($EMP_ID); */
+
+    }
 
     protected function performAjaxValidation($model)
     {

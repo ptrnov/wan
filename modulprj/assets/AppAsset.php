@@ -21,7 +21,9 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+		'js/detaiview-modal/employe.js'
     ];
+	//public $jsOptions = ['position' => \yii\web\View::POS_BEGIN]; 
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',

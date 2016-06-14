@@ -13,6 +13,10 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
+use yii\widget\Pjax;
+use yii\helpers\Url;
+
+
 
 use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
 AppAsset::register($this);		/* INDEPENDENT CSS/JS/THEME FOR PAGE  Author: -ptr.nov-*/
@@ -22,6 +26,26 @@ $this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp="Employee"; 
 
+
+
+
+		Modal::begin([
+			'id' => 'modal-view',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h5 class="modal-title"><b>VIEW EMPLOYEE</b></h5></div>',
+			'size' => Modal::SIZE_LARGE,
+			'headerOptions'=>[
+					'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+			],
+		]);
+		echo "<div id='modalContent'></div>";
+		Modal::end();	
+
+
+
+
+
+
+
 	/* echo Breadcrumbs::widget([
 				'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 			]);
@@ -30,17 +54,24 @@ $this->sideCorp="Employee";
 	$empActive=$this->render('_employeActive',[
 		'dataProvider' => $dataProvider,
 		'searchModel' => $searchModel,
-		'dinamkkColumn'=>$dinamkkColumn,
+		//'dinamkkColumn'=>$dinamkkColumn,
+		'aryDept'=>$aryDept,
+		'aryCbgID'=>$aryCbgID,
+		'aryCbg'=>$aryCbg,
+		'aryJab'=>$aryJab,
+		'aryStt'=>$aryStt,
+		'aryGol'=>$aryGol,
 	]);
 	$empResign=$this->render('_employeResign',[
 		'dataProvider1' => $dataProvider1,
 		'searchModel1' => $searchModel1,
 		'aryDept'=>$aryDept,
 		'aryCbgID'=>$aryCbgID,
+		'aryCbg'=>$aryCbg,
 		'aryJab'=>$aryJab,
 		'aryStt'=>$aryStt,
 		'aryGol'=>$aryGol,	
-	]);
+	]); 
 	$items=[
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Employe Active','content'=>$empActive,//$tab_employe_active,
@@ -63,7 +94,7 @@ $this->sideCorp="Employee";
 		*/
 	];
 
-	echo TabsX::widget([
+	$tabEmploye= TabsX::widget([
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		//'height'=>'tab-height-xs',
@@ -72,8 +103,12 @@ $this->sideCorp="Employee";
 		//'align'=>TabsX::ALIGN_LEFT,
 
 	]);
-
 ?>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div  class="row" style="margin-top:0px"> 
+		<?=$tabEmploye?>
+	</div>
+</div>
 <?php
 	/*
 	 * CREATE EMPLOYEE JS
@@ -103,123 +138,6 @@ $this->sideCorp="Employee";
 		],
     ]);
     Modal::end();
-	
-	/*
-	 * EDIT EMPLOYEE TITLE
-	 * @author ptrnov [ptr.nov@gmail.com]
-	 * @since 1.2
-	 */
-	$this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		 $('#edit-title').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget)
-			var modal = $(this)
-			var title = button.data('title')
-			var href = button.attr('href')
-			//modal.find('.modal-title').html(title)
-			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-			$.post(href)
-				.done(function( data ) {
-					modal.find('.modal-body').html(data)
-				});
-			})
-	",$this::POS_READY);
-    Modal::begin([
-        'id' => 'edit-title',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-1x fa-user"></div><div><h5 class="modal-title"><b>EMPLOYEE IDENTIFICATION</b></h5></div>',
-		'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-		],
-    ]);
-    Modal::end();
-
-	/*
-	 * EDIT EMPLOYEE PROFILE
-	 * @author ptrnov [ptr.nov@gmail.com]
-	 * @since 1.2
-	 */
-	$this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		 $('#edit-profile').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget)
-			var modal = $(this)
-			var title = button.data('title')
-			var href = button.attr('href')
-			//modal.find('.modal-title').html(title)
-			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-			$.post(href)
-				.done(function( data ) {
-					modal.find('.modal-body').html(data)
-				});
-			})
-	",$this::POS_READY);
-    Modal::begin([
-        'id' => 'edit-profile',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">EMPLOYEE IDENTITY</h4></div>',
-		'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-		],
-    ]);
-    Modal::end();
-	
-	
-	/*
-	 * EDIT DATA PAYROLL
-	 * @author ptrnov [ptr.nov@gmail.com]
-	 * @since 1.2
-	 */
-	$this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		 $('#edit-payroll').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget)
-			var modal = $(this)
-			var title = button.data('title')
-			var href = button.attr('href')
-			//modal.find('.modal-title').html(title)
-			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-			$.post(href)
-				.done(function( data ) {
-					modal.find('.modal-body').html(data)
-				});
-			})
-	",$this::POS_READY);
-    Modal::begin([
-        'id' => 'edit-payroll',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Edit Payrol Data</h4></div>',
-		'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-		],
-    ]);
-    Modal::end();
-	
-	/*
-	 * EDIT EMPLOYEE VIEW ALL
-	 * @author ptrnov [ptr.nov@gmail.com]
-	 * @since 1.2
-	 */
-	$this->registerJs("
-		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		 $('#modal-view').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget)
-			var modal = $(this)
-			var title = button.data('title')
-			var href = button.attr('href')
-			//modal.find('.modal-title').html(title)
-			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-			$.post(href)
-				.done(function( data ) {
-					modal.find('.modal-body').html(data)
-				});
-			})
-	",$this::POS_READY);
-    Modal::begin([
-        'id' => 'modal-view',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h5 class="modal-title"><b>VIEW EMPLOYEE</b></h5></div>',
-		'size' => Modal::SIZE_LARGE,
-		'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
-		],
-    ]);
-    Modal::end();
-
 ?>
+
+

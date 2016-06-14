@@ -7,7 +7,7 @@
 */
 
 namespace modulprj\master\models;
-use modulprj\sistem\Userlogin;
+//use modulprj\sistem\Userlogin;
 use kartik\builder\Form;
 use Yii;
 
@@ -26,15 +26,15 @@ class Pendidikan extends \yii\db\ActiveRecord
 	/* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{%a0002}}';
+        return '{{pendidikan}}';
     }	
 	
 	/* [3] RULE SCENARIO -> DetailView */
     public function rules()
     {
         return [
-            [['emp.EMP_ID'], 'required'],
-            [['emp.EMP_ID'], 'string', 'max' => 10],
+            [['PEN_ID'], 'required'],
+            [['PEN_ID'], 'string'],
         ];
     }
  
@@ -42,26 +42,26 @@ class Pendidikan extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'emp.EMP_ID' => Yii::t('app', 'EmployeeID'),
+           // 'emp.EMP_ID' => Yii::t('app', 'EmployeeID'),
             'PEN_ID' => Yii::t('app', 'PendidikanID'),
 			'PEN_NM' => Yii::t('app', 'Pendidikan Name'),
-			'TGL_MASUK' => Yii::t('app', 'Tgl Masuk'),
-			'TGL_KELUAR' => Yii::t('app', 'Tgl Keluar'),
-			'NILAI' => Yii::t('app', 'Nilai'),
+			//'TGL_MASUK' => Yii::t('app', 'Tgl Masuk'),
+			//'TGL_KELUAR' => Yii::t('app', 'Tgl Keluar'),
+			//'NILAI' => Yii::t('app', 'Nilai'),
         ];
     } 
 	 
 	/* [6] JOIN CLASS TABLE */
 		/* Join Class Table tatus Employe */
-		public function getEmp()
+		/* public function getEmp()
 		{
 			return $this->hasOne(Employe::className(), ['EMP_ID' => 'EMP_ID']);
-		}
+		} */
 		/* Join Class Table tatus User */
-		public function getUser()
-		{
-			return $this->hasOne(Userlogin::className(), ['EMP_ID' => 'EMP_ID']);
-		}
+		// public function getUser()
+		// {
+			// return $this->hasOne(Userlogin::className(), ['EMP_ID' => 'EMP_ID']);
+		// }
      
 }
 

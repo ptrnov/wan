@@ -64,15 +64,90 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 				</div>
 			</div>
 		   <div class="row" >
+				<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
+					<?php
+						echo Html::panel([
+								'id'=>'widget',
+								'heading' => '<b>WIDGET</b>',
+								'postBody' => Html::listGroup([
+										[
+											'content' => '<span class="fa fa-folder-open fa-lg"></span>'. '   '. 'Berita Acara',
+											'url' => '#',
+											'badge' => ''
+										],										
+										[
+											'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Memo',
+											'url' => '#',
+											'badge' => ''
+										],										
+										[
+											'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Profile',
+											'url' => '#',
+											
+										],										
+
+									]),
+							],
+							Html::TYPE_DANGER
+						);
+					?>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
+					
+					<?php
+						echo Html::panel([
+								'id'=>'task',
+								'heading' => '<b>DATA MANAGE </b>',
+								'postBody' => Html::listGroup([														
+										[
+											'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Employee',
+											'url' => '/master/employe',
+											'badge' => ''
+										],									
+										[
+											'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Arsip File',
+											'url' => '#',
+											'badge' => ''
+										],
+										[
+											'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Documentation',
+											'url' => '#',
+											'badge' => ''
+										],									
+
+									]),
+							],
+							Html::TYPE_DANGER
+						);
+					?>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4" >
 				<?php
-					$permission=2;
-					if($permission=='1'){
-						$indexTampil=$this->render('indexHIRS');
-					}elseif($permission=='2'){
-						$indexTampil=$this->render('indexACCT');
-					};				
-				?>
-				<?=$indexTampil?>
+						echo Html::panel([
+								'id'=>'approval',
+								'heading' => '<b>REQUEST AND APPROVAL</b>',
+								'postBody' => Html::listGroup([
+										[
+											'content' => '<span class="fa fa-sitemap fa-lg"></span>'. '   '.'Struktur Organization ',
+											'url' => '#'
+										],										
+										[
+											'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Request Overtime',
+											'url' => '#',
+											'badge' => ''
+										],
+										[
+											'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'SPJD',
+											'url' => '#',
+											'badge' => ''
+										],
+									]),
+							],
+							Html::TYPE_DANGER
+						);
+					?>
+					
+				</div>				
 			</div>		
 			<div class="row" >
 				<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12" >
