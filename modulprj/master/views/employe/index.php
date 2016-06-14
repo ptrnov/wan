@@ -58,6 +58,7 @@ $this->sideCorp="Employee";
 		'aryCbgId'=>$aryCbgId,
 		'aryCbg'=>$aryCbg,
 		'aryGfId'=>$aryGfId,
+		'aryGradingId'=>$aryGradingId,			
 		'arySttId'=>$arySttId,
 		'aryTimeTableId'=>$aryTimeTableId,
 	]);
@@ -69,6 +70,7 @@ $this->sideCorp="Employee";
 		'aryCbgId'=>$aryCbgId,
 		'aryCbg'=>$aryCbg,
 		'aryGfId'=>$aryGfId,
+		'aryGradingId'=>$aryGradingId,			
 		'arySttId'=>$arySttId,
 		'aryTimeTableId'=>$aryTimeTableId,
 	]); 

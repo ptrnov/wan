@@ -14,6 +14,7 @@ use yii\helpers\Html;
 use modulprj\master\models\Timetable;
 use modulprj\master\models\Pendidikan;
 use modulprj\master\models\Kepangkatan; //GROUP FUNCTION
+use modulprj\master\models\Grading; 	//GREADING
 
 Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/upload/hrd/Employee/';
 Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/upload/hrd/Employee/';
@@ -53,7 +54,7 @@ class Karyawan extends \yii\db\ActiveRecord{
                                      
             [['CORP_ID'], 'string'],			
 			/* COMPANY */	
-			[['CAB_ID','GF_ID','KAR_MAILK'], 'string'], 
+			[['CAB_ID','GF_ID','KAR_MAILK','JOBGRADE_ID'], 'string'], 
 			[['DEP_ID','KAR_STS'], 'integer'], 
 			[['KAR_TGLM','KAR_TGLK'], 'safe'],			
 			/* CONTACT */
@@ -115,6 +116,7 @@ class Karyawan extends \yii\db\ActiveRecord{
             'LVL_ID' => Yii::t('app', 'OT.Level'),
             //'JAB_ID' => Yii::t('app', 'Jabatan    :'),
             'GF_ID' => Yii::t('app', 'Group Function  :'),
+            'JOBGRADE_ID' => Yii::t('app', 'Job Grading  :'),
             'KAR_STS' => Yii::t('app', 'Status Pekerjaan   :'), //STATUS PEKERJAAn
             'KAR_STSK'  => Yii::t('app', 'Status Karyawan :'),
             'KAR_TGLM' => Yii::t('app', 'Tgl.Masuk    :'),
@@ -210,9 +212,20 @@ class Karyawan extends \yii\db\ActiveRecord{
         return $this->gfOne!=''?$this->gfOne->GF_NM:'none';
     }
 	
+	/* GRADING  JOIN | GET NAME */
+    public function getGradingOne()
+    {
+        return $this->hasOne(Grading::className(), ['JOBGRADE_ID' => 'JOBGRADE_ID']);
+    }
+	public function getGradingNm()
+    {
+        return $this->gradingOne!=''?$this->gradingOne->JOBGRADE_NM:'none';
+    }
+	
 	public function getCodeGolongan()
     {
-        return $this->GF_ID . $this->JOBGRADE_ID;
+        //return $this->GF_ID . $this->JOBGRADE_ID;
+        return $this->JOBGRADE_ID;
     }
 	
     /* STATUS PEKERJAAN JOIN | GET NAME */

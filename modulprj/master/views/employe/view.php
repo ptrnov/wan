@@ -119,7 +119,7 @@ AppAsset::register($this);
 			],	
 		],
 		 
-		[// Jabatan - Author: -ptr.nov-
+		[// KEPANGKATAN - Author: -ptr.nov- DEP DROP -> GRADING
 			'attribute' =>	'GF_ID' ,
 			'value'=>$model->gfNm .' ['.Html::a($model->codeGolongan, '#', ['class'=>'kv-author-link']).']',			
 			'format'=>'raw',
@@ -128,6 +128,26 @@ AppAsset::register($this);
 				'data'=>$aryGfId,
 				'options'=>['placeholder'=>'Select ...'],
 				'pluginOptions'=>['allowClear'=>true],
+				'options' => [ 'id'=>'gfunction-id',],
+			],	
+		],
+		
+		[// GRADING - Author: -ptr.nov-
+			'attribute' =>	'JOBGRADE_ID' ,
+			'value'=>$model->gradingNm,			
+			'format'=>'raw',
+			'type'=>DetailView::INPUT_DEPDROP,
+			'widgetOptions'=>[
+				'data'=>$aryGradingId,
+				'options'=>['id'=>'grading-id'],
+				'pluginOptions'=>[
+					'depends'=>['gfunction-id'],
+					'url'=>Url::to(['/master/employe/subgrading']),
+					'initialize'=>true, //loding First //
+					//'placeholder' => false, //disable select //
+					'loadingText' => 'Job Grading Loading ...',
+				],
+				
 			],	
 		],
 		

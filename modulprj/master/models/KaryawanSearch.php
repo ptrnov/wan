@@ -24,7 +24,7 @@ class KaryawanSearch extends Karyawan
 	public function attributes()
 	{
 		//Author -ptr.nov- add related fields to searchable attributes
-       return array_merge(parent::attributes(), ['golonganOne.TT_GRP_NM','cabNm','depNm','gfNm','stsKerjaNm','timeTableNm']);
+       return array_merge(parent::attributes(), ['golonganOne.TT_GRP_NM','cabNm','depNm','gfNm','gradingNm','stsKerjaNm','timeTableNm']);
     }
 
 
@@ -33,7 +33,7 @@ class KaryawanSearch extends Karyawan
     {
         return [
             [['KAR_ID', 'KAR_NM','KAR_TGLM','KAR_TGLK','golonganOne.TT_GRP_NM'], 'safe'],
-            [['gfNm','cabNm','depNm','stsKerjaNm','timeTableNm'], 'safe'],
+            [['cabNm','depNm','gfNm','gradingNm','stsKerjaNm','timeTableNm'], 'safe'],
         ];
     }
 	
@@ -53,6 +53,7 @@ class KaryawanSearch extends Karyawan
                          ->JoinWith('cabOne',true,'left JOIN')
 						 ->JoinWith('stsOne',true,'left JOIN')
 						 ->JoinWith('gfOne',true,'left JOIN')
+						 ->JoinWith('gradingOne',true,'left JOIN')
 						 ->JoinWith('timetableOne',true,'left JOIN')
 						 ->where('karyawan.KAR_STS<>3');
 	    $dataProvider = new ActiveDataProvider([
@@ -70,10 +71,16 @@ class KaryawanSearch extends Karyawan
 			'desc' => ['cabang.CAB_NM' => SORT_DESC],
 		];
 
-		// SORTING JABATAN Author -ptr.nov-
+		// SORTING KEPANGKATAN  Author -ptr.nov-
 		 $dataProvider->sort->attributes['gfNm'] = [	
 			'asc' => ['kepangkatan.GF_NM' => SORT_ASC],
 			'desc' => ['kepangkatan.GF_NM' => SORT_DESC],
+		]; 
+		
+		// SORTING GRADING  Author -ptr.nov-
+		 $dataProvider->sort->attributes['gradingNm'] = [	
+			'asc' => ['grading.JOBGRADE_NM' => SORT_ASC],
+			'desc' => ['grading.JOBGRADE_NM' => SORT_DESC],
 		]; 
 
 		 // SORTING STATUS Author -ptr.nov-
@@ -106,6 +113,7 @@ class KaryawanSearch extends Karyawan
                     ->andFilterWhere(['like', 'departemen.DEP_ID', $this->getAttribute('depNm')])
                     ->andFilterWhere(['like', 'cabang.CAB_ID', $this->getAttribute('cabNm')])
                     ->andFilterWhere(['like', 'kepangkatan.GF_ID', $this->getAttribute('gfNm')])
+                    ->andFilterWhere(['like', 'grading.JOBGRADE_ID', $this->getAttribute('gradingNm')])
                     ->andFilterWhere(['like', 'kar_stt.KAR_STS_ID',$this->getAttribute('stsKerjaNm')]);
 
 
@@ -134,8 +142,9 @@ class KaryawanSearch extends Karyawan
                          ->JoinWith('cabOne',true,'left JOIN')
 						 ->JoinWith('stsOne',true,'left JOIN')
 						 ->JoinWith('gfOne',true,'left JOIN')
+						 ->JoinWith('gradingOne',true,'left JOIN')
 						 ->JoinWith('timetableOne',true,'left JOIN')
-						  ->where('karyawan.KAR_STS=3');
+						 ->where('karyawan.KAR_STS=3');
 						 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -151,12 +160,18 @@ class KaryawanSearch extends Karyawan
 			'desc' => ['cabang.CAB_NM' => SORT_DESC],
 		];
 
-		// SORTING JABATAN Author -ptr.nov-
+		// SORTING KEPANGKATAN Author -ptr.nov-
 		 $dataProvider->sort->attributes['gfNm'] = [	
 			'asc' => ['kepangkatan.GF_NM' => SORT_ASC],
 			'desc' => ['kepangkatan.GF_NM' => SORT_DESC],
 		]; 
 
+		// SORTING GRADING  Author -ptr.nov-
+		 $dataProvider->sort->attributes['gradingNm'] = [	
+			'asc' => ['grading.JOBGRADE_NM' => SORT_ASC],
+			'desc' => ['grading.JOBGRADE_NM' => SORT_DESC],
+		]; 
+		
 		 // SORTING STATUS Author -ptr.nov-
 		 $dataProvider->sort->attributes['stsKerjaNm'] = [
 			 'asc' => ['kar_stt.KAR_STS_NM' => SORT_ASC],
@@ -187,6 +202,7 @@ class KaryawanSearch extends Karyawan
                     ->andFilterWhere(['like', 'departemen.DEP_ID', $this->getAttribute('depNm')])
                     ->andFilterWhere(['like', 'cabang.CAB_ID', $this->getAttribute('cabNm')])
                     ->andFilterWhere(['like', 'kepangkatan.GF_ID', $this->getAttribute('gfNm')])
+					->andFilterWhere(['like', 'grading.JOBGRADE_ID', $this->getAttribute('gradingNm')])
                     ->andFilterWhere(['like', 'kar_stt.KAR_STS_ID',$this->getAttribute('stsKerjaNm')]);
 
 

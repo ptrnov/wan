@@ -33,7 +33,8 @@ use modulprj\master\models\KaryawanSearch;	    /* TABLE CLASS SEARCH */
   
 use modulprj\master\models\Dept;
 use modulprj\master\models\Cbg;
-use modulprj\master\models\Kepangkatan;
+use modulprj\master\models\Kepangkatan; //KEPAGKATAN
+use modulprj\master\models\Grading; 	//GREADING
 use modulprj\master\models\Status;
 use modulprj\master\models\Timetable;
 use modulprj\master\models\Pendidikan;
@@ -72,9 +73,12 @@ class EmployeController extends Controller
 	}
 	public function aryGf(){ 
 		return ArrayHelper::map(Kepangkatan::find()->all(), 'GF_NM','GF_NM');
-	}
+	}	
 	public function aryGfId(){ 
 		return ArrayHelper::map(Kepangkatan::find()->all(), 'GF_ID','GF_NM');
+	}
+	public function aryGradingId(){ 
+		return ArrayHelper::map(Grading::find()->all(), 'JOBGRADE_ID','JOBGRADE_NM');
 	}
 	public function aryStt(){ 
 		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_NM','KAR_STS_NM');
@@ -176,6 +180,7 @@ class EmployeController extends Controller
 			'aryCbgId'=>$this->aryCbgId(),
 			'aryCbg'=>$this->aryCbg(),
 			'aryGfId'=>$this->aryGfId(),
+			'aryGradingId'=>$this->aryGradingId(),
 			'arySttId'=>$this->arySttId(),
 			'aryTimeTableId'=>$this->aryTimeTableId(),			
         ]);
@@ -214,6 +219,7 @@ class EmployeController extends Controller
 				'aryDeptId'=>$this->aryDeptId(),
 				'arySchool'=>$this->arySchool(),
 				'aryGfId'=>$this->aryGfId(),
+				'aryGradingId'=>$this->aryGradingId(),			
 				'arySttId'=>$this->arySttId(),
 				'aryTimeTableId'=>$this->aryTimeTableId(),
 			]);
@@ -221,7 +227,35 @@ class EmployeController extends Controller
 
     }
 	
-		
+	// DEPEDENCE Kepangkatan >< Grading
+	public function actionSubgrading() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			//print_r($parents);
+			if ($parents != null) {					
+				$GF_ID = $parents[0];
+				$param1 = null;
+				if (!empty($_POST['depdrop_params'])) {
+					$params = $_POST['depdrop_params'];
+					$param1 = $params[0]; // get the value of sub dept =js value/html							
+				}					
+									
+				$model = Grading::find()->asArray()->where(['GF_ID'=>$GF_ID])->all();
+				
+					foreach ($model as $key => $value) {
+						   $out[] = ['id'=>$value['JOBGRADE_ID'],'name'=> $value['JOBGRADE_NM']];
+					   }					
+					
+				   echo json_encode(['output'=>$out, 'selected'=>$param1]);
+				   return;
+		   }
+		}
+		echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+
+
+	
     /**
      * ACTION CREATE note | $id=PrimaryKey -> TRIGER FROM VIEW  -ptr.nov-
      */
@@ -464,7 +498,10 @@ class EmployeController extends Controller
 		}
 		echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
-		
+	
+	
+	
+	
     public function actionProd() {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
