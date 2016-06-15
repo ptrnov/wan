@@ -302,7 +302,7 @@ use yii\helpers\Url;
 									]
 						).' '.
 						Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),
-									'#',//'/master/employe/export_data',
+									'/export/employe',
 									[
 										//'id'=>'export-data',
 										//'data-pjax' => true,

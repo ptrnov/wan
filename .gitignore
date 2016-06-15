@@ -12,7 +12,8 @@
 
 # backend
 /backend
-
+/vendorX
+vendor.zip
 #common
 /common
 
