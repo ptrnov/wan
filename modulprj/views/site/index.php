@@ -65,10 +65,13 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 			</div>
 		   <div class="row" >
 				<?php
-					$permission=2;
-					if($permission=='1'){
+					$permission=Yii::$app->user->template;
+					// if($permission=='1'){
+						// $indexTampil=$this->render('indexHIRS');
+					// }
+					if($permission=='2'){
 						$indexTampil=$this->render('indexHIRS');
-					}elseif($permission=='2'){
+					}elseif($permission=='3'){
 						$indexTampil=$this->render('indexACCT');
 					};				
 				?>
