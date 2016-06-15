@@ -37,7 +37,15 @@ class UserOptionLogin extends Model
 	*/
 	
     public function searchDataLogin($params){
-		$dailyAbsensi= Yii::$app->db->createCommand("CALL SISTEM_login_option")->queryAll();  
+		//$dailyAbsensi= Yii::$app->db->createCommand("CALL SISTEM_login_option")->queryAll();  
+		$dailyAbsensi= Yii::$app->db->createCommand("
+			SELECT DISTINCT *,
+				(CASE WHEN x2.GF_ID<>'' THEN (SELECT GF_NM FROM kepangkatan WHERE GF_ID=x2.GF_ID LIMIT 1) ELSE 'none' END) AS GF_NM,
+				(CASE WHEN x2.JOBGRADE_ID<>'' THEN (SELECT JOBGRADE_NM FROM grading WHERE JOBGRADE_ID=x2.JOBGRADE_ID LIMIT 1) ELSE 'none' END) AS GRADING_NM,
+				(CASE WHEN x2.DEP_ID<>'' THEN (SELECT DEP_NM FROM departemen WHERE DEP_ID=x2.DEP_ID LIMIT 1) ELSE 'none' END) AS DEP_NM
+			FROM user x1 RIGHT JOIN karyawan x2 ON x2.KAR_ID=x1.EMP_ID
+			WHERE EMP_ID <>''
+		")->queryAll();  
 		$dataProvider= new ArrayDataProvider([
 			'key' => 'id',
 			'allModels'=>$dailyAbsensi,			

@@ -55,7 +55,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 						<?php
 						echo Html::panel(
 							[
-								'heading' => '<div>Employee Dashboard</div>',
+								'heading' => '<div>Dashboard</div>',
 								'body'=>$prof,
 							],
 							Html::TYPE_INFO
