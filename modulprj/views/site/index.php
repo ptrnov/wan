@@ -76,7 +76,7 @@ $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL,'options'=>['enctyp
 			</div>		
 			<div class="row" >
 				<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12" >
-					<div class="pre-scrollable alert alert-info" style="height:75px">				  
+					<div class="pre-scrollable alert alert-info" style="height:100px">				  
 					  <strong> General Information  </strong> <span class='fa fa-fire fa-lg'> </span>
 						<br> 
 						<?php echo ' '. tombolLentera(); ?>

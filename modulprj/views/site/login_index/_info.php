@@ -20,33 +20,31 @@ use kartik\widgets\ActiveForm;
 			<dd>: <?php echo $model['KAR_NM']; ?></dd>
 			
 			<dt style="width:100px; float:left;">Job Title</dt>
-			<dd>: <?=$model['GF_NM']?></dd>
+			<dd>: <?=$model['Title']?></dd>
 			
 			<dt style="width:100px; float:left;"><b>Job Level</b></dt>
 			<dd>: <?=$model['GRADING_NM']; ?></dd>     	  
 			
+			<dt style="width:100px; float:left;"><b>Job Grading</b></dt>
+			<dd>: <?=$model['GF_NM']?></dd>     	  
+			
 			<dt style="width:100px; float:left;"><b>Organization</b></dt>
 			<dd>: <?=$model['DEP_NM']; ?></dd>     	  
-			
-			<dt style="width:100px; float:left;">Location</dt>
-			<dd>: <?php //echo 'Demension c12'; ?></dd>
 		</dl>
     </div>
     <div class=" col-xs-12 col-sm-4 col-dm-4 col-lg-4"  style="padding-left:0;padding-top:10px;font-family: verdana, arial, sans-serif ;font-size: 8pt"  >
 		<dl>
 			<dt style="width:100px; float:left;">Company</dt>
-			<dd>: <?php //echo $dataProvider[0]['corpOne']->CORP_NM; ?></dd>
-			
-			
+			<dd>: <?=$model['CAB_NM']; ?></dd>   		
 			
 			<dt style="width:100px; float:left;">Join Date</dt>
-			<dd>: <?php //echo  $model->EMP_JOIN_DATE; ?></dd>
+			<dd>: <?=$model['JoinDate']; ?></dd>   	
 			
 			<dt style="width:100px; float:left;">Status</dt>
-			<dd>: <?php //echo $dataProvider[0]['sttOne']->STS_NM; ?></dd>
+			<dd>: <?=$model['KAR_STS_NM']; ?></dd>
 			
 			<dt style="width:100px; float:left;">Email</dt>
-			<dd>: <?php //echo  $model->EMP_EMAIL; ?></dd>
+			<dd>: <?=$model['KAR_MAILK']; ?></dd>
 			
 			<!--<dt style="width:100px; float:left;">Join Date</dt>
 			<dd>: <?php //echo  $model->EMP_JOIN_DATE; ?></dd>!-->
