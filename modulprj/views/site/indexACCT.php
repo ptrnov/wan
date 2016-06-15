@@ -23,7 +23,7 @@ use yii\helpers\Url;
 						],										
 						[
 							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department',
-							'url' => '#',
+							'url' => '/master/dept',
 							'badge' => ''
 						],										
 						[

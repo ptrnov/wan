@@ -39,7 +39,7 @@ $this->mddPage = 'hrd';
 		],
 
 	];
-	echo DetailView::widget([
+	$dept= DetailView::widget([
 		'model' => $model,				
 		'condensed'=>true,
 		'hover'=>true,
@@ -51,4 +51,22 @@ $this->mddPage = 'hrd';
 		'attributes'=>$attribute,
 	]);			
 ?>
-
+<div class="col-xs-12 col-sm-12 col-dm-12  col-lg-12">
+	<div class="raw">
+		<div class="col-xs-12 col-sm-12 col-dm-4  col-lg-4">
+			<div class="raw">
+				<?=$dept?>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-dm-4  col-lg-4">
+			<div class="raw">
+				<?=$dept?>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-dm-4  col-lg-4">
+			<div class="raw">
+				<?=$dept?>
+			</div>
+		</div>		
+	</div>
+<div class="col-xs-12 col-sm-6 col-dm-4  col-lg-4">
