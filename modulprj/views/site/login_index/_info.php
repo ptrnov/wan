@@ -11,7 +11,7 @@ use kartik\widgets\ActiveForm;
      	<?php echo Html::img($base64,['class'=>'img-thumbnail','alt'=>'Cinque Terre','width'=>'100','height'=>'100']);?>
 	</div>
 	
-    <div class="col-xs-12 col-sm-5 col-dm-3 col-lg-3"  style="margin-left:0 ;padding-left: 0; padding-top:10px; margin-bottom: 10px;font-family: verdana, arial, sans-serif ;font-size: 8pt">	
+    <div class="col-xs-12 col-sm-5 col-dm-4 col-lg-4"  style="margin-left:0 ;padding-left: 0; padding-top:10px; margin-bottom: 10px;font-family: verdana, arial, sans-serif ;font-size: 8pt">	
 		<dl>
 			<dt style="width:100px; float:left;">NIK</dt>
 			<dd style="color:rgba(87, 163, 247, 1)">:<b> <?php echo $model['KAR_ID']; ?></b></dd>
@@ -32,7 +32,7 @@ use kartik\widgets\ActiveForm;
 			<dd>: <?php //echo 'Demension c12'; ?></dd>
 		</dl>
     </div>
-    <div class=" col-xs-12 col-sm-4 col-dm-3 col-lg-3"  style="padding-left:0;padding-top:10px;font-family: verdana, arial, sans-serif ;font-size: 8pt"  >
+    <div class=" col-xs-12 col-sm-4 col-dm-4 col-lg-4"  style="padding-left:0;padding-top:10px;font-family: verdana, arial, sans-serif ;font-size: 8pt"  >
 		<dl>
 			<dt style="width:100px; float:left;">Company</dt>
 			<dd>: <?php //echo $dataProvider[0]['corpOne']->CORP_NM; ?></dd>
