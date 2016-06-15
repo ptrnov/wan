@@ -33,7 +33,13 @@ use yii\helpers\Url;
 			//INPUT FILE IMAGE
 			echo $form->field($model, 'image')->widget(FileInput::classname(), [
 					'options'=>['accept'=>'image/*'],
-					'pluginOptions'=>['allowedFileExtensions'=>['jpg','gif','png']]
+					'pluginOptions'=>[
+						'allowedFileExtensions'=>['jpg','gif','png'],
+						'showPreview' => true,
+						'showCaption' => false,
+						'showRemove' => false,
+						'showUpload' => false,
+					]
 				]);
 		?>
 		

@@ -292,8 +292,24 @@ use yii\helpers\Url;
 										'data-target'=>"#modal-create",
 										'class' => 'btn btn-success btn-sm'
 									]
-							),
-			'showFooter'=>false,
+						).' '.
+						Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
+									'/master/employe/',
+									[
+									  // 'id'=>'refresh-cust',
+									   'class' => 'btn btn-info btn-sm',
+									   //'data-pjax'=>false,
+									]
+						).' '.
+						Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),
+									'#',//'/master/employe/export_data',
+									[
+										//'id'=>'export-data',
+										//'data-pjax' => true,
+										'class' => 'btn btn-info btn-sm'
+									]
+						),
+						'showFooter'=>false,
 		],
 		'pjax'=>true,
 		'pjaxSettings'=>[

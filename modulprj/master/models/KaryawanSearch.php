@@ -58,6 +58,9 @@ class KaryawanSearch extends Karyawan
 						 ->where('karyawan.KAR_STS<>3');
 	    $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 100,
+			],
         ]);
 		
 		// SORTING Department Author -ptr.nov-

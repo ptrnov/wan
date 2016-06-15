@@ -281,7 +281,23 @@ use yii\helpers\Url;
 		'toolbar' => [
 			'{export}',
 		],	
-		'panel'=>false,
+		'toolbar' => [
+			'',
+		],	
+		'panel'=>[
+			//'heading'=>'<h3 class="panel-title">Employee List</h3>',
+			'heading'=>false,
+			'type'=>'warning',
+			'before'=> Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
+									'/master/employe/',
+									[
+									  // 'id'=>'refresh-cust',
+									   'class' => 'btn btn-info btn-sm',
+									   //'data-pjax'=>false,
+									]
+						),
+						'showFooter'=>false,
+		],
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
