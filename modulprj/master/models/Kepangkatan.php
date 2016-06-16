@@ -49,8 +49,8 @@ class Kepangkatan extends \yii\db\ActiveRecord
     {
         return [
             'ID' => Yii::t('app', 'ID'),
-            'GF_ID' => Yii::t('app', 'Gf  ID'),
-            'GF_NM' => Yii::t('app', 'Gf  Nm'),
+            'GF_ID' => Yii::t('app', 'ID'),
+            'GF_NM' => Yii::t('app', 'Group Function'),
             'GF_DCRP' => Yii::t('app', 'Gf  Dcrp'),
             'STATUS' => Yii::t('app', 'Status'),
             'CREATED_BY' => Yii::t('app', 'Created  By'),

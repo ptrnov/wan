@@ -10,49 +10,73 @@ use kartik\builder\Form;
 use modulprj\assets\AppAsset; 	
 AppAsset::register($this);
 
-	/*DEPARTMENT Author: -ptr.nov */
-	//print_r($dataProvider);
 	$gv_kepangkatan= GridView::widget([
-		'id'=>'id-kepangkatan',
+		'id'=>'id-grading',
 		'dataProvider' => $dataProvider_Grading,
 		'filterModel' => $searchModel_Grading,
+		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],	
 		'columns' => [
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}',
-            ],
-			//['class' => 'yii\grid\SerialColumn'],
-			'JOBGRADE_ID',
-			'JOBGRADE_NM',
+			[
+				'attribute'=>'JOBGRADE_ID',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			[
+				'attribute'=>'JOBGRADE_NM',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'250px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
 
 		],
+		'toolbar'=>false,
 		'panel'=>[
-            //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
-            'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
-            //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
-            //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
-            //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
-            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
-                        ['modelClass' => 'Department',]),
-                    ['create'], ['class' => 'btn btn-success']),
+            'heading' =>'GREADING',
+            'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
+            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
+                    ['#'], ['class' => 'btn btn-success btn-sm']),
         ],
         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
                 'enablePushState'=>false,
-                'id'=>'id-kepangkatan',
+                'id'=>'id-grading',
             ],
         ],
+		'summary'=>false,
         'hover'=>true, //cursor select
         'responsive'=>true,
         'bordered'=>true,
         'striped'=>true,
-        //'autoXlFormat'=>true,
-        'export'=>[//export like view grid --ptr.nov-
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
-        ],
 	]);
 ?>
 	<?=$gv_kepangkatan?>

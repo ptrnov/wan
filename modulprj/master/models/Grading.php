@@ -52,8 +52,8 @@ class Grading extends \yii\db\ActiveRecord
         return [
             'ID' => Yii::t('app', 'ID'),
             'GF_ID' => Yii::t('app', 'Gf  ID'),
-            'JOBGRADE_ID' => Yii::t('app', 'Jobgrade  ID'),
-            'JOBGRADE_NM' => Yii::t('app', 'Jobgrade  Nm'),
+            'JOBGRADE_ID' => Yii::t('app', 'ID'),
+            'JOBGRADE_NM' => Yii::t('app', 'Job Grading'),
             'JOBGRADE_DCRP' => Yii::t('app', 'Jobgrade  Dcrp'),
             'JOBGRADE_STS' => Yii::t('app', 'Jobgrade  Sts'),
             'CREATED_BY' => Yii::t('app', 'Created  By'),

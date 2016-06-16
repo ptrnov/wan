@@ -43,7 +43,7 @@ class Dept extends \yii\db\ActiveRecord
     {
         return [
             'DEP_ID' => Yii::t('app', 'Dept.ID  :'),
-            'DEP_NM' => Yii::t('app', 'Dept.Name    :'),
+            'DEP_NM' => Yii::t('app', 'Department    :'),
         ];
     }
 }

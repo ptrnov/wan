@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	]);
 
 ?>
-<div class="container-fluid">
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<div class="raw">
 		<div class="col-xs-12 col-sm-4 col-dm-4 col-lg-4">	
 				<?=$rnDept?>		

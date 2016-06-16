@@ -17,25 +17,63 @@ use modulprj\master\models\Dept;
 		'id'=>'id-dept',
 		'dataProvider' => $dataProvider_Dept,
 		'filterModel' => $searchModel_Dept,
+		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],	
 		'columns' => [
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}',
-            ],
-			//['class' => 'yii\grid\SerialColumn'],
-			'DEP_ID',
-			'DEP_NM',
+           [
+				'class'=>'kartik\grid\SerialColumn',
+				'contentOptions'=>['class'=>'kartik-sheet-style'],
+				'width'=>'10px',
+				'header'=>'No.',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+			],
+			//'DEP_ID',
+			[
+				'attribute'=>'DEP_NM',
+				'headerOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'10px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'left',
+						'width'=>'150px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],
+				'footer'=>true,
+			],
 
 		],
+		'toolbar'=>false,
+		
 		'panel'=>[
-            //'heading' =>true,// $hdr,//<div class="col-lg-4"><h8>'. $hdr .'</h8></div>',
-            'type' =>GridView::TYPE_SUCCESS,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
-            //'after'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add', '#', ['class'=>'btn btn-success']) . ' ' .
-            //Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class'=>'btn btn-primary']) . ' ' .
-            //    Html::a('<i class="glyphicon glyphicon-remove"></i> Delete  ', '#', ['class'=>'btn btn-danger'])
-            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create {modelClass}',
-                        ['modelClass' => 'Department',]),
-                    ['create'], ['class' => 'btn btn-success']),
+            'heading' =>'<h8>DEPARTMENT</h8>',
+            'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
+            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
+                    ['#'], ['class' => 'btn btn-info btn-sm']),
+			
         ],
         'pjax'=>true,
         'pjaxSettings'=>[
@@ -44,16 +82,11 @@ use modulprj\master\models\Dept;
                 'id'=>'id-dept',
             ],
         ],
+		'summary'=>false,
         'hover'=>true, //cursor select
         'responsive'=>true,
         'bordered'=>true,
-        'striped'=>true,
-        //'autoXlFormat'=>true,
-        'export'=>[//export like view grid --ptr.nov-
-            'fontAwesome'=>true,
-            'showConfirmAlert'=>false,
-            'target'=>GridView::TARGET_BLANK
-        ],
+        'striped'=>true,       
 	]);
 ?>
 	<?=$gv_dept?>
