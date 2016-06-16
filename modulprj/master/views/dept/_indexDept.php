@@ -72,7 +72,13 @@ use modulprj\master\models\Dept;
             'heading' =>'<h8>DEPARTMENT</h8>',
             'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
             'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
-                    ['#'], ['class' => 'btn btn-info btn-sm']),
+                    ['/master/dept/create-dept'], 
+					[
+						'id'=>'create-dept',
+						'data-toggle'=>'modal',
+						'data-target'=>'#create-dept-id',
+						'class' => 'btn btn-info btn-sm'
+					]),
 			
         ],
         'pjax'=>true,

@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 	/* GRADING */
 	$this->registerJs("
-		 $('#modal-view').on('show.bs.modal', function (event) {
+		 $('#create-grading-id').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
 			var title = button.data('title')
@@ -66,8 +66,56 @@ $this->params['breadcrumbs'][] = $this->title;
 			})
 	",$this::POS_READY);
 	Modal::begin([
-        'id' => 'modal-view',
-       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Items Sku</h4></div>',
+        'id' => 'create-grading-id',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">GRADING INPUT</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
+	
+	/* GROUP FUNCTION */
+	$this->registerJs("
+		 $('#create-gf-id').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+	Modal::begin([
+        'id' => 'create-gf-id',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">GROUP FUNCTION INPUT</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
+	
+	/* DEPARTMENT  */
+	$this->registerJs("
+		 $('#create-dept-id').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+	Modal::begin([
+        'id' => 'create-dept-id',
+       'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">DEPARTMENT INPUT</h4></div>',
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],

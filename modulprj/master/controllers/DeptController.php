@@ -8,8 +8,11 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use modulprj\master\models\DeptSearch;
+use modulprj\master\models\Grading;
+use modulprj\master\models\Kepangkatan;
 use modulprj\master\models\GradingSearch;
 use modulprj\master\models\KepangkatanSearch;
+
 /**
  * HRD | CONTROLLER EMPLOYE .
  */
@@ -57,5 +60,20 @@ class DeptController extends Controller
             'dataProvider_Grading'=>$dataProvider_Grading,
         ]);
     }
+	
+	public function actionCreateDept(){
+		$modal = new  Dept();
+		return $this->renderAjax('_formDept',['modal'=>$modal]);		
+	}
+	public function actionCreateGf(){
+		$modal = new  Kepangkatan();
+		return $this->renderAjax('_formGf',['modal'=>$modal]);		
+	}
+	public function actionCreateGrading(){
+		$modal = new  Grading();
+		return $this->renderAjax('_formGrading',['modal'=>$modal]);		
+	}
+	
+	
 	
 }

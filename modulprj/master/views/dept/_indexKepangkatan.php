@@ -63,8 +63,14 @@ AppAsset::register($this);
 		'panel'=>[
             'heading' =>'GROUP FUNCTION',
             'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
-            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add'),
-                    ['#'], ['class' => 'btn btn-success btn-sm']),
+            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
+                    ['/master/dept/create-Gf'], 
+					[
+						'id'=>'create-gf',
+						'data-toggle'=>'modal',
+						'data-target'=>'#create-gf-id',
+						'class' => 'btn btn-success btn-sm'
+					]),
         ],
         'pjax'=>true,
         'pjaxSettings'=>[
