@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 use modulprj\master\models\DeptSearch;
 use modulprj\master\models\Grading;
@@ -31,6 +32,13 @@ class DeptController extends Controller
         ];
     }
 
+	public function aryGfId(){ 
+		return ArrayHelper::map(Kepangkatan::find()->all(), 'GF_ID',function($model){
+					return $model['GF_ID'] . ' | ' . $model['GF_NM'];
+				});
+	
+	}
+	
     /**
      * ACTION INDEX
      */
@@ -65,13 +73,28 @@ class DeptController extends Controller
 		$modal = new  Dept();
 		return $this->renderAjax('_formDept',['modal'=>$modal]);		
 	}
+	
 	public function actionCreateGf(){
 		$modal = new  Kepangkatan();
-		return $this->renderAjax('_formGf',['modal'=>$modal]);		
+		return $this->renderAjax('_formGf',['modal'=>$modal]);	
 	}
+	
 	public function actionCreateGrading(){
-		$modal = new  Grading();
-		return $this->renderAjax('_formGrading',['modal'=>$modal]);		
+		$modalGrdg = new  Grading();
+		if ($modalGrdg->load(Yii::$app->request->post())){
+			$result = \Yii::$app->request->post();	
+			$gfid=$result['Grading']['GF_ID'];
+			$cnt=(Grading::find()->where(['GF_ID'=>$gfid])->count())+1;
+			$modalGrdg->JOBGRADE_ID=$gfid.$cnt;
+			if($modalGrdg->save(false)){
+				return $this->redirect(['/master/dept']);
+			};
+		}else{	
+			return $this->renderAjax('_formGrading',[
+				'modalGrdg'=>$modalGrdg,
+				'aryGfId'=>$this->aryGfId(),
+			]);	
+		}
 	}
 	
 	

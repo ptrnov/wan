@@ -52,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 	/* GRADING */
 	$this->registerJs("
+		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		 $('#create-grading-id').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)

@@ -41,7 +41,7 @@ class GradingSearch extends Grading
      */
     public function search($params)
     {
-        $query = Grading::find();
+        $query = Grading::find()->orderby(['JOBGRADE_ID'=>SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -19,7 +19,7 @@ use Yii;
  */
 class Grading extends \yii\db\ActiveRecord
 {
-    /**
+	/**
      * @inheritdoc
      */
     public static function tableName()
@@ -33,7 +33,7 @@ class Grading extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['JOBGRADE_ID'], 'required'],
+            [['JOBGRADE_ID','GF_ID'], 'required'],
             [['JOBGRADE_DCRP'], 'string'],
             [['JOBGRADE_STS'], 'integer'],
             [['UPDATED_TIME'], 'safe'],
