@@ -195,6 +195,21 @@ AppAsset::register($this);
 		],		
 	];
 	
+	$attAbsensi = [
+		[
+			'attribute' =>	'GRP_ID' ,
+			'format'=>'raw',
+			'value'=>$model->timeTableNm,
+			'type'=>DetailView::INPUT_SELECT2,
+			'widgetOptions'=>[
+				'data'=>$aryTimeTableId,
+				'options'=>['placeholder'=>'Select ...'],
+				'pluginOptions'=>['allowClear'=>true],
+			],		
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		]
+	];
+		
 	$attIdentity = [
 		/* [
 			'group'=>true,
@@ -366,6 +381,27 @@ AppAsset::register($this);
 			'params' => ['custom_param' => true],
 		],	
 	]);
+	
+	$dtAbsensiData=DetailView::widget([
+		'id'=>'emp-absensi-id',
+		'model' => $model,
+		'attributes'=>$attAbsensi,	
+		'condensed'=>true,
+		'hover'=>true,
+		'mode'=>DetailView::MODE_VIEW,
+		'buttons1'=>'{update}',
+		'buttons2'=>'{view}{save}',
+		'panel'=>[
+					//'heading'=>'#EMPLOYEE CONTACT',// . $model->EMP_NM . ' '.$model->EMP_NM_BLK,
+					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>ABSENSI DATA</b></h6></div>',
+					'type'=>DetailView::TYPE_INFO,
+				],
+		'saveOptions'=>[ 
+			'id' =>'saveBtn',
+			'value'=>'/master/employe/view?id='.$model->KAR_ID,
+			'params' => ['custom_param' => true],
+		],	
+	]);
 
 	/*RIGHT*/
 	 $empContact= DetailView::widget([
@@ -452,6 +488,8 @@ AppAsset::register($this);
 					<?=$dtUnixId?>		
 				<?php ActiveForm::end();?>				
 				<?=$dtCompanyData?>
+				<?=$dtAbsensiData?>
+				
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				<?=$empContact;?>

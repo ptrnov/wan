@@ -7,6 +7,7 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
+use yii\bootstrap\Modal;
 use modulprj\assets\AppAsset; 	
 AppAsset::register($this);
 
@@ -63,7 +64,13 @@ AppAsset::register($this);
             'heading' =>'GREADING',
             'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
             'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
-                    ['#'], ['class' => 'btn btn-success btn-sm']),
+                    ['/master/dept/create-grading'], 
+					[
+						'id'=>'create-grading',
+						'data-toggle'=>'modal',
+						'data-target'=>'#create-grading-id',
+						'class' => 'btn btn-success btn-sm'
+					]),
         ],
         'pjax'=>true,
         'pjaxSettings'=>[

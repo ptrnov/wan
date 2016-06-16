@@ -29,7 +29,8 @@ use yii\helpers\Url;
 		['ID' =>3, 'ATTR' =>['FIELD'=>'depNm','SIZE' => '20px','label'=>'Department','align'=>'left']],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'gfNm','SIZE' => '20px','label'=>'Group Function','align'=>'left']],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'gradingNm','SIZE' => '10px','label'=>'Grading','align'=>'left']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'stsKerjaNm','SIZE' => '20px','label'=>'Status','align'=>'left']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'stsKerjaNm','SIZE' => '20px','label'=>'STATUS','align'=>'left']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '20px','label'=>'GROUP ABSEN','align'=>'left']],
 		//['ID' =>6, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
@@ -204,10 +205,10 @@ use yii\helpers\Url;
 			$gvfilterType=false;
 			$gvfilter=$aryGradingId;
 		}
-		/*elseif($value[$key]['FIELD']=='timeTableNm'){
+		elseif($value[$key]['FIELD']=='timeTableNm'){
 			$gvfilterType=false;
 			$gvfilter=$aryTimeTableId;
-		} elseif($value[$key]['FIELD']=='KAR_TGLM'){
+		} /*elseif($value[$key]['FIELD']=='KAR_TGLM'){
 			$gvfilterType=GridView::FILTER_DATE_RANGE;
 			$gvfilter=true;
 			$filterWidgetOpt=[

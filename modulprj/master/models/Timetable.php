@@ -39,7 +39,7 @@ class Timetable extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'TT_GRP_ID' => 'Tt  Grp  ID',
+            'TT_GRP_ID' => 'Group',
             'TT_GRP_NM' => 'Tt  Grp  Nm',
             'TT_GRP_STT' => 'Tt  Grp  Stt',
             'TT_GRP_DEF' => 'Tt  Grp  Def',

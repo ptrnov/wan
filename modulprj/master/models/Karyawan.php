@@ -56,7 +56,11 @@ class Karyawan extends \yii\db\ActiveRecord{
 			/* COMPANY */	
 			[['CAB_ID','GF_ID','KAR_MAILK','JOBGRADE_ID'], 'string'], 
 			[['DEP_ID','KAR_STS'], 'integer'], 
-			[['KAR_TGLM','KAR_TGLK'], 'safe'],			
+			[['KAR_TGLM','KAR_TGLK'], 'safe'],	
+			
+			/* ABSENSI */	
+			[['GRP_ID'], 'integer'], 
+			
 			/* CONTACT */
 			[['KAR_TLP','KAR_HP','KAR_MAILP'], 'string'],		
 			/* IDENTITY */
@@ -114,7 +118,7 @@ class Karyawan extends \yii\db\ActiveRecord{
             'CORP_ID' => Yii::t('app', 'Corp  :'),
             'CAB_ID' => Yii::t('app', 'Cabang :'),
             'LVL_ID' => Yii::t('app', 'OT.Level'),
-            //'JAB_ID' => Yii::t('app', 'Jabatan    :'),
+            'GRP_ID' => Yii::t('app', 'Status Group :'), //Absensi Group, harian, staff, driver
             'GF_ID' => Yii::t('app', 'Group Function  :'),
             'JOBGRADE_ID' => Yii::t('app', 'Job Grading  :'),
             'KAR_STS' => Yii::t('app', 'Status Pekerjaan   :'), //STATUS PEKERJAAn
