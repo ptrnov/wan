@@ -66,8 +66,7 @@ use modulprj\master\models\Dept;
 			],
 
 		],
-		'toolbar'=>false,
-		
+		'toolbar'=>false,		
 		'panel'=>[
             'heading' =>'<h8>DEPARTMENT</h8>',
             'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO

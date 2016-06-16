@@ -22,13 +22,13 @@ use yii\helpers\Url;
 							'badge' => ''
 						],										
 						[
-							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department',
+							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department & Greading',
 							'url' => '/master/dept',
 							'badge' => ''
 						],										
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Greading',
-							'url' => '#',
+							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Finger & Maintain',
+							'url' => '/master/absen-maintain',
 							
 						],
 						[

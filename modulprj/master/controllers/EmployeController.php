@@ -76,7 +76,7 @@ class EmployeController extends Controller
 	}	
 	public function aryGfId(){ 
 		return ArrayHelper::map(Kepangkatan::find()->all(), 'GF_ID','GF_NM');
-	}
+	}	
 	public function aryGradingId(){ 
 		return ArrayHelper::map(Grading::find()->all(), 'JOBGRADE_ID','JOBGRADE_NM');
 	}

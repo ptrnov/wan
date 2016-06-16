@@ -22,13 +22,13 @@ use yii\helpers\Url;
 							'badge' => ''
 						],										
 						[
-							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department',
+							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department & Greading',
 							'url' => '/master/dept',
 							'badge' => ''
 						],										
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Greading',
-							'url' => '#',
+							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Finger & Maintain',
+							'url' => '/master/absen-maintain',
 							
 						],										
 
@@ -47,19 +47,24 @@ use yii\helpers\Url;
 				'postBody' => Html::listGroup([														
 						[
 							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Log Absensi',
-							'url' => '/master/employe',
+							'url' => '/master/absen-log/',
 							'badge' => ''
 						],									
 						[
-							'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Absensi Maintain',
-							'url' => '#',
+							'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Daily Absensi',
+							'url' => '/master/absen-daily',
 							'badge' => ''
 						],
 						[
+							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Daily Overtime',
+							'url' => '/master/absen-ot',
+							'badge' => ''
+						],	
+						/* [
 							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Exception',
 							'url' => '#',
 							'badge' => ''
-						],									
+						],	 */							
 
 					]),
 			],
