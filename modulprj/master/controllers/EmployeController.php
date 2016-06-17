@@ -36,7 +36,7 @@ use modulprj\master\models\Cbg;
 use modulprj\master\models\Kepangkatan; //KEPAGKATAN
 use modulprj\master\models\Grading; 	//GREADING
 use modulprj\master\models\Status;
-use modulprj\master\models\Timetable;
+use modulprj\master\models\TimetableGroup;
 use modulprj\master\models\Pendidikan;
 	
 	
@@ -87,10 +87,10 @@ class EmployeController extends Controller
 		return ArrayHelper::map(Status::find()->all(), 'KAR_STS_ID','KAR_STS_NM');
 	}
 	public function aryTimeTable(){ 
-		return ArrayHelper::map(Timetable::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
+		return ArrayHelper::map(TimetableGroup::find()->all(), 'TT_GRP_NM','TT_GRP_NM');
 	}
 	public function aryTimeTableId(){ 
-		return ArrayHelper::map(Timetable::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
+		return ArrayHelper::map(TimetableGroup::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
 	}
 	public function arySchool(){ 
 		return ArrayHelper::map(Pendidikan::find()->all(), 'PEN_ID','PEN_NM');

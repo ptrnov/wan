@@ -25,16 +25,21 @@ use yii\helpers\Url;
 							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department & Greading',
 							'url' => '/master/dept',
 							'badge' => ''
-						],										
+						],					
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Finger & Maintain',
-							'url' => '/master/absen-maintain',
+							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Salary',
+							'url' => '/master/payroll-salary',
 							
 						],
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Salary',
-							'url' => '#',
-							
+							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Social Card',
+							'url' => '/master/payroll-asuransi',
+							'badge' => ''
+						],
+						[
+							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Taxs Formula',
+							'url' => '/master/payroll-tax',
+							'badge' => ''
 						],
 					]),
 			],
@@ -48,7 +53,12 @@ use yii\helpers\Url;
 		echo Html::panel([
 				'id'=>'task',
 				'heading' => '<b>PROCESSING</b>',
-				'postBody' => Html::listGroup([														
+				'postBody' => Html::listGroup([		
+						[
+							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Exception',
+							'url' => '/master/ijin-header',
+							'badge' => ''
+						],	
 						[
 							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Closed Absensi',
 							'url' => '/master/employe',
@@ -80,21 +90,21 @@ use yii\helpers\Url;
 		echo Html::panel([
 				'id'=>'approval',
 				'heading' => '<b>REPORTING</b>',
-				'postBody' => Html::listGroup([
+				'postBody' => Html::listGroup([						
 						[
 							'content' => '<span class="fa fa-sitemap fa-lg"></span>'. '   '.'Struktur Organization ',
 							'url' => '#'
-						],		
+						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Social Card Formula',
-							'url' => '#',
+							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Holiday',
+							'url' => '/master/hari-libur',
 							'badge' => ''
 						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Taxs Formula',
+							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Profile',
 							'url' => '#',
 							'badge' => ''
-						],
+						],					
 						[
 							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Payroll',
 							'url' => '#',

@@ -27,11 +27,15 @@ use yii\helpers\Url;
 							'badge' => ''
 						],										
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Finger & Maintain',
+							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Finger Maintain',
 							'url' => '/master/absen-maintain',
 							
 						],										
-
+						[
+							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. ' WorkTime & Formula',
+							'url' => '/master/timetable-normal',
+							
+						],	
 					]),
 			],
 			Html::TYPE_DANGER
@@ -46,10 +50,16 @@ use yii\helpers\Url;
 				'heading' => '<b>PERSENSI</b>',
 				'postBody' => Html::listGroup([														
 						[
+							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Exception',
+							'url' => '/master/ijin-header',
+							'badge' => ''
+						],	
+						[
 							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Log Absensi',
 							'url' => '/master/absen-log/',
 							'badge' => ''
-						],									
+						],	
+						
 						[
 							'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Daily Absensi',
 							'url' => '/master/absen-daily',
@@ -83,12 +93,12 @@ use yii\helpers\Url;
 							'url' => '#'
 						],										
 						[
-							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'WorkTime',
-							'url' => '#',
+							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Holiday',
+							'url' => '/master/hari-libur',
 							'badge' => ''
 						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Formula',
+							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Profile',
 							'url' => '#',
 							'badge' => ''
 						],

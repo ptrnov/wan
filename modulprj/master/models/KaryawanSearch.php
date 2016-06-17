@@ -54,7 +54,7 @@ class KaryawanSearch extends Karyawan
 						 ->JoinWith('stsOne',true,'left JOIN')
 						 ->JoinWith('gfOne',true,'left JOIN')
 						 ->JoinWith('gradingOne',true,'left JOIN')
-						 ->JoinWith('timetableOne',true,'left JOIN')
+						 ->JoinWith('timetablegroupOne',true,'left JOIN')
 						 ->where('karyawan.KAR_STS<>3');
 	    $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -146,7 +146,7 @@ class KaryawanSearch extends Karyawan
 						 ->JoinWith('stsOne',true,'left JOIN')
 						 ->JoinWith('gfOne',true,'left JOIN')
 						 ->JoinWith('gradingOne',true,'left JOIN')
-						 ->JoinWith('timetableOne',true,'left JOIN')
+						 ->JoinWith('timetablegroupOne',true,'left JOIN')
 						 ->where('karyawan.KAR_STS=3');
 						 
         $dataProvider = new ActiveDataProvider([

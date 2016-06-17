@@ -11,7 +11,7 @@ use modulprj\master\models\cbg;
 use yii\web\UploadedFile;
 use yii\helpers\Html;
 //use modulprj\models\hrd\Dept;
-use modulprj\master\models\Timetable;
+use modulprj\master\models\TimetableGroup;
 use modulprj\master\models\Pendidikan;
 use modulprj\master\models\Kepangkatan; //GROUP FUNCTION
 use modulprj\master\models\Grading; 	//GREADING
@@ -243,13 +243,13 @@ class Karyawan extends \yii\db\ActiveRecord{
     }
 	
 	/* GOLONGAN ABSENSI JOIN | GET NAME */
-    public function getTimetableOne()
+    public function getTimetablegroupOne()
     {
-        return $this->hasOne(Timetable::className(), ['TT_GRP_ID' => 'GRP_ID']);
+        return $this->hasOne(TimetableGroup::className(), ['TT_GRP_ID' => 'GRP_ID']);
     }
 	public function getTimeTableNm()
     {
-        return $this->timetableOne!=''?$this->timetableOne->TT_GRP_NM:'none';
+        return $this->timetablegroupOne!=''?$this->timetablegroupOne->TT_GRP_NM:'none';
     }
 
 	

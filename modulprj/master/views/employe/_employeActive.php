@@ -30,7 +30,7 @@ use yii\helpers\Url;
 		['ID' =>4, 'ATTR' =>['FIELD'=>'gfNm','SIZE' => '20px','label'=>'Group Function','align'=>'left']],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'gradingNm','SIZE' => '10px','label'=>'Grading','align'=>'left']],
 		['ID' =>6, 'ATTR' =>['FIELD'=>'stsKerjaNm','SIZE' => '20px','label'=>'STATUS','align'=>'left']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '20px','label'=>'GROUP ABSEN','align'=>'left']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '20px','label'=>'TIME TABEL GROUP','align'=>'left']],
 		//['ID' =>6, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
