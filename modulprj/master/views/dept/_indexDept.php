@@ -68,8 +68,8 @@ use modulprj\master\models\Dept;
 		],
 		'toolbar'=>false,		
 		'panel'=>[
-            'heading' =>'<h8>DEPARTMENT</h8>',
-            'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
+            'heading' =>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>DEPARTMENT</b></h3>',
+            'type' =>GridView::TYPE_INFO,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
             'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
                     ['/master/dept/create-dept'], 
 					[
@@ -78,6 +78,7 @@ use modulprj\master\models\Dept;
 						'data-target'=>'#create-dept-id',
 						'class' => 'btn btn-info btn-sm'
 					]),
+			'footer'=>false,
 			
         ],
         'pjax'=>true,

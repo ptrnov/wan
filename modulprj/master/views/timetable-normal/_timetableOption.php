@@ -30,6 +30,10 @@ $this->sideCorp="Employee";
 		'searchModelStt'=>$searchModelStt,
 		'dataProviderStt'=>$dataProviderStt
 	]);
+	$timetableKategori=$this->render('_timetableOptionKategori',[		
+		'searchModelKtg'=>$searchModelKtg,
+		'dataProviderKtg'=>$dataProviderKtg,
+	]);
 
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
@@ -41,6 +45,7 @@ $this->sideCorp="Employee";
 			<?=$timetableLevel?>
 		</div>
 		<div  class="col-lg-4"> 
+			<?=$timetableKategori?>
 			<?=$timetableStatus?>
 		</div>
 	</div>

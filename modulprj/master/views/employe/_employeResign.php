@@ -70,7 +70,8 @@ use yii\helpers\Url;
 	$attDinamik[]=[
 		'class'=>'kartik\grid\ActionColumn',
 		'dropdown' => true,
-		'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
+		//'template' => '{view}{edit0}{edit1}{edit2}{edit3}{lihat}',
+		'template' => '{view}',
 		'dropdownOptions'=>['class'=>'pull-left dropdown'],
 		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 		'buttons' => [				

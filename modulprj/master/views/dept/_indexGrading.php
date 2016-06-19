@@ -61,8 +61,8 @@ AppAsset::register($this);
 		],
 		'toolbar'=>false,
 		'panel'=>[
-            'heading' =>'GREADING',
-            'type' =>GridView::TYPE_PRIMARY,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
+            'heading' =>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>GREADING</b></h3>',
+            'type' =>GridView::TYPE_INFO,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
             'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add'),
                     ['/master/dept/create-grading'], 
 					[
@@ -71,6 +71,7 @@ AppAsset::register($this);
 						'data-target'=>'#create-grading-id',
 						'class' => 'btn btn-success btn-sm'
 					]),
+			'footer'=>false,
         ],
         'pjax'=>true,
         'pjaxSettings'=>[

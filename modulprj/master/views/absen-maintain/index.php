@@ -267,6 +267,7 @@ $this->sideCorp="Employee";
 			'dropdown' => true,
 			'template' => '{karfinger}{edit}{delete}',
 			'dropdownOptions'=>['class'=>'pull-right dropup'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 					'karfinger' =>function($url, $model, $key){
 							return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Employee Finger'),
@@ -342,7 +343,7 @@ $this->sideCorp="Employee";
 		   ],
 		],
 		'panel' => [
-					'heading'=>'<h3 class="panel-title">EMPLOYEE MAINTAIN LOG FINGER</h3>',
+					'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>EMPLOYEE MAINTAIN LOG FINGER</b></h3>',
 					'type'=>'warning',
 					/*'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
 							['modelClass' => 'Kategori',]),'/master/barang/create',[
@@ -369,8 +370,8 @@ $this->sideCorp="Employee";
 
 
 <div class="body-content">
-    <div class="row" style="padding-left: 5px; padding-right: 5px">
-        <div class="col-sm-11 col-md-11 col-lg-11" style="padding-left:25px;padding-right:25px;">
+    <div class="row" style="padding-left: 5px; padding-right: 5px;font-family: verdana, arial, sans-serif ;font-size: 8pt">
+        <div class="col-sm-11 col-md-11 col-lg-11" style="padding-left:25px;padding-right:25px;font-family: verdana, arial, sans-serif ;font-size: 8pt">
             <?php            		
 				echo $gvAbsenLog;
             ?>

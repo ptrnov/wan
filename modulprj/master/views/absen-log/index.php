@@ -475,7 +475,7 @@ $this->sideCorp="Employee";
 		   ],
 		],
 		'panel' => [
-					'heading'=>'<h3 class="panel-title">EMPLOYEE LOG FINGER</h3>',
+					'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>EMPLOYEE LOG FINGER</b></h3>',
 					/* 'type'=>'warning',
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
 							['modelClass' => 'Kategori',]),'/master/barang/create',[
@@ -518,7 +518,7 @@ $this->sideCorp="Employee";
 			],
 		],
 		'panel' => [
-					'heading'=>'<h3 class="panel-title">EMPLOYEE LATE</h3>',
+					'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>EMPLOYEE LATE</b></h3>',
 					'type'=>'danger',
 					 /*
 					'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Customer ',
@@ -544,13 +544,13 @@ $this->sideCorp="Employee";
 
 
 <div class="body-content">
-    <div class="row" style="padding-left: 5px; padding-right: 5px">
-        <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left:15px;">
+    <div class="row" style="padding-left: 5px; padding-right: 5px; font-family: verdana, arial, sans-serif ;font-size: 8pt">
+        <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left:15px;font-family: verdana, arial, sans-serif ;font-size: 8pt">
             <?php            		
 				echo $gvAbsenLog;
             ?>
         </div>
-		<div class="col-sm-6 col-md-6 col-lg-6" style="padding-right:15px">
+		<div class="col-sm-6 col-md-6 col-lg-6" style="padding-right:15px;font-family: verdana, arial, sans-serif ;font-size: 8pt">
             <?php            		
 				echo $gvAbsenLate;
             ?>

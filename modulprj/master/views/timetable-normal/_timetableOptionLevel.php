@@ -101,33 +101,10 @@ use yii\helpers\Url;
 			''//'{export}',
 		],	
 		'panel'=>[
-			'heading'=>'<h3 class="panel-title">Absensi Level</h3>',
+			'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>ABSENSI LEVEL</b></h3>',
 			//'heading'=>false,
 			'type'=>'warning',
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
-									['modelClass' => 'Kategori',]),'/master/employe/create',[
-										'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
-										'class' => 'btn btn-success btn-sm'
-									]
-						).' '.
-						Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
-									'/master/employe/',
-									[
-									  // 'id'=>'refresh-cust',
-									   'class' => 'btn btn-info btn-sm',
-									   //'data-pjax'=>false,
-									]
-						).' '.
-						Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),
-									'/export/employe',
-									[
-										//'id'=>'export-data',
-										//'data-pjax' => true,
-										'class' => 'btn btn-info btn-sm'
-									]
-						),
-						'showFooter'=>false,
+			'footer'=>false,
 		],
 		'summary'=>false,
 		'pjax'=>true,

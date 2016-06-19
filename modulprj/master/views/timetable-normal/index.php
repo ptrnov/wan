@@ -33,7 +33,9 @@ $this->sideCorp="Employee";
 		'searchModelLvl'=>$searchModelLvl,
 		'dataProviderLvl'=>$dataProviderLvl,
 		'searchModelStt'=>$searchModelStt,
-		'dataProviderStt'=>$dataProviderStt
+		'dataProviderStt'=>$dataProviderStt,
+		'searchModelKtg'=>$searchModelKtg,
+		'dataProviderKtg'=>$dataProviderKtg,
 	]);
 	
 	$items=[
@@ -60,7 +62,7 @@ $this->sideCorp="Employee";
 
 ?>
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
-	<div  class="row" style="margin-top:0px"> 
+	<div  class="row" style="margin-top:0px;font-family: verdana, arial, sans-serif ;font-size: 8pt"> 
 		<?=$tabTimaTable?>
 	</div>
 </div>
