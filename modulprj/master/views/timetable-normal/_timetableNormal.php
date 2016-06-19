@@ -10,20 +10,24 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 
-	// 'TT_ID',,'TT_GRP_ID','TT_TYP','TT_TYP_KTG','TT_SDAYS','TT_EDAYS','TT_SDATE','TT_EDATE','TT_NOTE','TT_UPDT','TT_ACTIVE','RULE_IN','RULE_OUT','RULE_TOL_IN',
+	// 'TT_ID',,'TT_GRP_ID','TT_TYP_KTG','TT_SDAYS','TT_EDAYS','TT_SDATE','TT_EDATE','TT_NOTE','TT_UPDT','TT_ACTIVE','RULE_IN','RULE_OUT','RULE_TOL_IN',
     // 'RULE_TOL_OUT','RULE_BRK_OUT','RULE_BRK_IN','RULE_DRT_OT_DPN','RULE_DRT_OT_BLK','RULE_DURATION','RULE_FRK_DAY','LEV1_FOT_HALF','LEV1_FOT_HOUR', 'LEV1_FOT_MAX',
     // 'LEV1_FOT_MAX_TIME','LEV2_FOT_HALF','LEV2_FOT_HOUR','LEV2_FOT_MAX','LEV2_FOT_MAX_TIME','LEV3_FOT_HALF','LEV3_FOT_HOUR','LEV3_FOT_MAX','LEV3_FOT_MAX_TIME','KOMPENSASI',
  
 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'TT_TYP','SIZE' => '10px','label'=>'Type','align'=>'left']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'TT_GRP_ID','SIZE' => '20px','label'=>'Group','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'TT_TYP_KTG','SIZE' => '10px','label'=>'Kategory','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TT_SDAYS','SIZE' => '20px','label'=>'Start Day','align'=>'left']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TT_EDAYS','SIZE' => '20px','label'=>'End Day','align'=>'left']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'TT_SDATE','SIZE' => '10px','label'=>'Start Range','align'=>'left']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'TT_EDATE','SIZE' => '20px','label'=>'End Range','align'=>'left']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'TT_NOTE','SIZE' => '20px','label'=>'Desctiption','align'=>'left']],
-		//['ID' =>6, 'ATTR' =>['FIELD'=>'timeTableNm','SIZE' => '10px','label'=>'Golongan','align'=>'left']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'ktgNm','SIZE' => '10px','label'=>'Kategori','align'=>'left','mergeHeader'=>true]],		
+		['ID' =>1, 'ATTR' =>['FIELD'=>'grpNm','SIZE' => '20px','label'=>'Group','align'=>'left','mergeHeader'=>true]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'VTT_SDAYS','SIZE' => '20px','label'=>'Mulai Hari','align'=>'left','mergeHeader'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'VTT_EDAYS','SIZE' => '20px','label'=>'Akhir Hari','align'=>'left','mergeHeader'=>true]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'RULE_IN','SIZE' => '20px','label'=>'Jam Masuk','align'=>'center','mergeHeader'=>false]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'RULE_OUT','SIZE' => '20px','label'=>'Jam Keluar','align'=>'center','mergeHeader'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'RULE_TOL_IN','SIZE' => '20px','label'=>'Max Telat','align'=>'center','mergeHeader'=>false]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'RULE_TOL_OUT','SIZE' => '20px','label'=>'Min Pulang','align'=>'center','mergeHeader'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'RULE_BRK_OUT','SIZE' => '20px','label'=>'Istirahat Out','align'=>'center','mergeHeader'=>false]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'RULE_BRK_IN','SIZE' => '20px','label'=>'Istirahat In','align'=>'center','mergeHeader'=>false]],		
+		['ID' =>8, 'ATTR' =>['FIELD'=>'TT_SDATE','SIZE' => '10px','label'=>'Start Range','align'=>'center','mergeHeader'=>false]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'TT_EDATE','SIZE' => '20px','label'=>'End Range','align'=>'center','mergeHeader'=>false]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'TT_NOTE','SIZE' => '20px','label'=>'Desctiption','align'=>'left','mergeHeader'=>false]],
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 	
@@ -103,7 +107,7 @@ use yii\helpers\Url;
 			//'filterInputOptions'=>$filterInputOpt,				
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
-			//'mergeHeader'=>true,
+			'mergeHeader'=>$value[$key]['mergeHeader'],
 			'noWrap'=>true,			
 			'headerOptions'=>[		
 					'style'=>[									
@@ -153,7 +157,7 @@ use yii\helpers\Url;
 			//'heading'=>'<h3 class="panel-title">Employee List</h3>',
 			'heading'=>false,
 			'type'=>'warning',
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add',
 									['modelClass' => 'Kategori',]),'/master/employe/create',[
 										'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",

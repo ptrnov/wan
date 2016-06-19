@@ -14,6 +14,7 @@ use modulprj\master\models\TimetableGroupSearch;
 use modulprj\master\models\TimetableLevelSearch;
 use modulprj\master\models\TimetableOtSttSearch;
 use modulprj\master\models\TimetableKategoriSearch;
+use modulprj\master\models\FormulaOvertimeSearch;
 
 
 /**
@@ -88,6 +89,9 @@ class TimetableNormalController extends Controller
 		/*Option Kategori*/
 		$searchModelKtg = new TimetableKategoriSearch();
         $dataProviderKtg = $searchModelKtg->search(Yii::$app->request->queryParams);
+		/*Option FORMULA*/
+		$searchModelFormula = new FormulaOvertimeSearch();
+        $dataProviderFormula = $searchModelFormula->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -103,6 +107,8 @@ class TimetableNormalController extends Controller
 			'dataProviderStt'=>$dataProviderStt,
 			'searchModelKtg'=>$searchModelKtg,
 			'dataProviderKtg'=>$dataProviderKtg,
+			'searchModelFormula'=>$searchModelFormula,
+			'dataProviderFormula'=>$dataProviderFormula,
         ]);
     }
 

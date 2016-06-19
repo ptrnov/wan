@@ -19,7 +19,7 @@ class TimetableNormalSearch extends TimetableNormal
     {
         return [
             [['TT_ID', 'TT_GRP_ID', 'TT_TYP_KTG', 'TT_SDAYS', 'TT_EDAYS', 'TT_ACTIVE', 'RULE_DURATION', 'RULE_FRK_DAY', 'KOMPENSASI'], 'integer'],
-            [['TT_TYP', 'TT_SDATE', 'TT_EDATE', 'TT_NOTE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT', 'RULE_TOL_IN', 'RULE_TOL_OUT', 'RULE_BRK_OUT', 'RULE_BRK_IN', 'RULE_DRT_OT_DPN', 'RULE_DRT_OT_BLK', 'LEV1_FOT_MAX_TIME', 'LEV2_FOT_MAX_TIME', 'LEV3_FOT_MAX_TIME'], 'safe'],
+            [['TT_SDATE', 'TT_EDATE', 'TT_NOTE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT', 'RULE_TOL_IN', 'RULE_TOL_OUT', 'RULE_BRK_OUT', 'RULE_BRK_IN', 'RULE_DRT_OT_DPN', 'RULE_DRT_OT_BLK', 'LEV1_FOT_MAX_TIME', 'LEV2_FOT_MAX_TIME', 'LEV3_FOT_MAX_TIME'], 'safe'],
             [['LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX', 'LEV2_FOT_HALF', 'LEV2_FOT_HOUR', 'LEV2_FOT_MAX', 'LEV3_FOT_HALF', 'LEV3_FOT_HOUR', 'LEV3_FOT_MAX'], 'number'],
         ];
     }
@@ -94,8 +94,8 @@ class TimetableNormalSearch extends TimetableNormal
             'KOMPENSASI' => $this->KOMPENSASI,
         ]);
 
-        $query->andFilterWhere(['like', 'TT_TYP', $this->TT_TYP])
-            ->andFilterWhere(['like', 'TT_NOTE', $this->TT_NOTE]);
+        // $query->andFilterWhere(['like', 'TT_TYP', $this->TT_TYP])
+            // ->andFilterWhere(['like', 'TT_NOTE', $this->TT_NOTE]);
 
         return $dataProvider;
     }

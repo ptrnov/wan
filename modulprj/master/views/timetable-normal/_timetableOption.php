@@ -43,10 +43,11 @@ $this->sideCorp="Employee";
 		</div>
 		<div  class="col-lg-4"> 
 			<?=$timetableLevel?>
+			<?=$timetableStatus?>
 		</div>
 		<div  class="col-lg-4"> 
 			<?=$timetableKategori?>
-			<?=$timetableStatus?>
+			
 		</div>
 	</div>
 </div>

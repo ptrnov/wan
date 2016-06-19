@@ -4,12 +4,15 @@ namespace modulprj\master\models;
 
 use Yii;
 
+use modulprj\master\models\TimetableKategori;
+use modulprj\master\models\TimetableGroup;
+
 /**
  * This is the model class for table "timetable_normal".
  *
  * @property integer $TT_ID
  * @property integer $TT_GRP_ID
- * @property string $TT_TYP
+ * @property string $TT_TYP // dihapus karena join table
  * @property integer $TT_TYP_KTG
  * @property integer $TT_SDAYS
  * @property integer $TT_EDAYS
@@ -61,7 +64,7 @@ class TimetableNormal extends \yii\db\ActiveRecord
             [['TT_GRP_ID', 'TT_TYP_KTG', 'TT_SDAYS', 'TT_EDAYS', 'TT_ACTIVE', 'RULE_DURATION', 'RULE_FRK_DAY', 'KOMPENSASI'], 'integer'],
             [['TT_SDATE', 'TT_EDATE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT', 'RULE_TOL_IN', 'RULE_TOL_OUT', 'RULE_BRK_OUT', 'RULE_BRK_IN', 'RULE_DRT_OT_DPN', 'RULE_DRT_OT_BLK', 'LEV1_FOT_MAX_TIME', 'LEV2_FOT_MAX_TIME', 'LEV3_FOT_MAX_TIME'], 'safe'],
             [['LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX', 'LEV2_FOT_HALF', 'LEV2_FOT_HOUR', 'LEV2_FOT_MAX', 'LEV3_FOT_HALF', 'LEV3_FOT_HOUR', 'LEV3_FOT_MAX'], 'number'],
-            [['TT_TYP'], 'string', 'max' => 10],
+            //[['TT_TYP'], 'string', 'max' => 10],
             [['TT_NOTE'], 'string', 'max' => 15],
         ];
     }
@@ -74,7 +77,7 @@ class TimetableNormal extends \yii\db\ActiveRecord
         return [
             'TT_ID' => Yii::t('app', 'Tt  ID'),
             'TT_GRP_ID' => Yii::t('app', 'Tt  Grp  ID'),
-            'TT_TYP' => Yii::t('app', 'Tt  Typ'),
+           // 'TT_TYP' => Yii::t('app', 'Tt  Typ'),
             'TT_TYP_KTG' => Yii::t('app', 'Tt  Typ  Ktg'),
             'TT_SDAYS' => Yii::t('app', 'Tt  Sdays'),
             'TT_EDAYS' => Yii::t('app', 'Tt  Edays'),
@@ -108,4 +111,48 @@ class TimetableNormal extends \yii\db\ActiveRecord
             'KOMPENSASI' => Yii::t('app', 'Kompensasi'),
         ];
     }
+	
+	/*Join Kategori*/
+	public function getKategori(){
+		 return $this->hasOne(TimetableKategori::className(), ['TT_TYPE_KTG' => 'TT_TYP_KTG']);
+	}
+	
+	public function getKtgNm(){
+		return $this->kategori!=''?$this->kategori->TT_TYPE:'none';
+	}
+	/*Join Group*/
+	public function getGroup(){
+		 return $this->hasOne(TimetableGroup::className(), ['TT_GRP_ID' => 'TT_GRP_ID']);
+	}
+	
+	public function getGrpNm(){
+		return $this->group!=''?$this->group->TT_GRP_NM:'none';
+	}
+	
+	private function mingguInt($data){
+		if($data==1){
+			return 'Minggu';
+		}elseif($data==2){
+			return 'Senin';
+		}elseif($data==3){
+			return 'Selasa';
+		}elseif($data==4){
+			return 'Rabu';
+		}elseif($data==5){
+			return 'kamis';
+		}elseif($data==6){
+			return 'Jumat';
+		}elseif($data==7){
+			return 'Sabtu';
+		}
+	}
+	
+	public function getVTT_SDAYS(){
+		return  $this->mingguInt($this->TT_SDAYS);
+		//return $this->TT_SDAYS;
+	}
+	public function getVTT_EDAYS(){
+		return  $this->mingguInt($this->TT_EDAYS);
+		//return $this->TT_SDAYS;
+	}
 }

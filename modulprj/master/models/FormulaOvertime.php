@@ -31,7 +31,7 @@ class FormulaOvertime extends \yii\db\ActiveRecord
     {
         return [
             [['TT_GRP_ID'], 'integer'],
-            [['FOT_JAM1', 'FOT_JAM2'], 'safe'],
+            [['FOT_JAM1', 'FOT_JAM2','DCRIP'], 'safe'],
             [['FOT_PERSEN'], 'number'],
             [['FOT_NM'], 'string', 'max' => 50],
         ];
@@ -49,6 +49,7 @@ class FormulaOvertime extends \yii\db\ActiveRecord
             'FOT_JAM1' => Yii::t('app', 'Fot  Jam1'),
             'FOT_JAM2' => Yii::t('app', 'Fot  Jam2'),
             'FOT_PERSEN' => Yii::t('app', 'Fot  Persen'),
+            'DCRIP' => Yii::t('app', 'Description'),
         ];
     }
 }

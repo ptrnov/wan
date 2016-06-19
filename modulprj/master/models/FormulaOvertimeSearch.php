@@ -19,7 +19,7 @@ class FormulaOvertimeSearch extends FormulaOvertime
     {
         return [
             [['FOT_ID', 'TT_GRP_ID'], 'integer'],
-            [['FOT_NM', 'FOT_JAM1', 'FOT_JAM2'], 'safe'],
+            [['FOT_NM', 'FOT_JAM1', 'FOT_JAM2','DCRIP'], 'safe'],
             [['FOT_PERSEN'], 'number'],
         ];
     }
@@ -48,6 +48,9 @@ class FormulaOvertimeSearch extends FormulaOvertime
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				'pageSize' => 100,
+			],
         ]);
 
         $this->load($params);

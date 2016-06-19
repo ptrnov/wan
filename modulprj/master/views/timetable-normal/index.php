@@ -37,6 +37,10 @@ $this->sideCorp="Employee";
 		'searchModelKtg'=>$searchModelKtg,
 		'dataProviderKtg'=>$dataProviderKtg,
 	]);
+	$formulaOvertime=$this->render('_timetableFormula',[
+		'searchModelFormula'=>$searchModelFormula,
+		'dataProviderFormula'=>$dataProviderFormula,
+	]);
 	
 	$items=[
 		[
@@ -47,6 +51,9 @@ $this->sideCorp="Employee";
 		],       
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Option','content'=>$timetableOption,
+		],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Tabel Formula','content'=>$formulaOvertime,
 		]
 	];
 
