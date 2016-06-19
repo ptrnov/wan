@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\password\PasswordInput;
+use kartik\select2\Select2;
+
 
 /* @var $this yii\web\View */
 /* @var $model lukisongroup\models\system\erpmodul\Mdlpermission */
@@ -10,41 +13,27 @@ use yii\widgets\ActiveForm;
 
 <div class="mdlpermission-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+      'id'=>$model->formName(),
+      'enableClientValidation'=>true
+    ]); ?>
 
-    <?= $form->field($model, 'USER_ID')->textInput(['maxlength' => true]) ?>
+     <?= $form->field($model, 'username')->textInput()?>
 
-    <?= $form->field($model, 'MODUL_ID')->textInput(['maxlength' => true]) ?>
+     <!-- $form->field($model, 'password_hash')->passwordInput()?> -->
 
-    <?= $form->field($model, 'STATUS')->textInput() ?>
+      <?= $form->field($model, 'password_hash')->widget(PasswordInput::classname()) ?>
 
-    <?= $form->field($model, 'BTN_CREATE')->textInput() ?>
+      <?= $form->field($model, 'EMP_ID')->widget(Select2::classname(), [
+    'data' => $data,
+    'language' => 'en',
+    'options' => ['placeholder' => 'Select...'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]) ?>
 
-    <?= $form->field($model, 'BTN_EDIT')->textInput() ?>
 
-    <?= $form->field($model, 'BTN_DELETE')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_VIEW')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_PROCESS1')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_PROCESS2')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_PROCESS3')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_PROCESS4')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_PROCESS5')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_SIGN1')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_SIGN2')->textInput() ?>
-
-    <?= $form->field($model, 'BTN_SIGN3')->textInput() ?>
-	
-	<?= $form->field($model, 'BTN_SIGN4')->textInput() ?>
- 	
-    <?= $form->field($model, 'BTN_SIGN5')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

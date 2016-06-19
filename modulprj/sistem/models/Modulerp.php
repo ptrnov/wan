@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\sistem\models;
+namespace modulprj\sistem\models;
 
 use Yii;
 
@@ -28,7 +28,7 @@ class Modulerp extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db1');
+        return Yii::$app->get('db');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace lukisongroup\sistem\models;
+namespace modulprj\sistem\models;
 
 use Yii;
 
@@ -27,7 +27,7 @@ use Yii;
  * @property integer $BTN_SIGN5
  * @property integer $CREATED_BY
  * @property integer $UPDATED_BY
- * @property integer $UPDATED_TIME  
+ * @property integer $UPDATED_TIME
  */
 class Mdlpermission extends \yii\db\ActiveRecord
 {
@@ -44,7 +44,7 @@ class Mdlpermission extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('db1');
+        return Yii::$app->get('db');
     }
 
     /**
@@ -53,9 +53,10 @@ class Mdlpermission extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'MODUL_ID','USER_ID', 'STATUS', 'BTN_CREATE', 'BTN_EDIT', 'BTN_DELETE', 'BTN_VIEW', 'BTN_PROCESS1', 'BTN_PROCESS2', 'BTN_PROCESS3', 'BTN_PROCESS4', 'BTN_PROCESS5', 'BTN_SIGN1', 'BTN_SIGN2', 'BTN_SIGN3','BTN_SIGN4','BTN_SIGN5'], 'integer'],
+			[[ 'MODUL_ID','USER_ID', 'STATUS', 'BTN_CREATE','BTN_REVIEW', 'BTN_EDIT', 'BTN_DELETE', 'BTN_VIEW', 'BTN_PROCESS1', 'BTN_PROCESS2', 'BTN_PROCESS3', 'BTN_PROCESS4', 'BTN_PROCESS5', 'BTN_SIGN1', 'BTN_SIGN2', 'BTN_SIGN3','BTN_SIGN4','BTN_SIGN5','STT_NOTIFY'], 'integer'],
+			// ['STATUS', 'BTN_CREATE', 'BTN_EDIT', 'BTN_DELETE', 'BTN_VIEW', 'BTN_PROCESS1', 'BTN_PROCESS2', 'BTN_PROCESS3', 'BTN_PROCESS4', 'BTN_PROCESS5', 'BTN_SIGN1', 'BTN_SIGN2', 'BTN_SIGN3','BTN_SIGN4','BTN_SIGN5','default','value'=>1],
 			[['CREATED_BY','UPDATED_BY'],'string'],
-			[['UPDATED_TIME'],'safe'],
+			[['UPDATED_TIME'],'safe']
         ];
     }
 
@@ -86,6 +87,17 @@ class Mdlpermission extends \yii\db\ActiveRecord
 			'CREATED_BY' => 'Createdby',
 			'UPDATED_BY' => 'Updateby',
 			'UPDATED_TIME' => 'Updatetime',
+			'STT_NOTIFY' => 'Status Notify',
         ];
     }
+
+    public function getModul()
+	{
+	  return $this->hasOne(Modulerp::className(), ['MODUL_ID' => 'MODUL_ID']);
+	}
+	
+	public function getModulDcrp()
+	{
+		return $this->modul->MODUL_DCRP;
+	}
 }
