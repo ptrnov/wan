@@ -3,11 +3,17 @@
 namespace modulprj\master\controllers;
 
 use Yii;
-use modulprj\master\models\TimetableNormal;
-use modulprj\master\models\TimetableNormalSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use modulprj\master\models\TimetableNormal;
+use modulprj\master\models\TimetableNormalSearch;
+use modulprj\master\models\TimetableOvertimeSearch;
+use modulprj\master\models\TimetableGroupSearch;
+use modulprj\master\models\TimetableLevelSearch;
+use modulprj\master\models\TimetableOtSttSearch;
+
 
 /**
  * TimetableNormalController implements the CRUD actions for TimetableNormal model.
@@ -29,18 +35,68 @@ class TimetableNormalController extends Controller
         ];
     }
 
+	/**
+     * Before Action Index
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true;
+               }
+            } else {
+                return true;
+            }
+    }
+	
     /**
      * Lists all TimetableNormal models.
      * @return mixed
      */
     public function actionIndex()
     {
+		/*Time Table Normal*/
         $searchModel = new TimetableNormalSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		/*Time Table Overtime*/
+		$searchModelOt = new TimetableOvertimeSearch();
+        $dataProviderOt = $searchModelOt->search(Yii::$app->request->queryParams);
+		
+		/*Option Group*/
+		$searchModelGrp = new TimetableGroupSearch();
+        $dataProviderGrp = $searchModelGrp->search(Yii::$app->request->queryParams);
+		/*Option Level*/
+		$searchModelLvl = new TimetableLevelSearch();
+        $dataProviderLvl = $searchModelLvl->search(Yii::$app->request->queryParams);
+		/*Option Status*/
+		$searchModelStt = new TimetableOtSttSearch();
+        $dataProviderStt = $searchModelStt->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'searchModelOt'=>$searchModelOt,
+			'dataProviderOt'=>$dataProviderOt,
+			/*Option*/
+			'searchModelGrp'=>$searchModelGrp,
+			'dataProviderGrp'=>$dataProviderGrp,
+			'searchModelLvl'=>$searchModelLvl,
+			'dataProviderLvl'=>$dataProviderLvl,
+			'searchModelStt'=>$searchModelStt,
+			'dataProviderStt'=>$dataProviderStt
         ]);
     }
 

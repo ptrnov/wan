@@ -1,65 +1,68 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\widgets\Breadcrumbs;
+use yii\bootstrap\Modal;
+use kartik\grid\GridView;
+use kartik\widgets\ActiveForm;
+use kartik\tabs\TabsX;
+use kartik\date\DatePicker;
+use kartik\builder\Form;
+use yii\widget\Pjax;
+use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $searchModel modulprj\master\models\TimetableNormalSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Timetable Normals';
+use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+AppAsset::register($this);
+$this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp="Employee"; 
+
+
+	$timetableNormal=$this->render('_timetableNormal',[
+		'dataProvider' => $dataProvider,
+        'searchModel' => $searchModel,
+	]);
+	$timetableOvertime=$this->render('_timetableOvertime',[
+		'dataProviderOt' => $dataProviderOt,
+        'searchModelOt' => $searchModelOt,
+	]);
+	$timetableOption=$this->render('_timetableOption',[
+		'searchModelGrp'=>$searchModelGrp,
+		'dataProviderGrp'=>$dataProviderGrp,
+		'searchModelLvl'=>$searchModelLvl,
+		'dataProviderLvl'=>$dataProviderLvl,
+		'searchModelStt'=>$searchModelStt,
+		'dataProviderStt'=>$dataProviderStt
+	]);
+	
+	$items=[
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> TimeTabel','content'=>$timetableNormal,//$tab_employe_active,
+			//'active'=>true,
+
+		],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> TimeTabel Overtime','content'=>$timetableOvertime,
+		],       
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Option','content'=>$timetableOption,
+		]
+	];
+
+	$tabTimaTable= TabsX::widget([
+		'items'=>$items,
+		'position'=>TabsX::POS_ABOVE,
+		//'height'=>'tab-height-xs',
+		'bordered'=>true,
+		'encodeLabels'=>false,
+		//'align'=>TabsX::ALIGN_LEFT,
+
+	]);	
+
 ?>
-<div class="timetable-normal-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Timetable Normal', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'TT_ID',
-            'TT_GRP_ID',
-            'TT_TYP',
-            'TT_TYP_KTG',
-            'TT_SDAYS',
-            // 'TT_EDAYS',
-            // 'TT_SDATE',
-            // 'TT_EDATE',
-            // 'TT_NOTE',
-            // 'TT_UPDT',
-            // 'TT_ACTIVE',
-            // 'RULE_IN',
-            // 'RULE_OUT',
-            // 'RULE_TOL_IN',
-            // 'RULE_TOL_OUT',
-            // 'RULE_BRK_OUT',
-            // 'RULE_BRK_IN',
-            // 'RULE_DRT_OT_DPN',
-            // 'RULE_DRT_OT_BLK',
-            // 'RULE_DURATION',
-            // 'RULE_FRK_DAY',
-            // 'LEV1_FOT_HALF',
-            // 'LEV1_FOT_HOUR',
-            // 'LEV1_FOT_MAX',
-            // 'LEV1_FOT_MAX_TIME',
-            // 'LEV2_FOT_HALF',
-            // 'LEV2_FOT_HOUR',
-            // 'LEV2_FOT_MAX',
-            // 'LEV2_FOT_MAX_TIME',
-            // 'LEV3_FOT_HALF',
-            // 'LEV3_FOT_HOUR',
-            // 'LEV3_FOT_MAX',
-            // 'LEV3_FOT_MAX_TIME',
-            // 'KOMPENSASI',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div  class="row" style="margin-top:0px"> 
+		<?=$tabTimaTable?>
+	</div>
 </div>
