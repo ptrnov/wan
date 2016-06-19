@@ -1,40 +1,59 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\widgets\Breadcrumbs;
+use yii\bootstrap\Modal;
+use kartik\grid\GridView;
+use kartik\widgets\ActiveForm;
+use kartik\tabs\TabsX;
+use kartik\date\DatePicker;
+use kartik\builder\Form;
+use yii\widget\Pjax;
+use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $searchModel modulprj\master\models\PayrollTaxSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Payroll Taxes';
+use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+AppAsset::register($this);
+$this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp="Employee"; 
+
+
+	$itemPph21=$this->render('_pph21',[
+		'dataProvider' => $dataProvider,
+        'searchModel' => $searchModel,
+	]);
+	$timePtkp=$this->render('_ptkp',[
+		'dataProviderPtkp' => $dataProviderPtkp,
+        'searchModelPtkp' => $searchModelPtkp,
+	]);
+	$timeStatus=$this->render('_status',[
+		'dataProviderStt' => $dataProviderStt,
+        'searchModelStt' => $searchModelStt,
+	]);
+		
+	$items=[
+		[
+			'label'=>'<i class="fa fa-money fa-lg"></i> PPH21','content'=>$itemPph21,
+		],
+		[
+			'label'=>'<i class="fa fa-area-chart fa-lg"></i> PTKP ','content'=>$timePtkp,
+		],   
+		[
+			'label'=>'<i class="fa fa-area-chart fa-lg"></i> OPTION TAX ','content'=>$timeStatus,
+		],		
+	];
+
+	$tabTax= TabsX::widget([
+		'items'=>$items,
+		'position'=>TabsX::POS_ABOVE,
+		'bordered'=>true,
+		'encodeLabels'=>false,
+	]);	
+
 ?>
-<div class="payroll-tax-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Payroll Tax', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'KAR_ID',
-            'sDate',
-            'eDate',
-            'TTL_UPAH',
-            'PTKP_NM',
-            // 'PTKP_VALUE',
-            // 'UPAH_PTKP',
-            // 'TTL_PTKP',
-            // 'PPH21',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div  class="row" style="margin-top:0px"> 
+		<?=$tabTax?>
+	</div>
 </div>

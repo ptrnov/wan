@@ -1,37 +1,52 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\widgets\Breadcrumbs;
+use yii\bootstrap\Modal;
+use kartik\grid\GridView;
+use kartik\widgets\ActiveForm;
+use kartik\tabs\TabsX;
+use kartik\date\DatePicker;
+use kartik\builder\Form;
+use yii\widget\Pjax;
+use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $searchModel modulprj\master\models\IjinDetailSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Ijin Details';
+use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+AppAsset::register($this);
+$this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
+$this->sideCorp="Employee"; 
+
+
+	$ijinDetail=$this->render('_ijinDetail',[
+		'searchModelDetail' => $searchModelDetail,
+		'dataProviderDetail' => $dataProviderDetail,
+	]);
+	$ijinHeader=$this->render('_ijinHeader',[
+		'searchModelHeader'=>$searchModelHeader,
+		'dataProviderHeader'=>$dataProviderHeader,
+	]);
+		
+	$items=[
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Employee Exception','content'=>$ijinDetail,//$tab_employe_active,
+		],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Exception List','content'=>$ijinHeader,
+		]
+	];
+
+	$tabIjin= TabsX::widget([
+		'items'=>$items,
+		'position'=>TabsX::POS_ABOVE,
+		'bordered'=>true,
+		'encodeLabels'=>false,
+	]);	
+
 ?>
-<div class="ijin-detail-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Ijin Detail', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'ID',
-            'KAR_ID',
-            'IJN_SDATE',
-            'IJN_EDATE',
-            'IJN_ID',
-            // 'IJN_NOTE:ntext',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+<div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
+	<div  class="row" style="margin-top:0px"> 
+		<?=$tabIjin?>
+	</div>
 </div>

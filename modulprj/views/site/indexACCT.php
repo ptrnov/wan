@@ -22,22 +22,22 @@ use yii\helpers\Url;
 							'badge' => ''
 						],										
 						[
-							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department & Greading',
+							'content' => '<span class="fa fa-group fa-lg"></span>'. '   '.'Department & Greading',
 							'url' => '/master/dept',
 							'badge' => ''
 						],					
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Salary',
+							'content' =>'<span class="fa fa-money fa-lg"></span>'. '   '. 'Salary',
 							'url' => '/master/payroll-salary',
 							
 						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Social Card',
+							'content' => '<span class="fa fa-credit-card	 fa-lg"></span>'. '   '.'Social Card',
 							'url' => '/master/payroll-asuransi',
 							'badge' => ''
 						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Taxs Formula',
+							'content' => '<span class="fa fa-institution fa-lg"></span>'. '   '.'Taxs Formula',
 							'url' => '/master/payroll-tax',
 							'badge' => ''
 						],
@@ -55,30 +55,30 @@ use yii\helpers\Url;
 				'heading' => '<b>PROCESSING</b>',
 				'postBody' => Html::listGroup([		
 						[
-							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Exception',
-							'url' => '/master/ijin-header',
+							'content' =>'<span class="fa fa-wheelchair fa-lg"></span>'. '   '. 'Exception',
+							'url' => '/master/ijin-detail',
 							'badge' => ''
 						],	
 						[
-							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Closed Absensi',
+							'content' =>'<span class="fa fa-book fa-lg"></span>'. '   '. 'Absensi',
 							'url' => '/master/employe',
 							'badge' => ''
 						],						
 						[
-							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Closed Exception',
-							'url' => '#',
-							'badge' => ''
-						],	
-						[
-							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Closed Overtime',
+							'content' => '<span class="fa fa-clone fa-lg"></span>'. '   '.'Overtime',
 							'url' => '#',
 							'badge' => ''
 						],							
 						[
-							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Closed Loan',
+							'content' => '<span class="fa fa-tags fa-lg"></span>'. '   '.'Loan',
 							'url' => '#',
 							'badge' => ''
 						],	
+						[
+							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Payroll',
+							'url' => '#',
+							'badge' => ''
+						],
 					]),
 			],
 			Html::TYPE_DANGER
@@ -96,20 +96,16 @@ use yii\helpers\Url;
 							'url' => '#'
 						],
 						[
-							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Holiday',
+							'content' => '<span class="fa fa-calendar fa-lg"></span>'. '   '.'Holiday',
 							'url' => '/master/hari-libur',
 							'badge' => ''
 						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Profile',
+							'content' => '<span class="fa fa-user fa-lg"></span>'. '   '.'Profile',
 							'url' => '#',
 							'badge' => ''
 						],					
-						[
-							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Payroll',
-							'url' => '#',
-							'badge' => ''
-						],
+						
 					]),
 			],
 			Html::TYPE_DANGER

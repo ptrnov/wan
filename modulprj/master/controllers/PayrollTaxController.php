@@ -3,12 +3,14 @@
 namespace modulprj\master\controllers;
 
 use Yii;
-use modulprj\master\models\PayrollTax;
-use modulprj\master\models\PayrollTaxSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use modulprj\master\models\PayrollTax;
+use modulprj\master\models\PayrollTaxSearch;
+use modulprj\master\models\PayrollPtkpFormulaSearch;
+use modulprj\master\models\PayrollPtkpSttSearch;
 /**
  * PayrollTaxController implements the CRUD actions for PayrollTax model.
  */
@@ -35,12 +37,23 @@ class PayrollTaxController extends Controller
      */
     public function actionIndex()
     {
+		/*PPH21*/
         $searchModel = new PayrollTaxSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		/*PTKP*/
+		$searchModelPtkp = new PayrollPtkpFormulaSearch();
+        $dataProviderPtkp = $searchModelPtkp->search(Yii::$app->request->queryParams);
+		/*STATUS*/
+     	$searchModelStt = new PayrollPtkpSttSearch();
+        $dataProviderStt = $searchModelStt->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'searchModelPtkp'=>$searchModelPtkp,
+			'dataProviderPtkp'=>$dataProviderPtkp,
+			'searchModelStt'=>$searchModelStt,
+			'dataProviderStt'=>$dataProviderStt,
         ]);
     }
 

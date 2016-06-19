@@ -50,8 +50,8 @@ use yii\helpers\Url;
 				'heading' => '<b>PERSENSI</b>',
 				'postBody' => Html::listGroup([														
 						[
-							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Exception',
-							'url' => '/master/ijin-header',
+							'content' =>'<span class="fa fa-wheelchair fa-lg"></span>'. '   '. 'Exception',
+							'url' => '/master/ijin-detail',
 							'badge' => ''
 						],	
 						[
@@ -61,12 +61,12 @@ use yii\helpers\Url;
 						],	
 						
 						[
-							'content' => '<span class="fa fa-upload fa-lg"></span>'. '   '.'Daily Absensi',
+							'content' => '<span class="fa fa-tags fa-lg"></span>'. '   '.'Daily Absensi',
 							'url' => '/master/absen-daily',
 							'badge' => ''
 						],
 						[
-							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Daily Overtime',
+							'content' => '<span class="fa fa-clone fa-lg"></span>'. '   '.'Daily Overtime',
 							'url' => '/master/absen-ot',
 							'badge' => ''
 						],	
@@ -93,12 +93,12 @@ use yii\helpers\Url;
 							'url' => '#'
 						],										
 						[
-							'content' => '<span class="fa fa-calculator fa-lg"></span>'. '   '.'Holiday',
+							'content' => '<span class="fa fa-group fa-lg"></span>'. '   '.'Holiday',
 							'url' => '/master/hari-libur',
 							'badge' => ''
 						],
 						[
-							'content' => '<span class="fa fa-exchange fa-lg"></span>'. '   '.'Profile',
+							'content' => '<span class="fa fa-user fa-lg"></span>'. '   '.'Profile',
 							'url' => '#',
 							'badge' => ''
 						],

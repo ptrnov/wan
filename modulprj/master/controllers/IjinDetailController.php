@@ -3,15 +3,14 @@
 namespace modulprj\master\controllers;
 
 use Yii;
-use modulprj\master\models\IjinDetail;
-use modulprj\master\models\IjinDetailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * IjinDetailController implements the CRUD actions for IjinDetail model.
- */
+use modulprj\master\models\IjinDetail;
+use modulprj\master\models\IjinDetailSearch;
+use modulprj\master\models\IjinHeaderSearch;
+
 class IjinDetailController extends Controller
 {
     /**
@@ -35,12 +34,17 @@ class IjinDetailController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new IjinDetailSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModelDetail = new IjinDetailSearch();
+        $dataProviderDetail = $searchModelDetail->search(Yii::$app->request->queryParams);
+		
+		$searchModelHeader = new IjinHeaderSearch();
+        $dataProviderHeader = $searchModelHeader->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'searchModelDetail' => $searchModelDetail,
+            'dataProviderDetail' => $dataProviderDetail,
+			'searchModelHeader'=>$searchModelHeader,
+			'dataProviderHeader'=>$dataProviderHeader
         ]);
     }
 
