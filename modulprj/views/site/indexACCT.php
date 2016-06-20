@@ -17,7 +17,7 @@ use yii\helpers\Url;
 				'heading' => '<b>DATA MANAGE</b>',
 				'postBody' => Html::listGroup([
 						[
-							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Employee',
+							'content' =>'<span class="fa  fa-user-plus fa-lg"></span>'. '   '. 'Employee',
 							'url' => '/master/employe',
 							'badge' => ''
 						],										

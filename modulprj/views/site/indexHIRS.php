@@ -17,22 +17,22 @@ use yii\helpers\Url;
 				'heading' => '<b>DATA MANAGE</b>',
 				'postBody' => Html::listGroup([
 						[
-							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Employee',
+							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Employee',
 							'url' => '/master/employe',
 							'badge' => ''
 						],										
 						[
-							'content' => '<span class="fa fa-sticky-note-o fa-lg"></span>'. '   '.'Department & Greading',
+							'content' => '<span class="fa fa-group fa-lg"></span>'. '   '.'Department & Greading',
 							'url' => '/master/dept',
 							'badge' => ''
 						],										
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. 'Finger Maintain',
+							'content' =>'<span class="fa fa-thumbs-o-up fa-lg"></span>'. '   '. 'Finger Maintain',
 							'url' => '/master/absen-maintain',
 							
 						],										
 						[
-							'content' =>'<span class="fa fa-user-plus fa-lg"></span>'. '   '. ' WorkTime & Formula',
+							'content' =>'<span class="fa fa-braille fa-lg"></span>'. '   '. ' WorkTime & Formula',
 							'url' => '/master/timetable-normal',
 							
 						],	
@@ -61,7 +61,7 @@ use yii\helpers\Url;
 						],	
 						
 						[
-							'content' => '<span class="fa fa-tags fa-lg"></span>'. '   '.'Daily Absensi',
+							'content' => '<span class="fa fa-tasks fa-lg"></span>'. '   '.'Daily Absensi',
 							'url' => '/master/absen-daily',
 							'badge' => ''
 						],
@@ -93,7 +93,7 @@ use yii\helpers\Url;
 							'url' => '#'
 						],										
 						[
-							'content' => '<span class="fa fa-group fa-lg"></span>'. '   '.'Holiday',
+							'content' => '<span class="fa fa-calendar fa-lg"></span>'. '   '.'Holiday',
 							'url' => '/master/hari-libur',
 							'badge' => ''
 						],
