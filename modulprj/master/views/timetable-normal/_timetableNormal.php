@@ -158,9 +158,9 @@ use yii\helpers\Url;
 			'heading'=>false,
 			'type'=>'warning',
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add',
-									['modelClass' => 'Kategori',]),'/master/employe/create',[
+									['modelClass' => 'Kategori',]),'/master/timetable-normal/create',[
 										'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
+										'data-target'=>"#tt-add",
 										'class' => 'btn btn-success btn-sm'
 									]
 						).' '.

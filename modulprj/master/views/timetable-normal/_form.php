@@ -14,7 +14,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'TT_GRP_ID')->textInput() ?>
 
-    <?= $form->field($model, 'TT_TYP')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'TT_TYP_KTG')->textInput() ?>
 

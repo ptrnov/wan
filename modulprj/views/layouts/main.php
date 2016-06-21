@@ -86,7 +86,7 @@ $this->title = 'wandindo';
 			<body class="hold-transition skin-red"> <!--  sidebar-mini !-->
 				<?php $this->beginBody(); ?>
                 <div class="wrapper">
-                    <header class="main-header">
+                    <header class="main-header"> <!-- navbar-fixed-top !-->
                         <a  class="logo">
                             <?php
                            // echo Html::img('http://modulprj.com/favicon.ico', ['width'=>'20']);
@@ -119,6 +119,7 @@ $this->title = 'wandindo';
                                                 //'class' => 'navbar-inverse navbar-fixed-top',
                                                'class' => [
                                                    'navbar navbar-inverse navbar-static-top',
+                                                   //'navbar navbar-inverse navbar-fixed-top',
                                                    'style'=>'background-color:#313131'
                                                ],
                                                 //'class' => 'navbar-inverse navbar-static-top',
@@ -221,7 +222,7 @@ $this->title = 'wandindo';
 
                         </section>
                     </aside>
-                    <div class="content-wrapper">
+                    <div class="content-wrapper">  <!--style="padding-top:50px"!-->
                         <!--<div class="panel panel-default" style="margin-bottom: 0">!-->
                             <?php
                                /*
