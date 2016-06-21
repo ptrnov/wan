@@ -57,9 +57,9 @@ $this->sideCorp="Employee";
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> TimeTabel','content'=>$timetableNormal,
 		],
-		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> TimeTabel Overtime','content'=>$timetableOvertime,
-		],       
+		// [
+			// 'label'=>'<i class="glyphicon glyphicon-home"></i> TimeTabel Overtime','content'=>$timetableOvertime,
+		// ],       
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Option','content'=>$timetableOption,
 		],
