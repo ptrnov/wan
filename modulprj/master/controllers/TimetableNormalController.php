@@ -33,6 +33,10 @@ class TimetableNormalController extends Controller
 		return ArrayHelper::map(TimetableKategori::find()->all(), 'TT_TYPE_KTG','TT_TYPE');
 	}
 	
+	public function aryTtKtgOvertime(){ 
+		return ArrayHelper::map(TimetableKategori::find()->where('TT_TYPE_KTG<>1')->all(), 'TT_TYPE_KTG','TT_TYPE');
+	}
+	
 	/*Day of week Mysql*/
 	private function aryDayOfWeek(){ 
 		$dayOfWeek= [
@@ -188,6 +192,28 @@ class TimetableNormalController extends Controller
         }
     }
 
+	/**
+     * Creates a new TimetableNormal model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreateOvertime()
+    {
+        $model = new TimetableNormal();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect('index');
+        } else {
+            return $this->renderAjax('_formOvertime', [
+                'model' => $model,
+				'aryTtGrp'=>$this->aryTtGrp(),
+				'aryTtKtg'=>$this->aryTtKtgOvertime(),
+				'arrayDayOfWeek'=>$this->aryDayOfWeek(),
+				'aryStt'=>$this->aryStt(),
+            ]);
+        }
+    }
+	
     /**
      * Updates an existing TimetableNormal model.
      * If update is successful, the browser will be redirected to the 'view' page.

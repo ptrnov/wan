@@ -82,7 +82,7 @@ use yii\helpers\Url;
 			''//'{export}',
 		],	
 		'panel'=>[
-			'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>ABSENSI GROUP</b></h3>',
+			'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>ABSENSI CATEGORY</b></h3>',
 			//'heading'=>false,
 			'type'=>'warning',
 			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add',

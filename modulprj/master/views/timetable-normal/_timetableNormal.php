@@ -79,30 +79,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 			]
 		],
 	];
-	/*NO ATTRIBUTE*/
-	$attDinamik[] =[			
-			'class'=>'kartik\grid\SerialColumn',
-			'contentOptions'=>['class'=>'kartik-sheet-style'],
-			'width'=>'10px',
-			'header'=>'No.',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'verdana, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],					
-	];
+	
 	/*ACTION ATTRIBUTE*/
 	$attDinamik[]=[
 		'class'=>'kartik\grid\ActionColumn',
@@ -115,7 +92,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 					//$gF=getPermissionEmp()->GF_ID;
 					//if ($gF<=4){
 						return  '<li>' . Html::a('<span class="fa fa-money fa-dm"></span>'.Yii::t('app', 'Set Overtime'),
-												['/master/timetable-normal/set-overtime','id'=>$model->TT_ID],[
+												['/master/timetable-normal/create-overtime','id'=>$model->TT_ID],[
 												'data-toggle'=>"modal",
 												'data-target'=>"#set-overtime",
 												]). '</li>' . PHP_EOL;
@@ -150,6 +127,30 @@ use modulprj\master\models\TimetableOvertimeSearch;
 	
 	];
 	
+	/*NO ATTRIBUTE*/
+	$attDinamik[] =[			
+			'class'=>'kartik\grid\SerialColumn',
+			'contentOptions'=>['class'=>'kartik-sheet-style'],
+			'width'=>'10px',
+			'header'=>'No.',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(97, 211, 96, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],					
+	];
 	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){

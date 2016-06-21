@@ -59,13 +59,14 @@ $this->sideCorp="Employee";
 		],
 		// [
 			// 'label'=>'<i class="glyphicon glyphicon-home"></i> TimeTabel Overtime','content'=>$timetableOvertime,
-		// ],       
+		// ],
+		[
+			'label'=>'<i class="glyphicon glyphicon-home"></i> Tabel Formula','content'=>$formulaOvertime,
+		],		
 		[
 			'label'=>'<i class="glyphicon glyphicon-home"></i> Option','content'=>$timetableOption,
 		],
-		[
-			'label'=>'<i class="glyphicon glyphicon-home"></i> Tabel Formula','content'=>$formulaOvertime,
-		]
+		
 	];
 
 	$tabTimaTable= TabsX::widget([
@@ -86,7 +87,7 @@ $this->sideCorp="Employee";
 </div>
 <?php
 	/*
-	 * CREATE EMPLOYEE JS
+	 * CREATE TIMETABLE
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.2
 	 */
@@ -108,6 +109,36 @@ $this->sideCorp="Employee";
     Modal::begin([
         'id' => 'tt-add',
 		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Add OfficeHour</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+		'size'=>'modal-md'
+    ]);
+    Modal::end();
+	
+	/*
+	 * CREATE OVERTIME
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#set-overtime').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'set-overtime',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Add Overtime</h4></div>',
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],
