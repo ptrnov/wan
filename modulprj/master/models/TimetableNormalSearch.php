@@ -42,12 +42,15 @@ class TimetableNormalSearch extends TimetableNormal
      */
     public function search($params)
     {
-        $query = TimetableNormal::find();
+        $query = TimetableNormal::find()->where('TT_ACTIVE<>2'); //2=delete
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination'=>[
+				'pageSize'=>100
+			]
         ]);
 
         $this->load($params);

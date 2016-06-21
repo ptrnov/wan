@@ -2,84 +2,167 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\widgets\DatePicker;
+use kartik\widgets\TimePicker;
 
-/* @var $this yii\web\View */
-/* @var $model modulprj\master\models\TimetableNormal */
-/* @var $form yii\widgets\ActiveForm */
+$config = ['template'=>"{input}\n{error}\n{hint}"];
 ?>
 
 <div class="timetable-normal-form">
-
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'TT_GRP_ID')->textInput() ?>
-
-
-    <?= $form->field($model, 'TT_TYP_KTG')->textInput() ?>
-
-    <?= $form->field($model, 'TT_SDAYS')->textInput() ?>
-
-    <?= $form->field($model, 'TT_EDAYS')->textInput() ?>
-
-    <?= $form->field($model, 'TT_SDATE')->textInput() ?>
-
-    <?= $form->field($model, 'TT_EDATE')->textInput() ?>
-
-    <?= $form->field($model, 'TT_NOTE')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'TT_UPDT')->textInput() ?>
-
-    <?= $form->field($model, 'TT_ACTIVE')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_IN')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_OUT')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_TOL_IN')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_TOL_OUT')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_BRK_OUT')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_BRK_IN')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_DRT_OT_DPN')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_DRT_OT_BLK')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_DURATION')->textInput() ?>
-
-    <?= $form->field($model, 'RULE_FRK_DAY')->textInput() ?>
-
-    <?= $form->field($model, 'LEV1_FOT_HALF')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV1_FOT_HOUR')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV1_FOT_MAX')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV1_FOT_MAX_TIME')->textInput() ?>
-
-    <?= $form->field($model, 'LEV2_FOT_HALF')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV2_FOT_HOUR')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV2_FOT_MAX')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV2_FOT_MAX_TIME')->textInput() ?>
-
-    <?= $form->field($model, 'LEV3_FOT_HALF')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV3_FOT_HOUR')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV3_FOT_MAX')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'LEV3_FOT_MAX_TIME')->textInput() ?>
-
-    <?= $form->field($model, 'KOMPENSASI')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+	<?php $form = ActiveForm::begin([
+			//'type' => ActiveForm::TYPE_HORIZONTAL,
+			'method' => 'post',
+			'id'=>'form-timetable-normal-id',
+           //'enableClientValidation' => true,
+			'options' => ['enctype' => 'multipart/form-data']
+		]);
+	?>
+	<div class="row">
+		<div class="col-lg-6">
+			<?php //= $form->field($model, 'TT_GRP_ID')->textInput() ?>
+			<!-- Kategori !-->
+			<?=$form->field($model, 'TT_GRP_ID')->dropDownList($aryTtGrp,[
+					'id'=>'tt-group',
+					'prompt'=>' -- Pilih Group Attendance --',
+				]);
+			?>			
+			<!-- Hari Mulai !-->
+			<?=$form->field($model, 'TT_SDAYS')->dropDownList($arrayDayOfWeek,[
+					'id'=>'tt-ktg',
+					'prompt'=>' -- Dari hari --',
+				]);
+			?>	
+			<!-- Range tanggal Mulai !-->
+			<?=$form->field($model, 'TT_SDATE')->widget(DatePicker::classname(), [
+					'options' => ['placeholder' => 'Dari Tanggal  ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   'format' => 'yyyy-mm-dd',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>			
+			<!-- Jam Masuk !-->			
+			<?=$form->field($model, 'RULE_IN')->widget(TimePicker::classname(), [
+					'options' => ['placeholder' => 'Jam Masuk ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   //'format' => 'dd-mm-yyyy',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>	
+			<!-- Toleransi Jam telat !-->
+			<?=$form->field($model, 'RULE_TOL_IN')->widget(TimePicker::classname(), [
+					'options' => ['placeholder' => 'Late ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   //'format' => 'dd-mm-yyyy',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>	
+			<!-- Jam Keluar Istirahat !-->
+			<?=$form->field($model, 'RULE_BRK_OUT')->widget(TimePicker::classname(), [
+					'options' => ['placeholder' => 'BreakOut ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   //'format' => 'dd-mm-yyyy',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>				
+			<!-- Status !-->
+			<?=$form->field($model, 'TT_ACTIVE')->dropDownList($aryStt,[
+					'id'=>'tt-stt',
+					'prompt'=>' -- Pilih Status Active --',
+				]);
+			?>				
+		</div>
+		<div class="col-lg-6">
+			<!-- Type !-->
+			<?php 
+				// $form->field($model, 'TT_TYP_KTG')->dropDownList($aryTtKtg,[
+					// 'id'=>'tt-ktg',
+					// 'prompt'=>' -- Pilih Name --',
+				// ]);
+			?>			
+			<?= $form->field($model, 'typNm')->textInput(['readonly'=>true])->label('Type') ?>
+			<!-- Sampai Hari  !-->
+			<?=$form->field($model, 'TT_EDAYS')->dropDownList($arrayDayOfWeek,[
+					'id'=>'tt-ktg',
+					'prompt'=>' -- Sampai hari --',
+				]);
+			?>
+			<!-- Range Tanggal Akhir !-->
+			<?=$form->field($model, 'TT_EDATE')->widget(DatePicker::classname(), [
+					'options' => ['placeholder' => 'Sampai Tanggal ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   'format' => 'yyyy-mm-dd',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>
+			<!-- jam Keluar !-->
+			<?=$form->field($model, 'RULE_OUT')->widget(TimePicker::classname(), [
+					'options' => ['placeholder' => 'Jam Keluar  ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   //'format' => 'dd-mm-yyyy',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>	
+			<!-- Toleransi Jam Pulang Awal !-->
+			<?=$form->field($model, 'RULE_TOL_OUT')->widget(TimePicker::classname(), [
+					'options' => ['placeholder' => 'Early ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   //'format' => 'dd-mm-yyyy',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>	
+			<!--  Jam Masuk Istirahat !-->
+			<?=$form->field($model, 'RULE_BRK_IN')->widget(TimePicker::classname(), [
+					'options' => ['placeholder' => 'BreakIn ...'],
+					'pluginOptions' => [
+					   'autoclose'=>true,
+					   //'format' => 'dd-mm-yyyy',
+					],
+					'pluginEvents'=>[
+							   'show' => "function(e) {errror}",
+					],
+				])   
+			?>	
+		</div><div class="col-lg-12">	
+			<!-- Catatan !-->
+			<?=$form->field($model, 'TT_NOTE', $config)->textArea([
+				'options'=>['rows'=>5]
+				]) 
+			?>	
+			<!--  Type value hidden | TT_TYP_KTG !-->
+			<?= $form->field($model, 'TT_TYP_KTG')->hiddenInput(['value'=>1])->label(false); ?>			
+		</div>
+	</div>
+		<div class="form-group" style="text-align:right">			
+			<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		</div>
 
     <?php ActiveForm::end(); ?>
 

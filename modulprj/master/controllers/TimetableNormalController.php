@@ -6,22 +6,57 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 use modulprj\master\models\TimetableNormal;
 use modulprj\master\models\TimetableNormalSearch;
 use modulprj\master\models\TimetableOvertimeSearch;
+use modulprj\master\models\TimetableGroup;
 use modulprj\master\models\TimetableGroupSearch;
 use modulprj\master\models\TimetableLevelSearch;
 use modulprj\master\models\TimetableOtSttSearch;
+use modulprj\master\models\TimetableKategori;
 use modulprj\master\models\TimetableKategoriSearch;
 use modulprj\master\models\FormulaOvertimeSearch;
 
-
+/*Day of Week*/
+	
 /**
  * TimetableNormalController implements the CRUD actions for TimetableNormal model.
  */
 class TimetableNormalController extends Controller
 {
+	public function aryTtGrp(){ 
+		return ArrayHelper::map(TimetableGroup::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
+	}
+	public function aryTtKtg(){ 
+		return ArrayHelper::map(TimetableKategori::find()->all(), 'TT_TYPE_KTG','TT_TYPE');
+	}
+	
+	/*Day of week Mysql*/
+	private function aryDayOfWeek(){ 
+		$dayOfWeek= [
+			['id' => 1, 'DESCRIP' => 'Minggu'],
+			['id' => 2, 'DESCRIP' => 'Senin'],
+			['id' => 3, 'DESCRIP' => 'Selasa'],
+			['id' => 4, 'DESCRIP' => 'Rabu'],
+			['id' => 5, 'DESCRIP' => 'Kamis'],
+			['id' => 6, 'DESCRIP' => 'Jumat'],
+			['id' => 7, 'DESCRIP' => 'Sabtu']
+		];
+		return ArrayHelper::map($dayOfWeek, 'id', 'DESCRIP');
+	}
+	
+	/*Status Disable/Enable*/
+	private function aryStt(){ 
+		$stts= [
+			['ID' => 0, 'STT' => 'Disable'],
+			['ID' => 1, 'STT' => 'Enable'],
+			['ID' => 2, 'STT' => 'Delete']
+		];
+		return ArrayHelper::map($stts, 'ID', 'STT');
+	}
+	
     /**
      * @inheritdoc
      */
@@ -119,8 +154,15 @@ class TimetableNormalController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+		$searchModel = new TimetableOvertimeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
+			'arrayDayOfWeek'=>$this->aryDayOfWeek(),
+			'aryStt'=>$this->aryStt(),
+			'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -134,10 +176,14 @@ class TimetableNormalController extends Controller
         $model = new TimetableNormal();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->TT_ID]);
+            return $this->redirect('index');
         } else {
-            return $this->renderAjax('create', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
+				'aryTtGrp'=>$this->aryTtGrp(),
+				'aryTtKtg'=>$this->aryTtKtg(),
+				'arrayDayOfWeek'=>$this->aryDayOfWeek(),
+				'aryStt'=>$this->aryStt(),
             ]);
         }
     }

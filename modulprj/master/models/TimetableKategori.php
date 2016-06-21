@@ -26,6 +26,7 @@ class TimetableKategori extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['TT_TYPE_KTG'], 'integer'],
             [['TT_TYPE'], 'string', 'max' => 50],
         ];
     }

@@ -62,10 +62,10 @@ class TimetableNormal extends \yii\db\ActiveRecord
     {
         return [
             [['TT_GRP_ID', 'TT_TYP_KTG', 'TT_SDAYS', 'TT_EDAYS', 'TT_ACTIVE', 'RULE_DURATION', 'RULE_FRK_DAY', 'KOMPENSASI'], 'integer'],
-            [['TT_SDATE', 'TT_EDATE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT', 'RULE_TOL_IN', 'RULE_TOL_OUT', 'RULE_BRK_OUT', 'RULE_BRK_IN', 'RULE_DRT_OT_DPN', 'RULE_DRT_OT_BLK', 'LEV1_FOT_MAX_TIME', 'LEV2_FOT_MAX_TIME', 'LEV3_FOT_MAX_TIME'], 'safe'],
+            [['TT_UPDT', 'RULE_IN', 'RULE_OUT', 'RULE_TOL_IN', 'RULE_TOL_OUT', 'RULE_BRK_OUT', 'RULE_BRK_IN', 'RULE_DRT_OT_DPN', 'RULE_DRT_OT_BLK', 'LEV1_FOT_MAX_TIME', 'LEV2_FOT_MAX_TIME', 'LEV3_FOT_MAX_TIME'], 'safe'],
             [['LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX', 'LEV2_FOT_HALF', 'LEV2_FOT_HOUR', 'LEV2_FOT_MAX', 'LEV3_FOT_HALF', 'LEV3_FOT_HOUR', 'LEV3_FOT_MAX'], 'number'],
-            //[['TT_TYP'], 'string', 'max' => 10],
             [['TT_NOTE'], 'string', 'max' => 15],
+            [['TT_SDATE', 'TT_EDATE'], 'safe'],
         ];
     }
 
@@ -76,22 +76,21 @@ class TimetableNormal extends \yii\db\ActiveRecord
     {
         return [
             'TT_ID' => Yii::t('app', 'Tt  ID'),
-            'TT_GRP_ID' => Yii::t('app', 'Tt  Grp  ID'),
-           // 'TT_TYP' => Yii::t('app', 'Tt  Typ'),
-            'TT_TYP_KTG' => Yii::t('app', 'Tt  Typ  Ktg'),
-            'TT_SDAYS' => Yii::t('app', 'Tt  Sdays'),
-            'TT_EDAYS' => Yii::t('app', 'Tt  Edays'),
-            'TT_SDATE' => Yii::t('app', 'Tt  Sdate'),
-            'TT_EDATE' => Yii::t('app', 'Tt  Edate'),
-            'TT_NOTE' => Yii::t('app', 'Tt  Note'),
+            'TT_GRP_ID' => Yii::t('app', 'Category'),
+            'TT_TYP_KTG' => Yii::t('app', 'Type'),
+            'TT_SDAYS' => Yii::t('app', 'Start Day'),
+            'TT_EDAYS' => Yii::t('app', 'End Day'),
+            'TT_SDATE' => Yii::t('app', 'Range Start Date'),
+            'TT_EDATE' => Yii::t('app', 'Range End Date'),
+            'TT_NOTE' => Yii::t('app', 'Note'),
             'TT_UPDT' => Yii::t('app', 'Tt  Updt'),
-            'TT_ACTIVE' => Yii::t('app', 'Tt  Active'),
-            'RULE_IN' => Yii::t('app', 'Rule  In'),
-            'RULE_OUT' => Yii::t('app', 'Rule  Out'),
-            'RULE_TOL_IN' => Yii::t('app', 'Rule  Tol  In'),
-            'RULE_TOL_OUT' => Yii::t('app', 'Rule  Tol  Out'),
-            'RULE_BRK_OUT' => Yii::t('app', 'Rule  Brk  Out'),
-            'RULE_BRK_IN' => Yii::t('app', 'Rule  Brk  In'),
+            'TT_ACTIVE' => Yii::t('app', 'Status Active'),
+            'RULE_IN' => Yii::t('app', 'TimeIn'),
+            'RULE_OUT' => Yii::t('app', 'TimeOut'),
+            'RULE_TOL_IN' => Yii::t('app', 'Time Late'),
+            'RULE_TOL_OUT' => Yii::t('app', 'Time Early'),
+            'RULE_BRK_OUT' => Yii::t('app', 'Time BreakOut'),
+            'RULE_BRK_IN' => Yii::t('app', 'Time BreakIn'),
             'RULE_DRT_OT_DPN' => Yii::t('app', 'Rule  Drt  Ot  Dpn'),
             'RULE_DRT_OT_BLK' => Yii::t('app', 'Rule  Drt  Ot  Blk'),
             'RULE_DURATION' => Yii::t('app', 'Rule  Duration'),
@@ -128,6 +127,9 @@ class TimetableNormal extends \yii\db\ActiveRecord
 	public function getGrpNm(){
 		return $this->group!=''?$this->group->TT_GRP_NM:'none';
 	}
+	public function getTypNm(){
+		return 'Normal';
+	}
 	
 	private function mingguInt($data){
 		if($data==1){
@@ -154,5 +156,14 @@ class TimetableNormal extends \yii\db\ActiveRecord
 	public function getVTT_EDAYS(){
 		return  $this->mingguInt($this->TT_EDAYS);
 		//return $this->TT_SDAYS;
+	}
+	public function getVTT_STATUS(){
+		if($this->TT_ACTIVE==0){
+			return 'Disable';
+		}elseif($this->TT_ACTIVE==1){
+			return 'Enable';
+		}elseif($this->TT_ACTIVE==2){
+			return 'Delete';
+		}
 	}
 }
