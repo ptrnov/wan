@@ -229,7 +229,7 @@ use kartik\widgets\DepDrop;
 		'buttons1'=>'{update}',
 		'buttons2'=>'{view}{save}',
 		'panel'=>[
-					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>TIMETABLE HEADER</b></h6></div>',
+					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-calendar"></div><div><h6 class="modal-title"><b>TIMETABLE HEADER</b></h6></div>',
 					'type'=>DetailView::TYPE_INFO,
 				],
 		'saveOptions'=>[ 
@@ -249,7 +249,7 @@ use kartik\widgets\DepDrop;
 		'buttons1'=>'{update}',
 		'buttons2'=>'{view}{save}',
 		'panel'=>[
-			'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-list-alt"></div><div><h6 class="modal-title"><b>TIMETABLE DETAIL</b></h6></div>',
+			'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-calendar-check-o"></div><div><h6 class="modal-title"><b>TIMETABLE DETAIL</b></h6></div>',
 			'type'=>DetailView::TYPE_INFO,
 		],
 		'saveOptions'=>[ 

@@ -158,11 +158,14 @@ class TimetableNormalController extends Controller
      */
     public function actionView($id)
     {
-		$searchModel = new TimetableOvertimeSearch();
+		$model = $this->findModel($id);
+		$searchModel = new TimetableOvertimeSearch([
+			'TT_GRP_ID'=>$model->TT_GRP_ID
+		]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->renderAjax('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
 			'arrayDayOfWeek'=>$this->aryDayOfWeek(),
 			'aryStt'=>$this->aryStt(),
 			'searchModel' => $searchModel,

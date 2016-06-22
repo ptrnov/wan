@@ -21,10 +21,10 @@ $this->sideCorp="Employee";
 
 	Modal::begin([
 			'id' => 'modal-view',
-			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-user"></div><div><h5 class="modal-title"><b>VIEW TIMETABLE</b></h5></div>',
+			'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-clock-o"></div><div><h5 class="modal-title"><b>VIEW TIMETABLE</b></h5></div>',
 			'size' => Modal::SIZE_LARGE,
 			'headerOptions'=>[
-					'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+					'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
 			],
 		]);
 		echo "<div id='modalContent'></div>";
@@ -108,9 +108,9 @@ $this->sideCorp="Employee";
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'tt-add',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Add OfficeHour</h4></div>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-clock-o"></div><div><h4 class="modal-title">Add OfficeHour</h4></div>',
 		'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+				'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
 		],
 		'size'=>'modal-md'
     ]);
@@ -138,9 +138,9 @@ $this->sideCorp="Employee";
 	",$this::POS_READY);
     Modal::begin([
         'id' => 'set-overtime',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Add Overtime</h4></div>',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-clock-o"></div><div><h4 class="modal-title">Add Overtime</h4></div>',
 		'headerOptions'=>[
-				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+				'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
 		],
 		'size'=>'modal-md'
     ]);

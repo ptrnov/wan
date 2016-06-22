@@ -78,7 +78,7 @@ use yii\helpers\Url;
 					'width'=>'10px',
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba(228, 228, 88, 0.6)',
 				]
 			],
 			'contentOptions'=>[
@@ -105,7 +105,7 @@ use yii\helpers\Url;
 					'width'=>$value[$key]['FIELD'],
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba(228, 228, 88, 0.6)',
 				]
 			],  
 			'contentOptions'=>[
@@ -140,7 +140,7 @@ use yii\helpers\Url;
 		'columns' =>$attDinamik,
 		'toolbar' =>false,
 		'panel'=>[
-			'heading'=>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>OVERTIME LIST</b></h3>',
+			'heading'=>'<span class="fa fa-tasks fa-xs"><b style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"> OVERTIME LIST</b></span>',
 			'type'=>'info',
 			'footer'=>false,
 		],

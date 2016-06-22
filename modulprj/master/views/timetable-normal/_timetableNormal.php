@@ -112,7 +112,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 				'width'=>'10px',
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
-				'background-color'=>'rgba(97, 211, 96, 0.3)',
+				'background-color'=>'rgba(74, 206, 231, 1)',
 			]
 		],
 		'contentOptions'=>[
@@ -139,7 +139,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 					'width'=>'10px',
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba(74, 206, 231, 1)',
 				]
 			],
 			'contentOptions'=>[
@@ -205,7 +205,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 					'width'=>$value[$key]['FIELD'],
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba(74, 206, 231, 1)',
 				]
 			],  
 			'contentOptions'=>[
@@ -238,7 +238,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 		'id'=>'timetable-normal',
 		'dataProvider' => $dataProvider,
 		'filterModel' => $searchModel,
-		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],				
+		'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],				
 		'columns' =>$attDinamik,
 		'toolbar' => [
 			''//'{export}',
