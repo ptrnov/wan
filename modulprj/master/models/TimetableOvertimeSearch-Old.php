@@ -19,8 +19,8 @@ class TimetableOvertimeSearch extends TimetableOvertime
     {
         return [
             [['TT_ID', 'TT_GRP_ID', 'TT_TYP_KTG', 'TT_SDAYS', 'TT_EDAYS', 'TT_ACTIVE', 'RULE_DURATION', 'RULE_FRK_DAY', 'KOMPENSASI'], 'integer'],
-            [['TT_SDATE', 'TT_EDATE', 'TT_NOTE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT','LEV1_FOT_MAX_TIME'], 'safe'],
-            [['LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX'], 'number'],
+            [['TT_TYP', 'TT_SDATE', 'TT_EDATE', 'TT_NOTE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT', 'RULE_TOL_IN', 'RULE_TOL_OUT', 'RULE_BRK_OUT', 'RULE_BRK_IN', 'RULE_DRT_OT_DPN', 'RULE_DRT_OT_BLK', 'LEV1_FOT_MAX_TIME', 'LEV2_FOT_MAX_TIME', 'LEV3_FOT_MAX_TIME'], 'safe'],
+            [['LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX', 'LEV2_FOT_HALF', 'LEV2_FOT_HOUR', 'LEV2_FOT_MAX', 'LEV3_FOT_HALF', 'LEV3_FOT_HOUR', 'LEV3_FOT_MAX'], 'number'],
         ];
     }
 
@@ -42,7 +42,7 @@ class TimetableOvertimeSearch extends TimetableOvertime
      */
     public function search($params)
     {
-        $query = TimetableOvertime::find()->orderBy(['TT_GRP_ID'=>'ASC','TT_TYP_KTG'=>'ASC']);
+        $query = TimetableOvertime::find();
 
         // add conditions that should always apply here
 
@@ -70,17 +70,33 @@ class TimetableOvertimeSearch extends TimetableOvertime
             'TT_UPDT' => $this->TT_UPDT,
             'TT_ACTIVE' => $this->TT_ACTIVE,
             'RULE_IN' => $this->RULE_IN,
-            'RULE_OUT' => $this->RULE_OUT,    
+            'RULE_OUT' => $this->RULE_OUT,
+            'RULE_TOL_IN' => $this->RULE_TOL_IN,
+            'RULE_TOL_OUT' => $this->RULE_TOL_OUT,
+            'RULE_BRK_OUT' => $this->RULE_BRK_OUT,
+            'RULE_BRK_IN' => $this->RULE_BRK_IN,
+            'RULE_DRT_OT_DPN' => $this->RULE_DRT_OT_DPN,
+            'RULE_DRT_OT_BLK' => $this->RULE_DRT_OT_BLK,
             'RULE_DURATION' => $this->RULE_DURATION,
             'RULE_FRK_DAY' => $this->RULE_FRK_DAY,
             'LEV1_FOT_HALF' => $this->LEV1_FOT_HALF,
             'LEV1_FOT_HOUR' => $this->LEV1_FOT_HOUR,
             'LEV1_FOT_MAX' => $this->LEV1_FOT_MAX,
-            'LEV1_FOT_MAX_TIME' => $this->LEV1_FOT_MAX_TIME,            
+            'LEV1_FOT_MAX_TIME' => $this->LEV1_FOT_MAX_TIME,
+            'LEV2_FOT_HALF' => $this->LEV2_FOT_HALF,
+            'LEV2_FOT_HOUR' => $this->LEV2_FOT_HOUR,
+            'LEV2_FOT_MAX' => $this->LEV2_FOT_MAX,
+            'LEV2_FOT_MAX_TIME' => $this->LEV2_FOT_MAX_TIME,
+            'LEV3_FOT_HALF' => $this->LEV3_FOT_HALF,
+            'LEV3_FOT_HOUR' => $this->LEV3_FOT_HOUR,
+            'LEV3_FOT_MAX' => $this->LEV3_FOT_MAX,
+            'LEV3_FOT_MAX_TIME' => $this->LEV3_FOT_MAX_TIME,
             'KOMPENSASI' => $this->KOMPENSASI,
         ]);
 
-      
+        $query->andFilterWhere(['like', 'TT_TYP', $this->TT_TYP])
+            ->andFilterWhere(['like', 'TT_NOTE', $this->TT_NOTE]);
+
         return $dataProvider;
     }
 }

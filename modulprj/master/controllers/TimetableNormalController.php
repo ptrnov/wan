@@ -109,8 +109,8 @@ class TimetableNormalController extends Controller
     public function actionIndex()
     {
 		/*Time Table Normal*/
-        $searchModel = new TimetableNormalSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModelOtNormal = new TimetableNormalSearch();
+        $dataProviderOtNormal = $searchModelOtNormal->search(Yii::$app->request->queryParams);
 		
 		/*Time Table Overtime*/
 		$searchModelOt = new TimetableOvertimeSearch();
@@ -133,8 +133,8 @@ class TimetableNormalController extends Controller
         $dataProviderFormula = $searchModelFormula->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'searchModelOtNormal' => $searchModelOtNormal,
+            'dataProviderOtNormal' => $dataProviderOtNormal,
 			'searchModelOt'=>$searchModelOt,
 			'dataProviderOt'=>$dataProviderOt,
 			/*Option*/
@@ -159,17 +159,17 @@ class TimetableNormalController extends Controller
     public function actionView($id)
     {
 		$model = $this->findModel($id);
-		$searchModel = new TimetableOvertimeSearch([
+		$searchModelOt = new TimetableOvertimeSearch([
 			'TT_GRP_ID'=>$model->TT_GRP_ID
 		]);
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProviderOt = $searchModelOt->search(Yii::$app->request->queryParams);
 
         return $this->renderAjax('view', [
             'model' => $model,
 			'arrayDayOfWeek'=>$this->aryDayOfWeek(),
 			'aryStt'=>$this->aryStt(),
-			'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+			'searchModel' => $searchModelOt,
+            'dataProvider' => $dataProviderOt,
         ]);
     }
 

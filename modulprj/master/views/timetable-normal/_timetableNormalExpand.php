@@ -11,7 +11,6 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 			// 'TT_ID',
             // 'TT_GRP_ID',
-            // 'TT_TYP',
             // 'TT_TYP_KTG',
             // 'TT_SDAYS',
             // 'TT_EDAYS',
@@ -22,52 +21,38 @@ use yii\helpers\Url;
             // 'TT_ACTIVE',
             // 'RULE_IN',
             // 'RULE_OUT',
-            // 'RULE_TOL_IN',
-            // 'RULE_TOL_OUT',
-            // 'RULE_BRK_OUT',
-            // 'RULE_BRK_IN',
-            // 'RULE_DRT_OT_DPN',
-            // 'RULE_DRT_OT_BLK',
             // 'RULE_DURATION',
             // 'RULE_FRK_DAY',
             // 'LEV1_FOT_HALF',
             // 'LEV1_FOT_HOUR',
             // 'LEV1_FOT_MAX',
             // 'LEV1_FOT_MAX_TIME',
-            // 'LEV2_FOT_HALF',
-            // 'LEV2_FOT_HOUR',
-            // 'LEV2_FOT_MAX',
-            // 'LEV2_FOT_MAX_TIME',
-            // 'LEV3_FOT_HALF',
-            // 'LEV3_FOT_HOUR',
-            // 'LEV3_FOT_MAX',
-            // 'LEV3_FOT_MAX_TIME',
             // 'KOMPENSASI',
-	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'TT_GRP_ID','SIZE' => '20px','label'=>'Category','align'=>'left','mergeHeader'=>true]],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'TT_TYP_KTG','SIZE' => '10px','label'=>'Type','align'=>'left','mergeHeader'=>true]],		
-		['ID' =>2, 'ATTR' =>['FIELD'=>'TT_SDAYS','SIZE' => '20px','label'=>'Day Of Start','align'=>'left','mergeHeader'=>true]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TT_EDAYS','SIZE' => '20px','label'=>'Day Of End','align'=>'left','mergeHeader'=>true]],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'RULE_IN','SIZE' => '10px','label'=>'TimeIn','align'=>'center','mergeHeader'=>false]],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'RULE_OUT','SIZE' => '10px','label'=>'TimeOut','align'=>'center','mergeHeader'=>false]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'RULE_TOL_IN','SIZE' => '10px','label'=>'Late','align'=>'center','mergeHeader'=>false]],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'RULE_TOL_OUT','SIZE' => '10px','label'=>'Early','align'=>'center','mergeHeader'=>false]],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'RULE_BRK_OUT','SIZE' => '10px','label'=>'BreakOut','align'=>'center','mergeHeader'=>false]],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'RULE_BRK_IN','SIZE' => '10px','label'=>'BreakIn','align'=>'center','mergeHeader'=>false]],		
-		['ID' =>10, 'ATTR' =>['FIELD'=>'TT_SDATE','SIZE' => '20px','label'=>'Start Range','align'=>'center','mergeHeader'=>false]],
-		['ID' =>11, 'ATTR' =>['FIELD'=>'TT_EDATE','SIZE' => '20px','label'=>'End Range','align'=>'center','mergeHeader'=>false]],
-		['ID' =>12, 'ATTR' =>['FIELD'=>'TT_NOTE','SIZE' => '100px','label'=>'Desctiption','align'=>'left','mergeHeader'=>false]],
+	$aryFieldOt= [
+		//['ID' =>0, 'ATTR' =>['FIELD'=>'TT_GRP_ID','SIZE' => '20px','label'=>'Category','align'=>'left','mergeHeader'=>true]],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KtgNm','SIZE' => '20px','label'=>'Category','align'=>'left','mergeHeader'=>true]],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'vTT_SDAYS','SIZE' => '20px','label'=>'Day Of Start','align'=>'left','mergeHeader'=>true]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'vTT_EDAYS','SIZE' => '20px','label'=>'Day Of End','align'=>'left','mergeHeader'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TT_SDATE','SIZE' => '20px','label'=>'Start Range','align'=>'center','mergeHeader'=>false]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TT_EDATE','SIZE' => '20px','label'=>'End Range','align'=>'center','mergeHeader'=>false]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'RULE_IN','SIZE' => '10px','label'=>'TimeIn','align'=>'center','mergeHeader'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'RULE_OUT','SIZE' => '10px','label'=>'TimeOut','align'=>'center','mergeHeader'=>false]],			
+		['ID' =>7, 'ATTR' =>['FIELD'=>'LEV1_FOT_HALF','SIZE' => '100px','label'=>'% OT HALF','align'=>'left','mergeHeader'=>false]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'LEV1_FOT_HOUR','SIZE' => '100px','label'=>'% OT HOUR','align'=>'left','mergeHeader'=>false]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'LEV1_FOT_MAX','SIZE' => '100px','label'=>'% OT MAX','align'=>'left','mergeHeader'=>false]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'RULE_DURATION','SIZE' => '100px','label'=>'WORK TIME','align'=>'left','mergeHeader'=>false]],
+		['ID' =>11, 'ATTR' =>['FIELD'=>'LEV1_FOT_MAX_TIME','SIZE' => '100px','label'=>'TIME OT MAX','align'=>'left','mergeHeader'=>false]],
 	];	
-	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
+	$valFieldsOt = ArrayHelper::map($aryFieldOt, 'ID', 'ATTR'); 
 	
 	/*
 	 * GRIDVIEW COLUMN
 	 * @author ptrnov [ptr.nov@gmail.com]
 	 * @since 1.2
 	*/	
-	$attDinamik =[];
+	$attDinamikOt =[];
 	/*NO ATTRIBUTE*/
-	$attDinamik[] =[			
+	$attDinamikOt[] =[			
 			'class'=>'kartik\grid\SerialColumn',
 			'contentOptions'=>['class'=>'kartik-sheet-style'],
 			'width'=>'10px',
@@ -91,8 +76,8 @@ use yii\helpers\Url;
 			],					
 	];
 	/*OTHER ATTRIBUTE*/
-	foreach($valFields as $key =>$value[]){			
-		$attDinamik[]=[		
+	foreach($valFieldsOt as $key =>$value[]){			
+		$attDinamikOt[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
 			'hAlign'=>'right',
@@ -136,9 +121,9 @@ use yii\helpers\Url;
 	
 	$ttOvertime= GridView::widget([
 		'id'=>'tt-view-overtime',
-		'dataProvider' => $dataProviderOt,
-		//'filterModel' => $searchModelOt,
-		'columns' =>$attDinamik,
+		'dataProvider' => $dataProviderOtExpand,
+		//'filterModel' => $searchModelOtExpand,
+		'columns' =>$attDinamikOt,
 		'toolbar' =>false,
 		'panel'=>[
 			'heading'=>false,

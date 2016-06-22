@@ -42,19 +42,19 @@ use modulprj\master\models\TimetableOvertimeSearch;
 	/*GRIDVIEW EXPAND*/
 	$attDinamik[]=[	
 		'class'=>'kartik\grid\ExpandRowColumn',
-		'width'=>'50px',
-		'header'=>'Detail',
+		'width'=>'10px',
+		'header'=>'Detail OT',
 		'value'=>function ($model, $key, $index, $column) {
 			return GridView::ROW_COLLAPSED;
 		},
 		'detail'=>function ($model, $key, $index, $column){
-			$searchModelOt = new TimetableOvertimeSearch([
+			$searchModelOtExpand = new TimetableOvertimeSearch([
 				'TT_GRP_ID'=>''.$model['TT_GRP_ID'],
 			]);
-			$dataProviderOt = $searchModelOt->search(Yii::$app->request->queryParams);
+			$dataProviderOtExpand = $searchModelOtExpand->search(Yii::$app->request->queryParams);
 			return Yii::$app->controller->renderPartial('_timetableNormalExpand',[
-				//'searchModelOt' => $searchModelOt,
-				'dataProviderOt' => $dataProviderOt,			
+				//'searchModelOtExpand' => $searchModelOtExpand,
+				'dataProviderOtExpand' => $dataProviderOtExpand,			
 			]);
 		},					
 		'expandOneOnly'=>true,
@@ -78,7 +78,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 				'font-size'=>'9pt',
 			]
 		],
-	];
+	]; 
 	
 	/*ACTION ATTRIBUTE*/
 	$attDinamik[]=[
@@ -236,8 +236,8 @@ use modulprj\master\models\TimetableOvertimeSearch;
 	
 	$ttNormal= GridView::widget([
 		'id'=>'timetable-normal',
-		'dataProvider' => $dataProvider,
-		'filterModel' => $searchModel,
+		'dataProvider' => $dataProviderOtNormal,
+		'filterModel' => $searchModelOtNormal,
 		'filterRowOptions'=>['style'=>'background-color:rgba(74, 206, 231, 1); align:center'],				
 		'columns' =>$attDinamik,
 		'toolbar' => [

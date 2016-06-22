@@ -31,13 +31,15 @@ $this->sideCorp="Employee";
 		Modal::end();
 
 	$timetableNormal=$this->render('_timetableNormal',[
-		'dataProvider' => $dataProvider,
-        'searchModel' => $searchModel,
+		'searchModelOtNormal' => $searchModelOtNormal,
+		'dataProviderOtNormal' => $dataProviderOtNormal,
 	]);
+	
 	$timetableOvertime=$this->render('_timetableOvertime',[
 		'dataProviderOt' => $dataProviderOt,
         'searchModelOt' => $searchModelOt,
 	]);
+	
 	$timetableOption=$this->render('_timetableOption',[
 		'searchModelGrp'=>$searchModelGrp,
 		'dataProviderGrp'=>$dataProviderGrp,
@@ -153,7 +155,6 @@ $this->sideCorp="Employee";
 	 * @since 1.2
 	 */
 	$this->registerJs("
-		$.fn.modal.Constructor.prototype.enforceFocus = function(){};
 		$(document).ready(function () {
 			var stt  = localStorage.getItem('sts');
 			var nilaiValue = localStorage.getItem('nilai');

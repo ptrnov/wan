@@ -208,14 +208,19 @@ use kartik\widgets\DepDrop;
 			'attribute' =>	'RULE_BRK_IN',
 			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
-			'widgetOptions'=>[
-				'pluginOptions'=>[
-					//'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
-				]
-			],
 			'inputWidth'=>'100%',
+		],
+		[	//Note
+			'attribute' =>	'sembunyi',
+			'type'=>DetailView::INPUT_TEXTAREA,
+			'label'=>false,
+			'value'=>'Pastikan waktu sudah benar, karena akan menjadi dasar Absensi Karyawan',
+			'options'=>[
+				'readonly'=>true,
+				'rows'=>5,
+				
+			],
+			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 	];
 	

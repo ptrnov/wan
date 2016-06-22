@@ -55,31 +55,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 							   'show' => "function(e) {errror}",
 					],
 				])   
-			?>	
-			<!-- Toleransi Jam telat !-->
-			<?=$form->field($model, 'RULE_TOL_IN')->widget(TimePicker::classname(), [
-					'options' => ['placeholder' => 'Late ...'],
-					'pluginOptions' => [
-					   'autoclose'=>true,
-					   //'format' => 'dd-mm-yyyy',
-					],
-					'pluginEvents'=>[
-							   'show' => "function(e) {errror}",
-					],
-				])   
-			?>	
-			<!-- Jam Keluar Istirahat !-->
-			<?=$form->field($model, 'RULE_BRK_OUT')->widget(TimePicker::classname(), [
-					'options' => ['placeholder' => 'BreakOut ...'],
-					'pluginOptions' => [
-					   'autoclose'=>true,
-					   //'format' => 'dd-mm-yyyy',
-					],
-					'pluginEvents'=>[
-							   'show' => "function(e) {errror}",
-					],
-				])   
-			?>				
+			?>		
 			<!-- Status !-->
 			<?=$form->field($model, 'TT_ACTIVE')->dropDownList($aryStt,[
 					'id'=>'tt-stt',
@@ -115,30 +91,6 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 			<!-- jam Keluar !-->
 			<?=$form->field($model, 'RULE_OUT')->widget(TimePicker::classname(), [
 					'options' => ['placeholder' => 'Jam Keluar  ...'],
-					'pluginOptions' => [
-					   'autoclose'=>true,
-					   //'format' => 'dd-mm-yyyy',
-					],
-					'pluginEvents'=>[
-							   'show' => "function(e) {errror}",
-					],
-				])   
-			?>	
-			<!-- Toleransi Jam Pulang Awal !-->
-			<?=$form->field($model, 'RULE_TOL_OUT')->widget(TimePicker::classname(), [
-					'options' => ['placeholder' => 'Early ...'],
-					'pluginOptions' => [
-					   'autoclose'=>true,
-					   //'format' => 'dd-mm-yyyy',
-					],
-					'pluginEvents'=>[
-							   'show' => "function(e) {errror}",
-					],
-				])   
-			?>	
-			<!--  Jam Masuk Istirahat !-->
-			<?=$form->field($model, 'RULE_BRK_IN')->widget(TimePicker::classname(), [
-					'options' => ['placeholder' => 'BreakIn ...'],
 					'pluginOptions' => [
 					   'autoclose'=>true,
 					   //'format' => 'dd-mm-yyyy',
