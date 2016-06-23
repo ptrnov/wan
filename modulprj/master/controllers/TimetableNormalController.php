@@ -163,14 +163,20 @@ class TimetableNormalController extends Controller
 			'TT_GRP_ID'=>$model->TT_GRP_ID
 		]);
         $dataProviderOt = $searchModelOt->search(Yii::$app->request->queryParams);
-
-        return $this->renderAjax('view', [
-            'model' => $model,
-			'arrayDayOfWeek'=>$this->aryDayOfWeek(),
-			'aryStt'=>$this->aryStt(),
-			'searchModel' => $searchModelOt,
-            'dataProvider' => $dataProviderOt,
-        ]);
+		
+		if ($model->load(Yii::$app->request->post())){
+			if($model->save(false)){
+				return $this->redirect(['/master/timetable-normal']);
+			}
+		}else{		
+			return $this->renderAjax('view', [
+				'model' => $model,
+				'arrayDayOfWeek'=>$this->aryDayOfWeek(),
+				'aryStt'=>$this->aryStt(),
+				'searchModel' => $searchModelOt,
+				'dataProvider' => $dataProviderOt,
+			]);
+		}
     }
 
     /**

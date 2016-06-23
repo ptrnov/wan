@@ -137,78 +137,66 @@ use kartik\widgets\DepDrop;
 	$attbTtDetail=[
 		[	// Time In
 			'attribute' =>	'RULE_IN',
-			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
-					//'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
+					'format'=>'H:i:s',
+					//'showSeconds' => true, //Add Detik
 				],
-				'pluginEvents'=>[
-							   'show' => "function(e) {errror}",
-					],
 			],
 			'inputWidth'=>'100%',
 			'labelColOptions' => ['style' => 'text-align:right;width: 40%']
 		],
 		[	// Time OUT
 			'attribute' =>	'RULE_OUT',
-			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
-					//'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
+					'format'=>'H:i:s',
 				]
 			],
 			'inputWidth'=>'100%',
 		],
 		[	// Time LATE
 			'attribute' =>	'RULE_TOL_IN',
-			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
-					//'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
+					'format'=>'H:i:s',
 				]
 			],
 			'inputWidth'=>'100%',
 		],
 		[	// Time EARLY
 			'attribute' =>	'RULE_TOL_OUT',
-			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
-					//'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
+					'format'=>'H:i:s',
 				]
 			],
 			'inputWidth'=>'100%',
 		],
 		[	// Time BREAK OUT
 			'attribute' =>	'RULE_BRK_OUT',
-			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
-					//'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
+					'format'=>'H:i:s',
 				]
 			],
 			'inputWidth'=>'100%',
 		],
 		[	// Time BREAK IN
 			'attribute' =>	'RULE_BRK_IN',
-			'format'=>'time',
 			'type'=>DetailView::INPUT_TIME,
+			'widgetOptions'=>[
+				'pluginOptions'=>[
+					'format'=>'H:i:s',
+				]
+			],
 			'inputWidth'=>'100%',
+			
 		],
 		[	//Note
 			'attribute' =>	'sembunyi',
