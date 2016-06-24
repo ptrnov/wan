@@ -30,14 +30,26 @@ use kartik\affix\Affix;
 		],	
 		[
 			'url' => '#sec-1',
-			'label' => 'EMPLOYEE DATA',
-			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>EMPLOYEE DATA</b></div>',
+			'label' => 'TIME TABLE',
+			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>TIME TABLE ATTENCANCE</b></div>',
 			'icon' => 'play-circle',
-			'content' => 'www',
+			'content' => 'TIME TABLE, merupakan rule atau aturan pada attencance. Setiap Employee melakukan finger In atau out pada mesin absensi, data tersebut akan langsung masuk ke server dan dideteksi oleh time table, dan di kelompokan sesuai kereteria yang sudah di tetapkan.',
 			'items' => [
-				['url' => '#sec-1-4', 'label' =>'PENJELASAN','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $penjelasan],
-				['url' => '#sec-1-5', 'label' => 'DOWNLOAD APLIKASI','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $linkDownload],
-				['url' => '#sec-1-6', 'label' => 'CARA INSTALL','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $installapp]
+				[
+					'url' => '#sec-1-4', 'label' =>'PENJELASAN',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
+					'content' => $timetablePenjelasan
+				],
+				[
+					'url' => '#sec-1-5', 'label' => 'FUNGSI TOMBOL',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>FUNGSI TOMBOL</b></div>', 
+					'content' => ''
+				],
+				[
+					'url' => '#sec-1-6', 'label' => 'CARA INSTALL',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
+					'content' => $installapp
+				]
 			],
 			'options'=>[
 				'style'=>[
@@ -47,25 +59,7 @@ use kartik\affix\Affix;
 				],
 			],			
 		],	
-		[
-			'url' => '#sec-2',
-			'label' => 'EMPLOYEE DATA',
-			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>EMPLOYEE DATA</b></div>',
-			'icon' => 'play-circle',
-			'content' => 'www',
-			'items' => [
-				['url' => '#sec-2-7', 'label' =>'PENJELASAN','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $penjelasan],
-				['url' => '#sec-2-8', 'label' => 'DOWNLOAD APLIKASI','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $linkDownload],
-				['url' => '#sec-2-9', 'label' => 'CARA INSTALL','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $installapp]
-			],
-			'options'=>[
-				'style'=>[
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'10pt',
-					'text-align'=>'left',
-				],
-			],			
-		],	
+		
 	];
 	
 ?>
