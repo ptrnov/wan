@@ -33,17 +33,15 @@ class HelpController extends Controller
 	
     public function actionIndex()
     {
-		
-		$penjelasan =$this->renderPartial('_penjelasan');
-		$linkDownload =$this->renderPartial('_downloadLink');
-		$installapp =$this->renderPartial('_installapp');
-		/*TITORIAL TIME TABEl */
-		$timetablePenjelasan =$this->renderPartial('_penjelasanTimetable');
+		/* Modul Employe */
+		$employePenjelasan =$this->renderPartial('_employePenjelasan');
+		/*Modul TIME TABEl */
+		$timetablePenjelasan =$this->renderPartial('_timetablePenjelasan');
 		
 		return $this->render('index',[
-			'linkDownload'=>$linkDownload ,
-			'penjelasan'=>$penjelasan,
-			'installapp'=>$installapp,
+			/* Modul Employe */
+			'employePenjelasan'=>$employePenjelasan,
+			/* Modul Time Table */
 			'timetablePenjelasan'=>$timetablePenjelasan
 		]);
     }

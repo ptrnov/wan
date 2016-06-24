@@ -154,13 +154,13 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 				'options'=>['rows'=>5]
 				])->label('Note')
 			?>	
-			<?=$form->field($modelOt, 'TT_GRP_ID')->hiddenInput(['value'=>$modelNormal->TT_GRP_ID]) ?>
+			<?=$form->field($modelOt, 'TT_GRP_ID')->hiddenInput(['value'=>$modelNormal->TT_GRP_ID])->label(false) ?>
 						
 		</div>
 	</div>
 		
 		<div style="text-align: right;">
-			<?php echo Html::submitButton('login',['class' => 'btn btn-primary']); ?>
+			<?php echo Html::submitButton('Create',['class' => 'btn btn-primary']); ?>
 		</div>
     <?php ActiveForm::end(); ?>
 

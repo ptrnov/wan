@@ -14,11 +14,13 @@ use kartik\affix\Affix;
 			'label' => 'EMPLOYEE DATA',
 			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>EMPLOYEE DATA</b></div>',
 			'icon' => 'play-circle',
-			'content' => 'www',
+			'content' => 'Employee Data, merupakan komponen mendasar dalam aplikasi Attendance dan payroll, sehingga data karyawan disebut data master yang tidak bisa di ubah-ubah tanpa adanya request yang jelas.',
 			'items' => [
-				['url' => '#sec-1-1', 'label' =>'PENJELASAN','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $penjelasan],
-				['url' => '#sec-1-2', 'label' => 'DOWNLOAD APLIKASI','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $linkDownload],
-				['url' => '#sec-1-3', 'label' => 'CARA INSTALL','header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 'content' => $installapp]
+				[
+					'url' => '#sec-1-1', 'label' =>'PENJELASAN',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
+					'content' => $employePenjelasan
+				],
 			],
 			'options'=>[
 				'style'=>[
@@ -31,7 +33,7 @@ use kartik\affix\Affix;
 		[
 			'url' => '#sec-1',
 			'label' => 'TIME TABLE',
-			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>TIME TABLE ATTENCANCE</b></div>',
+			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>TIME TABLE ATTENDANCE</b></div>',
 			'icon' => 'play-circle',
 			'content' => 'TIME TABLE, merupakan rule atau aturan pada attencance. Setiap Employee melakukan finger In atau out pada mesin absensi, data tersebut akan langsung masuk ke server dan dideteksi oleh time table, dan di kelompokan sesuai kereteria yang sudah di tetapkan.',
 			'items' => [
@@ -40,16 +42,6 @@ use kartik\affix\Affix;
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
 					'content' => $timetablePenjelasan
 				],
-				[
-					'url' => '#sec-1-5', 'label' => 'FUNGSI TOMBOL',
-					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>FUNGSI TOMBOL</b></div>', 
-					'content' => ''
-				],
-				[
-					'url' => '#sec-1-6', 'label' => 'CARA INSTALL',
-					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
-					'content' => $installapp
-				]
 			],
 			'options'=>[
 				'style'=>[
@@ -68,7 +60,7 @@ use kartik\affix\Affix;
 <div class="content">	
 	<div class="row">
 		<div>
-			<h4 class="text-center"><b>HIRS TUTORIAL</b></h4>
+			<h4 class="text-center"><b>HUMAN RESOURCE INFORMATION SYSTEM DOCUMENTATION, HRIS ver 1.1</b></h4>
 		</div>
 		<hr style="height:10px;margin-top: 1px; margin-bottom: 1px;color:#94cdf0">
 		<div class="col-md-12">						
