@@ -31,6 +31,7 @@ use modulprj\master\models\TimetableGroup;
  */
 class TimetableOvertime extends \yii\db\ActiveRecord
 {
+	public $hideTT_GRP_ID;
     /**
      * @inheritdoc
      */
@@ -45,10 +46,17 @@ class TimetableOvertime extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+			[[
+				'TT_TYP_KTG',
+				'TT_GRP_ID','TT_SDAYS', 'TT_EDAYS', 'TT_ACTIVE', 'RULE_DURATION',
+				'TT_SDATE', 'TT_EDATE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT','LEV1_FOT_MAX_TIME',
+				'LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX'
+			], 'required'],
             [['TT_GRP_ID', 'TT_TYP_KTG', 'TT_SDAYS', 'TT_EDAYS', 'TT_ACTIVE', 'RULE_DURATION', 'RULE_FRK_DAY', 'KOMPENSASI'], 'integer'],
-            [['TT_TYP','TT_SDATE', 'TT_EDATE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT','LEV1_FOT_MAX_TIME'], 'safe'],
+            [['TT_SDATE', 'TT_EDATE', 'TT_UPDT', 'RULE_IN', 'RULE_OUT','LEV1_FOT_MAX_TIME'], 'safe'],
             [['LEV1_FOT_HALF', 'LEV1_FOT_HOUR', 'LEV1_FOT_MAX'], 'number'],
             [['TT_NOTE'], 'string', 'max' => 15],
+            
         ];
     }
 

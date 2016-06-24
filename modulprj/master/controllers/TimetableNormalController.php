@@ -7,9 +7,13 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
+use yii\web\Response;
+use yii\web\Request;
 
 use modulprj\master\models\TimetableNormal;
 use modulprj\master\models\TimetableNormalSearch;
+use modulprj\master\models\TimetableOvertime;
 use modulprj\master\models\TimetableOvertimeSearch;
 use modulprj\master\models\TimetableGroup;
 use modulprj\master\models\TimetableGroupSearch;
@@ -206,21 +210,30 @@ class TimetableNormalController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreateOvertime()
+    public function actionCreateOvertime($id)
     {
-        $model = new TimetableNormal();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect('index');
-        } else {
-            return $this->renderAjax('_formOvertime', [
-                'model' => $model,
+        $modelOt = new TimetableOvertime();
+		$modelNormal = $this->findModel($id);
+		
+		if (!$modelOt->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_formOvertime', [
+				'modelOt' => $modelOt,
+				'modelNormal'=>$modelNormal,
 				'aryTtGrp'=>$this->aryTtGrp(),
 				'aryTtKtg'=>$this->aryTtKtgOvertime(),
 				'arrayDayOfWeek'=>$this->aryDayOfWeek(),
 				'aryStt'=>$this->aryStt(),
-            ]);
-        }
+			]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$modelOt->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($modelOt));
+			}else{
+				if ($modelOt->load(Yii::$app->request->post()) && $modelOt->save()) {
+					return $this->redirect('index');
+				}
+			}
+		}
     }
 	
     /**

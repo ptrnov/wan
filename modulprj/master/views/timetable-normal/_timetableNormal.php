@@ -39,6 +39,31 @@ use modulprj\master\models\TimetableOvertimeSearch;
 	 * @since 1.2
 	*/	
 	$attDinamik =[];
+	
+	/*NO ATTRIBUTE*/
+	$attDinamik[] =[			
+			'class'=>'kartik\grid\SerialColumn',
+			'contentOptions'=>['class'=>'kartik-sheet-style'],
+			'width'=>'10px',
+			'header'=>'No.',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'verdana, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(74, 206, 231, 1)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],					
+	];
 	/*GRIDVIEW EXPAND*/
 	$attDinamik[]=[	
 		'class'=>'kartik\grid\ExpandRowColumn',
@@ -125,33 +150,7 @@ use modulprj\master\models\TimetableOvertimeSearch;
 			]
 		],
 	
-	];
-	
-	/*NO ATTRIBUTE*/
-	$attDinamik[] =[			
-			'class'=>'kartik\grid\SerialColumn',
-			'contentOptions'=>['class'=>'kartik-sheet-style'],
-			'width'=>'10px',
-			'header'=>'No.',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'verdana, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(74, 206, 231, 1)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],					
-	];
-	
+	];	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){
 		$filterWidgetOpt='';

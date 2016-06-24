@@ -152,9 +152,10 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 			?>	
 		</div><div class="col-lg-12">	
 			<!-- Catatan !-->
-			<?=$form->field($model, 'TT_NOTE', $config)->textArea([
+			<!--$form->field($model, 'TT_NOTE', $config)->textArea([ !-->
+			<?=$form->field($model, 'TT_NOTE')->textArea([
 				'options'=>['rows'=>5]
-				]) 
+				])->label('Note')
 			?>	
 			<!--  Type value hidden | TT_TYP_KTG !-->
 			<?= $form->field($model, 'TT_TYP_KTG')->hiddenInput(['value'=>1])->label(false); ?>			

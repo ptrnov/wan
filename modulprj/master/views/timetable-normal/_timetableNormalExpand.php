@@ -29,19 +29,20 @@ use yii\helpers\Url;
             // 'LEV1_FOT_MAX_TIME',
             // 'KOMPENSASI',
 	$aryFieldOt= [
-		//['ID' =>0, 'ATTR' =>['FIELD'=>'TT_GRP_ID','SIZE' => '20px','label'=>'Category','align'=>'left','mergeHeader'=>true]],
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KtgNm','SIZE' => '20px','label'=>'Category','align'=>'left','mergeHeader'=>true]],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'vTT_SDAYS','SIZE' => '20px','label'=>'Day Of Start','align'=>'left','mergeHeader'=>true]],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'vTT_EDAYS','SIZE' => '20px','label'=>'Day Of End','align'=>'left','mergeHeader'=>true]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TT_SDATE','SIZE' => '20px','label'=>'Start Range','align'=>'center','mergeHeader'=>false]],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TT_EDATE','SIZE' => '20px','label'=>'End Range','align'=>'center','mergeHeader'=>false]],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'vTT_SDAYS','SIZE' => '10px','label'=>'Day Of Start','align'=>'center','mergeHeader'=>true]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'vTT_EDAYS','SIZE' => '10px','label'=>'Day Of End','align'=>'center','mergeHeader'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TT_SDATE','SIZE' => '10px','label'=>'Start Range','align'=>'center','mergeHeader'=>false]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TT_EDATE','SIZE' => '10px','label'=>'End Range','align'=>'center','mergeHeader'=>false]],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'RULE_IN','SIZE' => '10px','label'=>'TimeIn','align'=>'center','mergeHeader'=>false]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'RULE_OUT','SIZE' => '10px','label'=>'TimeOut','align'=>'center','mergeHeader'=>false]],			
-		['ID' =>7, 'ATTR' =>['FIELD'=>'LEV1_FOT_HALF','SIZE' => '100px','label'=>'% OT HALF','align'=>'left','mergeHeader'=>false]],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'LEV1_FOT_HOUR','SIZE' => '100px','label'=>'% OT HOUR','align'=>'left','mergeHeader'=>false]],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'LEV1_FOT_MAX','SIZE' => '100px','label'=>'% OT MAX','align'=>'left','mergeHeader'=>false]],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'RULE_DURATION','SIZE' => '100px','label'=>'WORK TIME','align'=>'left','mergeHeader'=>false]],
-		['ID' =>11, 'ATTR' =>['FIELD'=>'LEV1_FOT_MAX_TIME','SIZE' => '100px','label'=>'TIME OT MAX','align'=>'left','mergeHeader'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'RULE_OUT','SIZE' => '10px','label'=>'TimeOut','align'=>'center','mergeHeader'=>false]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'RULE_DURATION','SIZE' => '10px','label'=>'TOTAL TIME','align'=>'center','mergeHeader'=>false]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'LEV1_FOT_MAX_TIME','SIZE' => '100px','label'=>'TIME OT MAX','align'=>'center','mergeHeader'=>false]],		
+		['ID' =>9, 'ATTR' =>['FIELD'=>'LEV1_FOT_HALF','SIZE' => '10px','label'=>'%HALF','align'=>'right','mergeHeader'=>false]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'LEV1_FOT_HOUR','SIZE' => '10px','label'=>'%HOUR','align'=>'right','mergeHeader'=>false]],
+		['ID' =>11, 'ATTR' =>['FIELD'=>'LEV1_FOT_MAX','SIZE' => '10px','label'=>'%MAX','align'=>'right','mergeHeader'=>false]],
+		['ID' =>11, 'ATTR' =>['FIELD'=>'TT_NOTE','SIZE' => '10px','label'=>'Note','align'=>'right','mergeHeader'=>false]],
+		
 	];	
 	$valFieldsOt = ArrayHelper::map($aryFieldOt, 'ID', 'ATTR'); 
 	
