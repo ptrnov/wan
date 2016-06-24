@@ -11,9 +11,9 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 
 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'IJN_ID','SIZE' => '20px','label'=>'Id','align'=>'left']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'IIJN_NM','SIZE' => '10px','label'=>'Exception','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'IJIN_KET','SIZE' => '10px','label'=>'Description','align'=>'left']],
+		//['ID' =>0, 'ATTR' =>['FIELD'=>'IJN_ID','SIZE' => '20px','label'=>'Id','align'=>'left']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'IIJN_NM','SIZE' => '10px','label'=>'Exception','align'=>'left']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'IJIN_KET','SIZE' => '10px','label'=>'Description','align'=>'left']],
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 	
@@ -105,7 +105,7 @@ use yii\helpers\Url;
 			//'heading'=>'<h3 class="panel-title">Exception List</h3>',
 			'heading'=>false,
 			'type'=>'warning',
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Exception',
 									['modelClass' => 'Kategori',]),'/master/employe/create',[
 										'data-toggle'=>"modal",
 										'data-target'=>"#modal-create",

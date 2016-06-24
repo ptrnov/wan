@@ -2,6 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
+use kartik\widgets\DatePicker;
+use kartik\widgets\datetimepicker;
+use kartik\widgets\TimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model modulprj\master\models\IjinDetail */
@@ -12,15 +19,62 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'KAR_ID')->textInput(['maxlength' => true]) ?>
+	<?=$form->field($model, 'cabang')->dropDownList($aryCbg,[
+			'id'=>'ijindetail-cabang',
+			'prompt'=>' -- Pilih Cabang --',
+		]);
+	?>	
+	<?=$form->field($model, 'KAR_ID')->widget(DepDrop::classname(), [
+			'type'=>DepDrop::TYPE_SELECT2,
+			'data' => $aryKaryawan,
+			'options' => ['id'=>'select2-ijindetail-kar_id-container'],
+			'pluginOptions' => [
+				'depends'=>['ijindetail-cabang'],
+				'url'=>Url::to(['/master/ijin-detail/cabang-employe']),
+				'initialize'=>true,
+			],
+		])->label('Karyawan');
+	?>
+	<?=$form->field($model, 'IJN_ID')->widget(Select2::classname(), [
+			'data' => $aryIjinHeader,
+			'options' => ['placeholder' => 'Pilih  Nama Ijin ...'],
+			'pluginOptions' => [
+				'allowClear' => true
+			 ],
+		])->label('Ijin Nama');
+	?>
+	<?=$form->field($model, 'IJN_SDATE')->widget(datetimepicker::classname(), [
+			'options' => ['placeholder' => ' Jam dan waktu Mulai  ...'],
+			'pluginOptions' => [
+			   'autoclose'=>true,
+			   'format' => 'yyyy-mm-dd HH:ii:ss',
+			],
+			'pluginEvents'=>[
+					   'show' => "function(e) {errror}",
+			],
+		])   
+	?>	
+	<?=$form->field($model, 'IJN_EDATE')->widget(datetimepicker::classname(), [
+			'options' => ['placeholder' => ' Jam dan waktu akhir  ...'],
+			'pluginOptions' => [
+			   'autoclose'=>true,
+			   'format' => 'yyyy-mm-dd HH:ii:ss',
+			],
+			'pluginEvents'=>[
+					   'show' => "function(e) {errror}",
+			],
+		])   
+	?>	
+	<?php //= $form->field($model, 'IJN_ID')->textInput() ?>
+    <?php //= $form->field($model, 'KAR_ID')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'IJN_SDATE')->textInput() ?>
+    <?php //= $form->field($model, 'IJN_SDATE')->textInput() ?>
 
-    <?= $form->field($model, 'IJN_EDATE')->textInput() ?>
+    <?php //= $form->field($model, 'IJN_EDATE')->textInput() ?>
 
-    <?= $form->field($model, 'IJN_ID')->textInput() ?>
+    
 
-    <?= $form->field($model, 'IJN_NOTE')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'IJN_NOTE')->textarea(['rows' => 6])->label('Alasan') ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

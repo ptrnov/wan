@@ -19,10 +19,16 @@ class IjinDetailSearch extends IjinDetail
     {
         return [
             [['ID', 'IJN_ID'], 'integer'],
-            [['KAR_ID', 'IJN_SDATE', 'IJN_EDATE', 'IJN_NOTE'], 'safe'],
+            [['KAR_ID', 'IJN_SDATE', 'IJN_EDATE', 'IJN_NOTE','empNm','ijinNm'], 'safe'],
         ];
     }
 
+	public function attributes()
+	{
+		//Author -ptr.nov- add related fields to searchable attributes
+       return array_merge(parent::attributes(), ['empNm','ijinNm']);
+    }
+	
     /**
      * @inheritdoc
      */
@@ -41,7 +47,8 @@ class IjinDetailSearch extends IjinDetail
      */
     public function search($params)
     {
-        $query = IjinDetail::find();
+        $query = IjinDetail::find()
+					->JoinWith('emp',true,'left JOIN');
 
         // add conditions that should always apply here
 
@@ -62,10 +69,11 @@ class IjinDetailSearch extends IjinDetail
             'ID' => $this->ID,
             'IJN_SDATE' => $this->IJN_SDATE,
             'IJN_EDATE' => $this->IJN_EDATE,
-            'IJN_ID' => $this->IJN_ID,
+            'IJN_ID' => $this->getAttribute('ijinNm'),
         ]);
 
-        $query->andFilterWhere(['like', 'KAR_ID', $this->KAR_ID])
+        $query->andFilterWhere(['like', 'ijin_detail.KAR_ID', $this->getAttribute('empNm')])
+			->andFilterWhere(['like', 'ijin_detail.KAR_ID',$this->KAR_ID])
             ->andFilterWhere(['like', 'IJN_NOTE', $this->IJN_NOTE]);
 
         return $dataProvider;

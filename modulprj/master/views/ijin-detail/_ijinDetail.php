@@ -11,11 +11,11 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 
 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_ID','SIZE' => '20px','label'=>'Employee','align'=>'left']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'IJN_ID','SIZE' => '10px','label'=>'Exception','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'IJN_SDATE','SIZE' => '10px','label'=>'Start Date','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'IJN_EDATE','SIZE' => '20px','label'=>'End Date','align'=>'left']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'IJN_NOTE','SIZE' => '20px','label'=>'Note','align'=>'left']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'empNm','SIZE' => '20%','label'=>'Employee','align'=>'left','mergeHeader'=>true]],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'ijinNm','SIZE' => '20%','label'=>'Exception','align'=>'left','mergeHeader'=>true]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'IJN_SDATE','SIZE' => '5%','label'=>'Start Date','align'=>'left','mergeHeader'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'IJN_EDATE','SIZE' => '5%','label'=>'End Date','align'=>'left','mergeHeader'=>true]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'IJN_NOTE','SIZE' => '40%','label'=>'Note','align'=>'left','mergeHeader'=>true]],
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 	
@@ -52,17 +52,39 @@ use yii\helpers\Url;
 	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){
+		$filterWidgetOpt='';
+		if ($value[$key]['FIELD']=='empNm'){				
+			$gvfilterType=GridView::FILTER_SELECT2;
+			//$gvfilterType=false;
+			$gvfilter =true;
+			$filterWidgetOpt=[	
+				'data'=>$aryKaryawan,			
+				'pluginOptions'=>['allowClear'=>true,'placeholder'=>'Cari Employee'],	
+			];
+		}elseif($value[$key]['FIELD']=='ijinNm'){
+			$gvfilterType=false;
+			$gvfilter =$aryIjinHeader;
+		}else{
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			//$filterInputOpt=false;						
+		};
+		
 		$attDinamik[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
+			'filterType'=>$gvfilterType,
+			'filter'=>$gvfilter,
+			'filterWidgetOptions'=>$filterWidgetOpt,
 			//'mergeHeader'=>true,
 			'noWrap'=>true,			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
-					'width'=>$value[$key]['FIELD'],
+					'width'=>$value[$key]['SIZE'],
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
 					'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -71,7 +93,7 @@ use yii\helpers\Url;
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>$value[$key]['align'],
-					//'width'=>'12px',
+					'width'=>$value[$key]['SIZE'],
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
@@ -107,15 +129,15 @@ use yii\helpers\Url;
 			//'heading'=>'<h3 class="panel-title">Employee List Exception</h3>',
 			'heading'=>false,
 			'type'=>'warning',
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
-									['modelClass' => 'Kategori',]),'/master/employe/create',[
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Process Exception ',
+									['modelClass' => 'Kategori',]),'/master/ijin-detail/create',[
 										'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
+										'data-target'=>"#process-exception-add",
 										'class' => 'btn btn-success btn-sm'
 									]
 						).' '.
 						Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
-									'/master/employe/',
+									'/master/ijin-detail/',
 									[
 									   'class' => 'btn btn-info btn-sm',
 									]
