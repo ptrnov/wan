@@ -10,13 +10,17 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Response;
 use yii\web\Request;
-
+use yii\bootstrap\Modal;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
+	
 use modulprj\master\models\IjinDetail;
 use modulprj\master\models\IjinDetailSearch;
 use modulprj\master\models\IjinHeaderSearch;
 use modulprj\master\models\IjinHeader;
 use modulprj\master\models\Cbg;
 use modulprj\master\models\Karyawan;
+use modulprj\master\models\Dept;
 
 class IjinDetailController extends Controller
 {
@@ -63,6 +67,9 @@ class IjinDetailController extends Controller
 	public function aryCbg(){ 
 		return ArrayHelper::map(Cbg::find()->all(), 'CAB_ID','CAB_NM');
 	}
+	public function aryDep(){ 
+		return ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
+	}
 	public function aryKaryawan(){ 
 		return ArrayHelper::map(Karyawan::find()->all(), 'KAR_ID','KAR_NM');
 	}
@@ -101,6 +108,8 @@ class IjinDetailController extends Controller
 			'dataProviderHeader'=>$dataProviderHeader,
 			'aryKaryawan'=>$this->aryKaryawan(),
 			'aryIjinHeader'=>$this->aryIjinHeader(),
+			'aryCbg'=>$this->aryCbg(),
+			'aryDep'=>$this->aryDep(),
         ]);
     }
 
@@ -111,9 +120,22 @@ class IjinDetailController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+		$model = $this->findModel($id);
+     
+		if ($model->load(Yii::$app->request->post())){
+			//$model->save(false);
+			if($model->save()){
+				//$model->refresh();
+				
+				return $this->redirect(['/master/ijin-detail/']);
+				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+			};
+		}else{
+			return $this->renderAjax('_view', [
+				'model' => $model,
+				'aryIjinHeader'=>$this->aryIjinHeader(),
+			]);
+		}
     }
 
     /**
@@ -131,6 +153,7 @@ class IjinDetailController extends Controller
             return $this->renderAjax('_form', [
                 'model' => $model,
 				'aryCbg'=>$this->aryCbg(),
+				'aryDep'=>$this->aryDep(),
 				'aryKaryawan'=>$this->aryKaryawan(),
 				'aryIjinHeader'=>$this->aryIjinHeader(),
             ]);
@@ -145,10 +168,11 @@ class IjinDetailController extends Controller
 	public function actionCabangEmploye() {
 		$out = [];
 		if (isset($_POST['depdrop_parents'])) {
-			$cab_id = $_POST['depdrop_parents'];
-			if ($cab_id != null) {
-				//$corp_id = $parents[0];
-				$model = Karyawan::find()->asArray()->where(['CAB_ID'=>$cab_id])->all();
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$cab_id = $parents[0];
+				$dep_id = $parents[1];
+				$model = Karyawan::find()->asArray()->where(['CAB_ID'=>$cab_id,'DEP_ID'=>$dep_id])->all();
 				foreach ($model as $key => $value) {
 					   $out[] = ['id'=>$value['KAR_ID'],'name'=> $value['KAR_NM']];
 				   }

@@ -19,9 +19,14 @@ use kartik\widgets\TimePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-	<?=$form->field($model, 'cabang')->dropDownList($aryCbg,[
-			'id'=>'ijindetail-cabang',
+	<?=$form->field($model, 'CAB_ID')->dropDownList($aryCbg,[
+			'id'=>'ijindetail-cab_id',
 			'prompt'=>' -- Pilih Cabang --',
+		]);
+	?>	
+	<?=$form->field($model, 'DEP_ID')->dropDownList($aryDep,[
+			'id'=>'ijindetail-dep_id',
+			'prompt'=>' -- Pilih Department --',
 		]);
 	?>	
 	<?=$form->field($model, 'KAR_ID')->widget(DepDrop::classname(), [
@@ -29,7 +34,7 @@ use kartik\widgets\TimePicker;
 			'data' => $aryKaryawan,
 			'options' => ['id'=>'select2-ijindetail-kar_id-container'],
 			'pluginOptions' => [
-				'depends'=>['ijindetail-cabang'],
+				'depends'=>['ijindetail-cab_id','ijindetail-dep_id'],
 				'url'=>Url::to(['/master/ijin-detail/cabang-employe']),
 				'initialize'=>true,
 			],

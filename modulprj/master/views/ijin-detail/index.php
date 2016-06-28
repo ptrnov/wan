@@ -12,18 +12,31 @@ use kartik\builder\Form;
 use yii\widget\Pjax;
 use yii\helpers\Url;
 
-use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
-AppAsset::register($this);
+// use modulprj\assets\AppAsset; 	/* CLASS ASSET CSS/JS/THEME Author: -ptr.nov-*/
+// AppAsset::register($this);
 $this->mddPage = 'hrd';
 $this->params['breadcrumbs'][] = $this->title;
-$this->sideCorp="Employee"; 
+//$this->sideCorp="Employee"; 
 
+	Modal::begin([
+		'id' => 'modal-view-ijin',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-clock-o"></div><div><h5 class="modal-title"><b>VIEW EXCEPTION</b></h5></div>',
+		'size' => Modal::SIZE_LARGE,
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+		],
+	]);
+	echo "<div id='modalContentIjin'></div>";
+	Modal::end();
+		
 
 	$ijinDetail=$this->render('_ijinDetail',[
 		'searchModelDetail' => $searchModelDetail,
 		'dataProviderDetail' => $dataProviderDetail,
 		'aryKaryawan'=>$aryKaryawan,
 		'aryIjinHeader'=>$aryIjinHeader,
+		'aryCbg'=>$aryCbg,
+		'aryDep'=>$aryDep,
 	]);
 	$ijinHeader=$this->render('_ijinHeader',[
 		'searchModelHeader'=>$searchModelHeader,
@@ -82,4 +95,62 @@ $this->sideCorp="Employee";
 		'size'=>'modal-xs'
     ]);
     Modal::end();
+?>
+<?php
+	/*
+	 * PROCESS EXCEPTION VIEW EDITING
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+	$(document).ready(function () {
+		var stt  = localStorage.getItem('sts');
+		var nilaiValue = localStorage.getItem('nilai');
+		localStorage.setItem('sts','hidden');
+		/*
+		 * FIRST SHOW MODAL
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/
+		$(document).on('click','#modalButtonIjin', function(ehead){	
+				$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+				//e.preventDefault(); 		
+				localStorage.clear();
+				localStorage.setItem('nilai',ehead.target.value);			
+				localStorage.setItem('sts','show');
+				$('#modal-view-ijin').modal('show')
+				.find('#modalContentIjin')
+				.load(ehead.target.value);
+		});
+		
+		/* TEST VALUE */
+		//alert(stt);
+		//alert(nilaiValue);
+		
+		/*
+		 * STATUS SHOW IF EVENT BUTTON SAVED
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/
+		$(document).on('click','#saveBtn', function(e){		
+			localStorage.setItem('sts','show');		
+		}); 
+		
+		/*
+		 * STATUS HIDDEN IF EVENT MODAL HIDE
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/
+		$('#modal-view-ijin').one('hidden.bs.modal', function () {
+			localStorage.setItem('sts','hidden');
+		});
+		
+		/*
+		 * CALL BACK SHOW MODAL
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/	
+		setTimeout(function(){
+			$('#modal-view-ijin').modal(stt)
+			.find('#modalContentIjin')
+			.load(nilaiValue);
+		}, 1000);  
+	});
+	",$this::POS_READY);
 ?>

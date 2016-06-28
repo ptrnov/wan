@@ -18,15 +18,15 @@ class IjinDetailSearch extends IjinDetail
     public function rules()
     {
         return [
-            [['ID', 'IJN_ID'], 'integer'],
-            [['KAR_ID', 'IJN_SDATE', 'IJN_EDATE', 'IJN_NOTE','empNm','ijinNm'], 'safe'],
+            [['ID', 'IJN_ID','DEP_ID'], 'integer'],
+            [['KAR_ID', 'IJN_SDATE', 'IJN_EDATE', 'IJN_NOTE','empNm','ijinNm','CAB_ID','cabNm','depNm'], 'safe'],
         ];
     }
 
 	public function attributes()
 	{
 		//Author -ptr.nov- add related fields to searchable attributes
-       return array_merge(parent::attributes(), ['empNm','ijinNm']);
+       return array_merge(parent::attributes(), ['empNm','ijinNm','cabNm','depNm']);
     }
 	
     /**
@@ -48,7 +48,9 @@ class IjinDetailSearch extends IjinDetail
     public function search($params)
     {
         $query = IjinDetail::find()
-					->JoinWith('emp',true,'left JOIN');
+					->JoinWith('emp',true,'left JOIN')
+					->JoinWith('cabang',true,'left JOIN')
+					->JoinWith('department',true,'left JOIN');
 
         // add conditions that should always apply here
 
@@ -67,15 +69,26 @@ class IjinDetailSearch extends IjinDetail
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'IJN_SDATE' => $this->IJN_SDATE,
-            'IJN_EDATE' => $this->IJN_EDATE,
+            //'IJN_SDATE' => $this->IJN_SDATE,
+            //'IJN_EDATE' => $this->IJN_EDATE,
             'IJN_ID' => $this->getAttribute('ijinNm'),
         ]);
 
         $query->andFilterWhere(['like', 'ijin_detail.KAR_ID', $this->getAttribute('empNm')])
 			->andFilterWhere(['like', 'ijin_detail.KAR_ID',$this->KAR_ID])
+			->andFilterWhere(['like', 'ijin_detail.DEP_ID',$this->getAttribute('depNm')])
+			->andFilterWhere(['like', 'ijin_detail.CAB_ID',$this->getAttribute('cabNm')])
             ->andFilterWhere(['like', 'IJN_NOTE', $this->IJN_NOTE]);
 
+		/* FILTER COLUMN DATE RANGE Author -ptr.nov-*/
+		if(isset($this->IJN_SDATE) && $this->IJN_SDATE!=''){
+			$date_explode = explode(" - ", $this->IJN_SDATE);
+			// print_r($date_explod);
+			// die();
+			$date1 = trim($date_explode[0]);
+			$date2= trim($date_explode[1]);
+			$query->andFilterWhere(['between', 'IJN_SDATE', $date1,$date2]);
+		}
         return $dataProvider;
     }
 }

@@ -5,6 +5,8 @@ namespace modulprj\master\models;
 use Yii;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\IjinHeader;
+use modulprj\master\models\Cbg;
+use modulprj\master\models\Dept;
 /**
  * This is the model class for table "ijin_detail".
  *
@@ -17,8 +19,8 @@ use modulprj\master\models\IjinHeader;
 class IjinDetail extends \yii\db\ActiveRecord
 {
 	
-	public $cabang;
-    /**
+	
+	 /**
      * @inheritdoc
      */
     public static function tableName()
@@ -34,9 +36,9 @@ class IjinDetail extends \yii\db\ActiveRecord
         return [
             [['IJN_SDATE', 'IJN_EDATE'], 'safe'],
             [['IJN_ID','IJN_SDATE','IJN_EDATE','KAR_ID'], 'required'],
-            [['IJN_ID'], 'integer'],
+            [['IJN_ID','DEP_ID'], 'integer'],
             [['IJN_NOTE'], 'string'],
-            [['KAR_ID'], 'string', 'max' => 15],
+            [['KAR_ID','CAB_ID'], 'string'],
         ];
     }
 
@@ -46,11 +48,13 @@ class IjinDetail extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'KAR_ID' => Yii::t('app', 'Kar  ID'),
-            'IJN_SDATE' => Yii::t('app', 'Ijn  Sdate'),
-            'IJN_EDATE' => Yii::t('app', 'Ijn  Edate'),
-            'IJN_ID' => Yii::t('app', 'Ijn  ID'),
-            'IJN_NOTE' => Yii::t('app', 'Ijn  Note'),
+            'KAR_ID' => Yii::t('app', 'Employee Id'),
+            'IJN_SDATE' => Yii::t('app', 'Start Date'),
+            'IJN_EDATE' => Yii::t('app', 'End Date'),
+            'IJN_ID' => Yii::t('app', 'Ijin.Id'),
+            'IJN_NOTE' => Yii::t('app', 'Note'),
+            'CAB_ID' => Yii::t('app', 'Cabang'),
+            'DEP_ID' => Yii::t('app', 'Department'),
         ];
     }
 	
@@ -70,5 +74,23 @@ class IjinDetail extends \yii\db\ActiveRecord
 	
 	public function getIjinNm(){
 		return $this->ijinHdr!=''?$this->ijinHdr->IIJN_NM:'none';
+	}
+	
+	/*Join Ijin Cabang*/
+	public function getDepartment(){
+		 return $this->hasOne(Dept::className(), ['DEP_ID' => 'DEP_ID']);
+	}
+	
+	public function getDepNm(){
+		return $this->department!=''?$this->department->DEP_NM:'none';
+	}
+	
+	/*Join Ijin Cabang*/
+	public function getCabang(){
+		 return $this->hasOne(Cbg::className(), ['CAB_ID' => 'CAB_ID']);
+	}
+	
+	public function getCabNm(){
+		return $this->cabang!=''?$this->cabang->CAB_NM:'none';
 	}
 }
