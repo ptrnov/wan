@@ -128,13 +128,13 @@ use yii\helpers\Url;
 					'opens'=>'left',
 					'autoclose' => true,
 					'todayHighlight' => true,
-					'contentOptions'=>[
+					/* 'contentOptions'=>[
 						'style'=>[
 						  'text-align'=>'left',
 						  'font-family'=>'tahoma, arial, sans-serif',
 						  'font-size'=>'8pt',
 						]
-					]
+					] */
 				],				
 			]; 
 			$filterOptCspn=2;
@@ -250,7 +250,7 @@ use yii\helpers\Url;
 										'class' => 'btn btn-info btn-sm'
 									]
 						),
-						'footer'=>false,
+						'footer'=>true,
 		],
 		'summary'=>false,
 		'pjax'=>true,
