@@ -31,6 +31,7 @@ class PersonallogSearch extends Personallog
 	public $waktu;
 	public $idno;
 	public $NAMA;
+	public $EmpNmFinger;
 	
     /**
      * @inheritdoc	
@@ -58,7 +59,18 @@ class PersonallogSearch extends Personallog
 	 * @since 1.2
      */
 	public function getScripts(){
-		return Yii::$app->db->createCommand("CALL absensi_maintain()")->queryAll();             
+		//return Yii::$app->db->createCommand("CALL absensi_maintain()")->queryAll();             
+		return Yii::$app->db->createCommand("
+			SELECT X.idno,X.TerminalID,X.UserID,X.FunctionKey,X.Edited,X.FlagAbsence,X.DateTime,X.DateTime as DateTimeLate,X.tgl,X.waktu,
+			 X.UserName,Y.NAMA
+			FROM personallog X LEFT JOIN
+				(	SELECT A.TerminalID,A.FingerPrintID,CONCAT(B.KAR_NM) AS NAMA 
+					FROM kar_finger A LEFT JOIN Karyawan B ON B.KAR_ID=A.KAR_ID
+				) Y 
+				ON Y.FingerPrintID=X.UserID AND X.TerminalID=Y.TerminalID
+			WHERE X.TerminalID<>''
+			GROUP BY X.UserID;
+		")->queryAll();             
 	}	
 	public function search($params)
     {

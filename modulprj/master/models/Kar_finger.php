@@ -3,7 +3,7 @@
 namespace modulprj\master\models;
 
 use Yii;
-
+use modulprj\master\models\Karyawan;
 /**
  * This is the model class for table "kar_finger".
  *
@@ -46,6 +46,7 @@ class Kar_finger extends \yii\db\ActiveRecord
         ];
     }
 
+	
     /**
      * @inheritdoc
      */
@@ -60,4 +61,13 @@ class Kar_finger extends \yii\db\ActiveRecord
             'UPDT' => 'Updt',
         ];
     }
+	
+	/*Join Karyawan*/
+	public function getEmp(){
+		 return $this->hasOne(Karyawan::className(), ['KAR_ID' => 'KAR_ID']);
+	}
+	
+	public function getEmpNm(){
+		return $this->emp!=''?$this->emp->KAR_NM:'none';
+	}
 }

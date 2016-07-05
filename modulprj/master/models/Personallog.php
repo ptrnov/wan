@@ -8,6 +8,7 @@ use modulprj\master\models\Machine;
 use modulprj\master\models\MachineSearch;
 use modulprj\master\models\Key_list;
 use modulprj\master\models\Key_listSearch;
+use modulprj\master\models\Kar_finger;
 
 
 class Personallog extends \yii\db\ActiveRecord
@@ -44,6 +45,15 @@ class Personallog extends \yii\db\ActiveRecord
 	public function getKeys_nm(){
 		//return $this->keys->FunctionKeyNM;
 		return $this->keys!=''?$this->keys->FunctionKeyNM:'unknown';
+	}
+	
+	/*Join Karyawan*/
+	public function getEmpfinger(){
+		 return $this->hasOne(Kar_finger::className(), ['FingerPrintID' => 'UserID']);
+	}
+	
+	public function getEmpNm(){
+		return $this->empfinger!=''?$this->empfinger->empNm:'none';
 	}
 	
     /**

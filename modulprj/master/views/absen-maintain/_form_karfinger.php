@@ -33,15 +33,16 @@ $aryKaryawane = ArrayHelper::map(Karyawan::find()->all(), 'KAR_ID','KAR_NM');
     <?= $form->field($model, 'TerminalID')->hiddenInput(['value'=>$modelView->TerminalID,'maxlength' => true])->label(false); ?>
 	  
 	<?= $form->field($model, 'mesinNm')->textInput(['value'=>$modelView->Machine_nm,'maxlength' => true,'readonly'=>true])->label('Machine ID'); ?>
-	<?= $form->field($model, 'FingerPrintID')->textInput(['value'=>$modelView->UserID,'maxlength' => true,'readonly'=>true])->label('Finger'); ?>
-    <?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger'); ?>
+	<?= $form->field($model, 'FingerPrintID')->hiddenInput(['value'=>$modelView->UserID,'maxlength' => true,'readonly'=>true])->label(false); ?>
+    <?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger Name'); ?>
+    <?= $form->field($model, 'EmpNmFinger')->textInput(['value'=>$modelView->empNm,'maxlength' => true,'readonly'=>true])->label('Employee Name'); ?>
     <?= $form->field($model, 'KAR_ID')->widget(Select2::classname(), [
 			'data' => $aryKaryawane,
 			'options' => ['placeholder' => 'Pilih Karyawane ...'],
 			'pluginOptions' => [
 				'allowClear' => true
 				 ],
-		]);
+		])->label('Change Employee');
 	?>
     
 
