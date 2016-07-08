@@ -13,7 +13,7 @@ use \DateTime;
 use modulprj\master\models\Personallog;
 use modulprj\master\models\PersonallogSearch;
 use modulprj\master\models\Kar_finger;
-
+use modulprj\master\models\Karyawan;
 
 class AbsenMaintainController extends Controller
 {
@@ -107,22 +107,72 @@ class AbsenMaintainController extends Controller
 	
 	public function actionFingerEmpSave()
     {
+		$hsl = \Yii::$app->request->post();
+		$teminal= $hsl['Kar_finger']['TerminalID'];
+		$finger= $hsl['Kar_finger']['FingerPrintID'];
+		$karid= $hsl['Kar_finger']['KAR_ID'];
+		
 		if (!Yii::$app->user->isGuest){
-			$model = new Kar_finger();
-
-			if($model->load(Yii::$app->request->post())){                  
-						//$model->CREATED_BY = Yii::$app->user->identity->username;
-						//$model->CREATED_AT = date('Y-m-d H:i:s');
-						$model->save();    
-				return $this->redirect(['index']);
-						
+			
+			$modelUpdate = Kar_finger::findOne(['TerminalID'=>$teminal,'FingerPrintID'=>$finger]);
+			
+			/* print_r($modelUpdate);
+			if ($modelUpdate->NO_URUT!=''){
+				echo  $teminal;
 			}else{
-				return ActiveForm::validate($model);
-			}	
+				echo  $karid;
+				
+			} */
+			
+			/*ADD NEW*/
+			if ($modelUpdate->NO_URUT!=''){
+				
+				if ($modelUpdate->load(Yii::$app->request->post()) && $modelUpdate->save()) {
+					return $this->redirect(['index']);
+				}else{
+					return ActiveForm::validate($modelUpdate);
+				}	
+				
+			}else{
+				/*UPDATE*/
+				$model = new Kar_finger();
+				if($model->load(Yii::$app->request->post())){                  
+							//$model->CREATED_BY = Yii::$app->user->identity->username;
+							//$model->CREATED_AT = date('Y-m-d H:i:s');
+							$model->save();    
+					return $this->redirect(['index']);
+							
+				}else{
+					return ActiveForm::validate($model);
+				}	
+			} 
 		}
     }
 	
-	
+	/**
+     * DepDrop CABANG | KARYAWAN
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionCabangDeptEmploye() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$cab_id = $parents[0];
+				$dep_id = $parents[1];
+				//$model = Karyawan::find()->asArray()->where(['CAB_ID'=>$cab_id,'DEP_ID'=>$dep_id])->all();
+				$model = Karyawan::find()->asArray()->where("CAB_ID=".$cab_id." AND DEP_ID=".$dep_id." AND KAR_STS<>3")->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KAR_ID'],'name'=> $value['KAR_NM']];
+				   }
+
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
 	
 	
 	
@@ -183,10 +233,13 @@ class AbsenMaintainController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($m,$f,$e)
     {
-        $this->findModel($id)->delete();
-
+		//echo $m.'-'.$f.'-'.$e;
+		$modelDel =  Kar_finger::findOne(['TerminalID'=>$teminal,'FingerPrintID'=>$finger,'KAR_ID'=>"'".$e."'"])->delete();
+		//$modelDel->delete();
+        //$this->findModel($id)->delete();
+		
         return $this->redirect(['index']);
     }
 

@@ -265,12 +265,12 @@ $this->sideCorp="Employee";
 		[	//col-8
 			'class'=>'kartik\grid\ActionColumn',
 			'dropdown' => true,
-			'template' => '{karfinger}{edit}{delete}',
+			'template' => '{karfinger}{view}{delete}',
 			'dropdownOptions'=>['class'=>'pull-right dropup'],
 			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 			'buttons' => [
 					'karfinger' =>function($url, $model, $key){
-							return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Employee Finger'),
+							return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Employee To Finger'),
 														[	
 															'/master/absen-maintain/finger-emp',
 															'm'=>$model['TerminalID'],
@@ -279,25 +279,27 @@ $this->sideCorp="Employee";
 														],[	
 														'data-toggle'=>"modal",
 														'data-target'=>"#modal-view",														
-														'data-title'=> 'RT0'.$model['UserID'],
+														//'data-title'=> 'RT0'.$model['UserID'],
 														]). '</li>' . PHP_EOL;
 					},
-					'edit' =>function($url, $model, $key){
-							return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Edit'),
+					'view' =>function($url, $model, $key){
+							return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'View'),
 														['/dashboard/warga-data-rt/edit','id'=>$model['UserID']],[	
 														'data-toggle'=>"modal",
 														'data-target'=>"#modal-edit",														
-														'data-title'=> 'RT0'.$model['UserID'],
+														'data-title'=> 'RT0'.$model['NAMA'],
 														]). '</li>' . PHP_EOL;					
 					},
 					'delete' =>function($url, $model, $key){
 						return  '<li>' .Html::a('<span class="fa fa-remove fa-dm"></span>'.Yii::t('app', 'delete'),
-													['/dashboard/warga-data-rt/delete','id'=>$model['UserID']],[
-													'data-method'=>'post',
-													//'data-toggle'=>"modal",
-													//'data-target'=>"#modal-del",
-													//'data-title'=>$model->KK_NM,
-													'data-confirm'=>'Anda yakin ingin menghapus data warga '. $model['UserID'].' ?',
+													[	'/master/absen-maintain/delete',
+														'm'=>$model['TerminalID'],		 // terminal Id																									
+														'f'=>$model['UserID'],			 //Finger Id
+														'e'=>$model['KAR_ID'],			 //employe Id
+													],
+													[
+														'data-method'=>'post',
+														'data-confirm'=>'Anda yakin ingin menghapus data  Finger: '.$model['UserName'].' dengan Karyawan: '. $model['NAMA'].' ?',
 													]). '</li>' . PHP_EOL;
 					},					
 			],
@@ -419,7 +421,7 @@ $this->sideCorp="Employee";
     ",$this::POS_READY);
 	 Modal::begin([
         'id' => 'modal-view',
-      	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">View Data Warga</h4></div>',
+      	'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Change Finger Employee</h4></div>',
 		'headerOptions'=>[								
 				'style'=> 'border-radius:5px; background-color: rgba(0, 95, 218, 0.3)',	
 		],
