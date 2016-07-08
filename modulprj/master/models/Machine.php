@@ -4,6 +4,8 @@ namespace modulprj\master\models;
 
 use Yii;
 
+use modulprj\master\models\Cbg;
+
 /**
  * This is the model class for table "machine".
  *
@@ -56,4 +58,13 @@ class Machine extends \yii\db\ActiveRecord
             'CAB_ID' => 'Cab  ID',
         ];
     }
+	
+	/*Join MACHINE*/
+	public function getCabang(){
+		 return $this->hasOne(Cbg::className(), ['CAB_ID' => 'CAB_ID']);
+	}
+	
+	public function getCabNm(){
+		return $this->cabang!=''?$this->cabang->CAB_NM:'none';
+	}
 }

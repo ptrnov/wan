@@ -49,11 +49,14 @@ class Personallog extends \yii\db\ActiveRecord
 	
 	/*Join Karyawan*/
 	public function getEmpfinger(){
-		 return $this->hasOne(Kar_finger::className(), ['FingerPrintID' => 'UserID']);
+		 return $this->hasOne(Kar_finger::className(), ['FingerPrintID' => 'UserID','TerminalID'=>'TerminalID']);
 	}
 	
 	public function getEmpNm(){
 		return $this->empfinger!=''?$this->empfinger->empNm:'none';
+	}
+	public function getEmpId(){
+		return $this->empfinger!=''?$this->empfinger->KAR_ID:'none';
 	}
 	
     /**

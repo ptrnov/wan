@@ -67,60 +67,6 @@ $this->sideCorp="Employee";
 				]
 			]
 		],
-		[	//col-8
-			'class'=>'kartik\grid\ActionColumn',
-			'dropdown' => true,
-			'template' => '{karfinger}{delete}',
-			'dropdownOptions'=>['class'=>'pull-left dropup'],
-			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
-			'buttons' => [
-					'karfinger' =>function($url, $model, $key){
-							return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Employee To Finger'),
-														[	
-															'/master/absen-maintain/finger-emp',
-															'm'=>$model['TerminalID'],
-															'f'=>$model['UserID']
-														
-														],[	
-														'data-toggle'=>"modal",
-														'data-target'=>"#modal-view",
-														'data-pjax'=>true,														
-														//'data-title'=> 'RT0'.$model['UserID'],
-														]). '</li>' . PHP_EOL;
-					},
-					'delete' =>function($url, $model, $key){
-						return  '<li>' .Html::a('<span class="fa fa-remove fa-dm"></span>'.Yii::t('app', 'delete'),
-													[	'/master/absen-maintain/delete',
-														'm'=>$model['TerminalID'],		 // terminal Id																									
-														'f'=>$model['UserID'],			 //Finger Id
-														'e'=>$model['KAR_ID'],			 //employe Id
-													],
-													[
-														'data-method'=>'post',
-														'data-confirm'=>'Anda yakin ingin menghapus data  Finger: '.$model['UserName'].' dengan Karyawan: '. $model['NAMA'].' ?',
-													]). '</li>' . PHP_EOL;
-					},					
-			],
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'10px',
-					'height'=>'10px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],
-
-		],
 		[  	//col-1
 			//Finger Machine
 			'attribute' =>'TerminalID',// 'machine_nm',
@@ -150,32 +96,7 @@ $this->sideCorp="Employee";
 				]
 			],
 		],
-		[  	//col-1
-			//Finger Machine
-			'attribute' =>'TerminalID',// 'machine_nm',
-			'filter'=>$aryMachine,
-			'label'=>'Machine S/N',
-			'hAlign'=>'left',
-			'vAlign'=>'middle',
-			'headerOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'50px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-					'background-color'=>'rgba(0, 95, 218, 0.3)',
-				]
-			],
-			'contentOptions'=>[
-				'style'=>[
-					'text-align'=>'center',
-					'width'=>'50px',
-					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'9pt',
-				]
-			],
-		],
-		/* [  	//col-2
+		[  	//col-2
 			//CUSTOMER GRAOUP NAME
 			'attribute' => 'UserID',
 			'label'=>'Finger',
@@ -198,7 +119,7 @@ $this->sideCorp="Employee";
 					'font-size'=>'9pt',
 				]
 			],
-		], */
+		],
 		[  	//col-3
 			//Employee-Name
 			'attribute' => 'UserName',
@@ -237,7 +158,7 @@ $this->sideCorp="Employee";
 					'width'=>'80px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
-					'background-color'=>'rgba(97, 211, 96, 0.3)',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
 				]
 			],
 			'contentOptions'=>[
@@ -249,7 +170,152 @@ $this->sideCorp="Employee";
 				]
 			],
 		],
-		
+		[  	//col-5
+			//Finger.Key
+			'attribute' => 'FunctionKey',//'Keys_nm',
+			'label'=>'Key',
+			'filter'=>$aryKeylist,
+			'value' => function($model){
+				$nmKeylist=Key_list::find()->where(['FunctionKey'=>$model['FunctionKey']])->one();
+				return $nmKeylist!=''? $nmKeylist['FunctionKeyNM']:'unknown';
+			},
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'50px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		[  	//col-6
+			//DateTime
+			'attribute' => 'DateTime',
+			'label'=>'DateTime',
+			'noWrap'=>true,
+			'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+					'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',					 
+                    'autoclose' => true,
+                    'todayHighlight' => true,
+					//'format' => 'dd-mm-yyyy hh:mm',
+					'autoWidget' => false,
+					//'todayBtn' => true,
+                ]
+            ],
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'100px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'100px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		[  	//col-7
+			//FlagAbsence
+			'attribute' => 'FlagAbsence',
+			'label'=>'Key',
+			'noWrap'=>false,
+			'filter'=>$valFlag,			
+			'hAlign'=>'left',
+			'vAlign'=>'middle',
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'80px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+		],
+		[	//col-8
+			'class'=>'kartik\grid\ActionColumn',
+			'dropdown' => true,
+			'template' => '{karfinger}{delete}',
+			'dropdownOptions'=>['class'=>'pull-right dropup'],
+			'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+			'buttons' => [
+					'karfinger' =>function($url, $model, $key){
+							return  '<li>' .Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Employee To Finger'),
+														[	
+															'/master/absen-maintain/finger-emp',
+															'm'=>$model['TerminalID'],
+															'f'=>$model['UserID']
+														
+														],[	
+														'data-toggle'=>"modal",
+														'data-target'=>"#modal-view",
+														'data-pjax'=>true,														
+														//'data-title'=> 'RT0'.$model['UserID'],
+														]). '</li>' . PHP_EOL;
+					},
+					'delete' =>function($url, $model, $key){
+						return  '<li>' .Html::a('<span class="fa fa-remove fa-dm"></span>'.Yii::t('app', 'delete'),
+													[	'/master/absen-maintain/delete',
+														'm'=>$model['TerminalID'],		 // terminal Id																									
+														'f'=>$model['UserID'],			 //Finger Id
+														'e'=>$model['KAR_ID'],			 //employe Id
+													],
+													[
+														'data-method'=>'post',
+														'data-confirm'=>'Anda yakin ingin menghapus data  Finger: '.$model['UserName'].' dengan Karyawan: '. $model['NAMA'].' ?',
+													]). '</li>' . PHP_EOL;
+					},					
+			],
+			'headerOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'40px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+					'background-color'=>'rgba(0, 95, 218, 0.3)',
+				]
+			],
+			'contentOptions'=>[
+				'style'=>[
+					'text-align'=>'center',
+					'width'=>'40px',
+					'height'=>'10px',
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'9pt',
+				]
+			],
+
+		],
 	];
 		
 	/*

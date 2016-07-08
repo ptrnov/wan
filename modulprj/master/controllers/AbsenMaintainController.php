@@ -3,6 +3,7 @@
 namespace  modulprj\master\controllers;
 
 use Yii;
+use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
@@ -10,10 +11,17 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \DateTime;
+use yii\helpers\Json;
+use yii\web\Response;
+use yii\web\Request;
+use yii\helpers\Url;
+
 use modulprj\master\models\Personallog;
 use modulprj\master\models\PersonallogSearch;
 use modulprj\master\models\Kar_finger;
+use modulprj\master\models\Kar_fingerSearch;
 use modulprj\master\models\Karyawan;
+
 
 class AbsenMaintainController extends Controller
 {
@@ -94,59 +102,69 @@ class AbsenMaintainController extends Controller
 		
 		$modelView = Personallog::find()->where(['TerminalID'=>$m,'UserID'=>$f])->one();
         $model = new Kar_finger();
+		$searchModel = new Kar_fingerSearch([
+			'KAR_ID'=>$modelView->empId
+		]);
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_form_karfinger', [
                 'model' => $model,
-				'modelView'=>$modelView
+				'modelView'=>$modelView,
+				'searchModel'=>$searchModel,
+				'dataProvider'=>$dataProvider
             ]);
        }
     }
 	
 	public function actionFingerEmpSave()
     {
-		$hsl = \Yii::$app->request->post();
-		$teminal= $hsl['Kar_finger']['TerminalID'];
-		$finger= $hsl['Kar_finger']['FingerPrintID'];
-		$karid= $hsl['Kar_finger']['KAR_ID'];
+		$model = new Kar_finger();
 		
-		if (!Yii::$app->user->isGuest){
-			
-			$modelUpdate = Kar_finger::findOne(['TerminalID'=>$teminal,'FingerPrintID'=>$finger]);
-			
-			/* print_r($modelUpdate);
-			if ($modelUpdate->NO_URUT!=''){
-				echo  $teminal;
-			}else{
-				echo  $karid;
+		if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+		}else{		
+			if($model->load(Yii::$app->request->post())){
+				$hsl = \Yii::$app->request->post();
+				$teminal= $hsl['Kar_finger']['TerminalID'];
+				$finger= $hsl['Kar_finger']['FingerPrintID'];
+				$karid= $hsl['Kar_finger']['KAR_ID'];
 				
-			} */
-			
-			/*ADD NEW*/
-			if ($modelUpdate->NO_URUT!=''){
 				
-				if ($modelUpdate->load(Yii::$app->request->post()) && $modelUpdate->save()) {
-					return $this->redirect(['index']);
-				}else{
-					return ActiveForm::validate($modelUpdate);
-				}	
+				$modelUpdate = Kar_finger::findOne(['TerminalID'=>$teminal,'FingerPrintID'=>$finger]); 
 				
-			}else{
-				/*UPDATE*/
-				$model = new Kar_finger();
-				if($model->load(Yii::$app->request->post())){                  
-							//$model->CREATED_BY = Yii::$app->user->identity->username;
-							//$model->CREATED_AT = date('Y-m-d H:i:s');
-							$model->save();    
-					return $this->redirect(['index']);
-							
-				}else{
-					return ActiveForm::validate($model);
-				}	
-			} 
+				//if (!Yii::$app->user->isGuest){			
+					/* print_r($modelUpdate);
+					if ($modelUpdate->NO_URUT!=''){
+						echo  $teminal;
+					}else{
+						echo  $karid;
+						
+					} */
+					
+					/*ADD NEW*/
+					
+						//return $this->redirect(['index']);
+						if ($modelUpdate->NO_URUT!=''){					
+							if ($modelUpdate->load(Yii::$app->request->post()) && $modelUpdate->validate()) {
+									$modelUpdate->save();
+									return $this->redirect(['index']);
+							}											
+						}else{
+							//UPDATE
+							if($model->load(Yii::$app->request->post()) && $model->validate()){                  
+										//$model->CREATED_BY = Yii::$app->user->identity->username;
+										//$model->CREATED_AT = date('Y-m-d H:i:s');
+										$model->save();    
+								return $this->redirect(['index']);									
+							}						
+						} 
+			}
 		}
+		//}
     }
 	
 	/**
@@ -236,10 +254,10 @@ class AbsenMaintainController extends Controller
     public function actionDelete($m,$f,$e)
     {
 		//echo $m.'-'.$f.'-'.$e;
-		$modelDel =  Kar_finger::findOne(['TerminalID'=>$teminal,'FingerPrintID'=>$finger,'KAR_ID'=>"'".$e."'"])->delete();
-		//$modelDel->delete();
-        //$this->findModel($id)->delete();
-		
+		$modelDel =  Kar_finger::find()->where(['TerminalID'=>$m,'FingerPrintID'=>$f,'KAR_ID'=>$e])->one();
+		Kar_finger::findOne($modelDel->NO_URUT)->delete();
+		//print_r($modelDel);
+		//die();
         return $this->redirect(['index']);
     }
 

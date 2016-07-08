@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\form\ActiveForm;
+//use kartik\form\ActiveForm;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\widgets\Select2;
 use kartik\widgets\FileInput;
@@ -25,6 +26,7 @@ $aryDept =  ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 	<?php $form = ActiveForm::begin([
                 'id'=>'finger-employe',
                 'enableClientValidation' => true,
+				'enableAjaxValidation' => true,
 				'method' => 'post',
 				'action' => ['/master/absen-maintain/finger-emp-save'],
 		]); 
@@ -32,17 +34,18 @@ $aryDept =  ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 	<div style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
 		<div class="row" >
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-				 <?=$form->field($model, 'mesinNm')->textInput(['value'=>$modelView->Machine_nm,'maxlength' => true,'readonly'=>true])->label('Machine ID'); ?>
-				 				<?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger Name'); ?>
+				<?=$form->field($model, 'mesinNm')->textInput(['value'=>$modelView->Machine_nm,'maxlength' => true,'readonly'=>true])->label('Machine ID'); ?>
+				<?=$form->field($model, 'TerminalID')->textInput(['value'=>$modelView->TerminalID,'maxlength' => true,'readonly'=>true])->label('Machine S/N'); ?>
+				<?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger Name'); ?>
 				<?= $form->field($model, 'EmpNmFinger')->textInput(['value'=>$modelView->empNm,'maxlength' => true,'readonly'=>true])->label('SetTo Employee Name'); ?>
 			
-				<?=$form->field($model, 'TerminalID')->hiddenInput(['value'=>$modelView->TerminalID,'maxlength' => true])->label(false); ?>
+				
 				<?= $form->field($model, 'FingerPrintID')->hiddenInput(['value'=>$modelView->UserID,'maxlength' => true,'readonly'=>true])->label(false); ?>
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				 <?=$form->field($model, 'tmpCab')->dropDownList($aryCbg,[
 						'id'=>'kar_finger-tmpcab',
-					]);
+					])->label('Branch');
 				?>	  				
 				<?=$form->field($model, 'tmpDept')->dropDownList($aryDept,[
 						'id'=>'kar_finger-tmpdept',	
@@ -52,7 +55,8 @@ $aryDept =  ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 						'type'=>DepDrop::TYPE_SELECT2,
 						'data' => $aryKaryawane,
 						'options' => [
-							'id'=>'select2-ijindetail-kar_id-container'
+							//'id'=>'select2-kar_finger-kar_id-container'
+							'id'=>'kar_finger-kar_id'
 						],
 						'pluginOptions' => [
 							'depends'=>['kar_finger-tmpcab','kar_finger-tmpdept'],
@@ -67,9 +71,19 @@ $aryDept =  ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 				<?php // $form->field($model, 'UPDT')->textInput() ?>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				<div class="form-group">
-					<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+				<div style="text-align: right;">
+					<?php echo Html::submitButton('Save',['class' => 'btn btn-primary']); ?>
 				</div>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top:5px">
+				<?php					
+					$gvInfoFingerEmp=$this->render('_form_karfinger_grid',[
+						'modelView'=>$modelView,
+						'searchModel'=>$searchModel,
+						'dataProvider'=>$dataProvider
+					]);
+				?>
+				<?=$gvInfoFingerEmp?>
 			</div>
 		</div>
 	</div>

@@ -12,6 +12,11 @@ use modulprj\master\models\Kar_finger;
  */
 class Kar_fingerSearch extends Kar_finger
 {
+	public function attributes()
+	{
+		//Author -ptr.nov- add related fields to searchable attributes
+       return array_merge(parent::attributes(), ['cabNm','empNm']);
+    }
     /**
      * @inheritdoc
      */
@@ -19,7 +24,7 @@ class Kar_fingerSearch extends Kar_finger
     {
         return [
             [['NO_URUT'], 'integer'],
-            [['TerminalID', 'KAR_ID', 'FingerPrintID', 'FingerTmpl', 'UPDT'], 'safe'],
+            [['TerminalID', 'KAR_ID', 'FingerPrintID', 'FingerTmpl', 'UPDT','cabNm','empNm'], 'safe'],
         ];
     }
 

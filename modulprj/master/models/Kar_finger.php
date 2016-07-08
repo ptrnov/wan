@@ -4,6 +4,7 @@ namespace modulprj\master\models;
 
 use Yii;
 use modulprj\master\models\Karyawan;
+use modulprj\master\models\Machine;
 /**
  * This is the model class for table "kar_finger".
  *
@@ -41,13 +42,32 @@ class Kar_finger extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['FingerTmpl'], 'string'],
+			[['KAR_ID'], 'required'],
+            [['KAR_ID'], 'string', 'max' => 15],
+			['KAR_ID','findKarids'],
+            [['FingerTmpl','userNameFinger'], 'string'],
+            [['tmpCab','tmpDept'], 'integer'],
             [['UPDT'], 'safe'],
             [['TerminalID', 'FingerPrintID'], 'string', 'max' => 100],
-            [['KAR_ID'], 'string', 'max' => 15]
+			
         ];
     }
-
+	
+	/**
+     * SATU MESIN ABSEN SATU EMPLOYE AND FINGER
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function findKarids($attribute, $params)
+    {
+		if (!$this->hasErrors()) {
+			$data = $this::find()->where("TerminalID='".$this->TerminalID."' AND KAR_ID='".$this->KAR_ID."'")->one();
+			if ($data!=0)
+            {
+              $this->addError($attribute, 'Employee Already Register to Machine, please delete first to register again');
+            }       
+       }
+    }
 	
     /**
      * @inheritdoc
@@ -71,5 +91,14 @@ class Kar_finger extends \yii\db\ActiveRecord
 	
 	public function getEmpNm(){
 		return $this->emp!=''?$this->emp->KAR_NM:'none';
+	}
+	
+	/*Join Karyawan*/
+	public function getMesin(){
+		 return $this->hasOne(Machine::className(), ['TerminalID' => 'TerminalID']);
+	}
+	
+	public function getCabNm(){
+		return $this->mesin!=''?$this->mesin->CabNm:'none';
 	}
 }
