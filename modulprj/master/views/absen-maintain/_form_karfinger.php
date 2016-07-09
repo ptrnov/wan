@@ -34,10 +34,10 @@ $aryDept =  ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 	<div style="height:100%;font-family: verdana, arial, sans-serif ;font-size: 8pt">
 		<div class="row" >
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-				<?=$form->field($model, 'mesinNm')->textInput(['value'=>$modelView->Machine_nm,'maxlength' => true,'readonly'=>true])->label('Machine ID'); ?>
-				<?=$form->field($model, 'TerminalID')->textInput(['value'=>$modelView->TerminalID,'maxlength' => true,'readonly'=>true])->label('Machine S/N'); ?>
-				<?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger Name'); ?>
-				<?= $form->field($model, 'EmpNmFinger')->textInput(['value'=>$modelView->empNm,'maxlength' => true,'readonly'=>true])->label('SetTo Employee Name'); ?>
+				<?=$form->field($model, 'mesinNm')->textInput(['value'=>$modelView->Machine_nm,'maxlength' => true,'readonly'=>true])->label('Machine.Name'); ?>
+				<?=$form->field($model, 'TerminalID')->textInput(['value'=>$modelView->TerminalID,'maxlength' => true,'readonly'=>true])->label('Machine.S/N'); ?>
+				<?= $form->field($model, 'userNameFinger')->textInput(['value'=>$modelView->UserName,'maxlength' => true,'readonly'=>true])->label('Finger.Name'); ?>
+				<?= $form->field($model, 'EmpNmFinger')->textInput(['value'=>$modelView->empNm,'maxlength' => true,'readonly'=>true])->label('SetTo Employee.Name'); ?>
 			
 				
 				<?= $form->field($model, 'FingerPrintID')->hiddenInput(['value'=>$modelView->UserID,'maxlength' => true,'readonly'=>true])->label(false); ?>

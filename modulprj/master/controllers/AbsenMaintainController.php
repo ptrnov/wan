@@ -4,6 +4,7 @@ namespace  modulprj\master\controllers;
 
 use Yii;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
@@ -21,10 +22,15 @@ use modulprj\master\models\PersonallogSearch;
 use modulprj\master\models\Kar_finger;
 use modulprj\master\models\Kar_fingerSearch;
 use modulprj\master\models\Karyawan;
+use modulprj\master\models\Machine;
 
 
 class AbsenMaintainController extends Controller
 {
+	public function aryMesin(){ 
+		return ArrayHelper::map(Machine::find()->all(), 'MESIN_NM','MESIN_NM');
+	}
+	
     public function behaviors()
     {
         return [
@@ -89,6 +95,7 @@ class AbsenMaintainController extends Controller
             'dataProvider' => $dataProvider, 
 			'searchModelLate' => $searchModelLate,
             'dataProviderLate' => $dataProviderLate,
+			'aryMesin'=>$this->aryMesin(),
         ]);
     }
 

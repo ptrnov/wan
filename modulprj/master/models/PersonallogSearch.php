@@ -32,6 +32,7 @@ class PersonallogSearch extends Personallog
 	public $idno;
 	public $NAMA;
 	public $EmpNmFinger;
+	public $TerminalNm;
 	
 	
     /**
@@ -41,7 +42,7 @@ class PersonallogSearch extends Personallog
     {
         return [
             [['idno'], 'integer'],
-            [['NAMA','tgllog','tgllate','TerminalID', 'UserID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime','DateTimeLate','tgl', 'waktu'], 'safe'],
+            [['NAMA','tgllog','tgllate','TerminalID','TerminalNm', 'UserID', 'FunctionKey', 'Edited', 'UserName', 'FlagAbsence', 'DateTime','DateTimeLate','tgl', 'waktu'], 'safe'],
         ];
     }
 
@@ -63,6 +64,19 @@ class PersonallogSearch extends Personallog
 		//return Yii::$app->db->createCommand("CALL absensi_maintain()")->queryAll();             
 		return Yii::$app->db->createCommand("
 			SELECT X.idno,X.TerminalID,X.UserID,X.FunctionKey,X.Edited,X.FlagAbsence,X.DateTime,X.DateTime as DateTimeLate,X.tgl,X.waktu,
+			 X.UserName,C.MESIN_NM AS TerminalNm,Y.KAR_ID,Y.NAMA
+			FROM personallog X LEFT JOIN
+				(	SELECT A.TerminalID,A.FingerPrintID,A.KAR_ID,CONCAT(B.KAR_NM) AS NAMA 
+					FROM kar_finger A LEFT JOIN Karyawan B ON B.KAR_ID=A.KAR_ID
+				) Y 
+				ON Y.FingerPrintID=X.UserID AND X.TerminalID=Y.TerminalID
+				LEFT JOIN machine C ON C.TerminalID=X.TerminalID
+			WHERE X.TerminalID<>''
+			GROUP BY X.UserID;
+		")->queryAll();
+		
+		/* return Yii::$app->db->createCommand("
+			SELECT X.idno,X.TerminalID,X.UserID,X.FunctionKey,X.Edited,X.FlagAbsence,X.DateTime,X.DateTime as DateTimeLate,X.tgl,X.waktu,
 			 X.UserName,Y.KAR_ID,Y.NAMA
 			FROM personallog X LEFT JOIN
 				(	SELECT A.TerminalID,A.FingerPrintID,A.KAR_ID,CONCAT(B.KAR_NM) AS NAMA 
@@ -71,7 +85,7 @@ class PersonallogSearch extends Personallog
 				ON Y.FingerPrintID=X.UserID AND X.TerminalID=Y.TerminalID
 			WHERE X.TerminalID<>''
 			GROUP BY X.UserID;
-		")->queryAll();             
+		")->queryAll(); */             
 	}	
 	public function search($params)
     {
@@ -113,6 +127,7 @@ class PersonallogSearch extends Personallog
 		$filter = new Filter();
  		$this->addCondition($filter, 'idno', true);
  		$this->addCondition($filter, 'TerminalID', true);
+ 		$this->addCondition($filter, 'TerminalNm', true);
  		$this->addCondition($filter, 'UserID', true);
  	    $this->addCondition($filter, 'FunctionKey', true);
  		$this->addCondition($filter, 'Edited', true);
@@ -125,7 +140,6 @@ class PersonallogSearch extends Personallog
  		$this->addCondition($filter, 'DateTimeLate', true);		
  		$dataProvider->allModels = $filter->filter($this->getScripts());
  
-		
 		
 		
 		
