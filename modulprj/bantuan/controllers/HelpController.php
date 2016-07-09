@@ -35,12 +35,16 @@ class HelpController extends Controller
     {
 		/* Modul Employe */
 		$employePenjelasan =$this->renderPartial('_employePenjelasan');
+		/* Modul Finger Maintain */
+		$fingerMaintainPenjelasan =$this->renderPartial('_fingerMaintainPenjelasan');
 		/*Modul TIME TABEl */
 		$timetablePenjelasan =$this->renderPartial('_timetablePenjelasan');
 		
 		return $this->render('index',[
 			/* Modul Employe */
 			'employePenjelasan'=>$employePenjelasan,
+			/* Modul Finger Maintain */
+			'fingerMaintainPenjelasan'=>$fingerMaintainPenjelasan,
 			/* Modul Time Table */
 			'timetablePenjelasan'=>$timetablePenjelasan
 		]);

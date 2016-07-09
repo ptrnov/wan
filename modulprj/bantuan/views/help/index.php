@@ -29,7 +29,29 @@ use kartik\affix\Affix;
 					'text-align'=>'left',
 				],
 			],			
-		],	
+		],
+		/*MODUL FINGER MAINTAIN*/
+		[
+			'url' => '#sec-1',
+			'label' => 'FINGER MAINTAIN',
+			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>FINGER MAINTAIN</b></div>',
+			'icon' => 'play-circle',
+			'content' => 'Syncronkan data finger dengan data karyawan, agar mendapatkan log absensi yang valid.',
+			'items' => [
+				[
+					'url' => '#sec-1-1', 'label' =>'PENJELASAN',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
+					'content' => $fingerMaintainPenjelasan
+				],
+			],
+			'options'=>[
+				'style'=>[
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'10pt',
+					'text-align'=>'left',
+				],
+			],			
+		],			
 		[
 			'url' => '#sec-1',
 			'label' => 'TIME TABLE',
