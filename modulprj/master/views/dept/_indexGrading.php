@@ -61,7 +61,7 @@ AppAsset::register($this);
 		],
 		'toolbar'=>false,
 		'panel'=>[
-            'heading' =>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>GREADING</b></h3>',
+            'heading' =>'<h3 class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:9pt;text-align:left;"><b>GREADING/GOLONGAN</b></h3>',
             'type' =>GridView::TYPE_INFO,//TYPE_WARNING, //TYPE_DANGER, //GridView::TYPE_SUCCESS,//GridView::TYPE_INFO, //TYPE_PRIMARY, TYPE_INFO
             'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'add Grading'),
                     ['/master/dept/create-grading'], 

@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 
 use modulprj\master\models\DeptSearch;
+use modulprj\master\models\Dept;
 use modulprj\master\models\Grading;
 use modulprj\master\models\Kepangkatan;
 use modulprj\master\models\GradingSearch;
@@ -70,13 +71,31 @@ class DeptController extends Controller
     }
 	
 	public function actionCreateDept(){
-		$modal = new  Dept();
-		return $this->renderAjax('_formDept',['modal'=>$modal]);		
+		$model = new  Dept();
+		if ($model->load(Yii::$app->request->post())){
+			$result = \Yii::$app->request->post();	
+			$model->DEP_NM = strtoupper($result['Dept']['DEP_NM']);
+			if($model->save()){
+				return $this->redirect(['/master/dept']);
+			};
+		}else{	
+			return $this->renderAjax('_formDept',['model'=>$model]);
+		}
+				
 	}
 	
-	public function actionCreateGf(){
-		$modal = new  Kepangkatan();
-		return $this->renderAjax('_formGf',['modal'=>$modal]);	
+	public function actionCreateGfnc(){
+		$model = new  Kepangkatan();
+		if ($model->load(Yii::$app->request->post())){
+			$result = \Yii::$app->request->post();	
+			$model->GF_ID = strtoupper($result['Kepangkatan']['GF_ID']);
+			$model->GF_NM = strtoupper($result['Kepangkatan']['GF_NM']);
+			if($model->save()){
+				return $this->redirect(['/master/dept']);
+			};
+		}else{	
+			return $this->renderAjax('_formGf',['model'=>$model]);	
+		}		
 	}
 	
 	public function actionCreateGrading(){

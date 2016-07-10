@@ -32,7 +32,7 @@ class Kepangkatan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['GF_ID'], 'required'],
+            [['GF_ID','GF_NM'], 'required'],
             [['GF_DCRP'], 'string'],
             [['STATUS'], 'integer'],
             [['UPDATED_TIME'], 'safe'],
