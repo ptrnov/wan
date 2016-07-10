@@ -47,7 +47,39 @@ use yii\helpers\Url;
 				]
 			],					
 	];
-	
+	$attDinamik[] =[
+		'class' => 'kartik\grid\ActionColumn', 
+		'template' => '{view}',
+		'header'=>'Action',
+		'buttons' => [
+			'view' =>function($url, $model, $key){
+					return  Html::button(Yii::t('app', 'view'),
+						['value'=>url::to(['/master/ijin-detail/view-header','id'=>$model->IJN_ID]),
+						'id'=>'modalButtonIjinHeader',
+						'class'=>"btn btn-primary btn-xs",			
+						'style'=>['width'=>'40px', 'height'=>'25px'],
+					]);
+			},					
+		],
+		'headerOptions'=>[					
+			'style'=>[
+				'vAlign'=>'bottem',
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'verdana, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(97, 211, 96, 0.3)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],		
+	];
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){
 		$attDinamik[]=[		
@@ -105,21 +137,22 @@ use yii\helpers\Url;
 			//'heading'=>'<h3 class="panel-title">Exception List</h3>',
 			'heading'=>false,
 			'type'=>'warning',
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Exception',
-									['modelClass' => 'Kategori',]),'/master/employe/create',[
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> Add Exception',
+									'/master/ijin-detail/create-header',
+									[
 										'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
+										'data-target'=>"#modal-create-header",
 										'class' => 'btn btn-success btn-sm'
 									]
 						).' '.
-						Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
-									'/master/employe/',
+						Html::a('<i class="fa fa-history "></i> Refresh',
+									'/master/ijin-detail/index?tab=1',
 									[
 									   'class' => 'btn btn-info btn-sm',
 									]
 						).' '.
-						Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),
-									'/export/employe',
+						Html::a('<i class="fa fa-file-excel-o"></i> Export',
+									'/export/ijin-header',
 									[
 										'class' => 'btn btn-info btn-sm'
 									]

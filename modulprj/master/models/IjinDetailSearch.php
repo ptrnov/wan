@@ -50,7 +50,7 @@ class IjinDetailSearch extends IjinDetail
         $query = IjinDetail::find()
 					->JoinWith('emp',true,'left JOIN')
 					->JoinWith('cabang',true,'left JOIN')
-					->JoinWith('department',true,'left JOIN');
+					->JoinWith('department',true,'left JOIN')->orderBy(['ID'=>SORT_DESC]);
 
         // add conditions that should always apply here
 

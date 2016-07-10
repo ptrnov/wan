@@ -95,6 +95,8 @@ class IjinDetailController extends Controller
 			$cari='';
 		};
 		
+		$tab=Yii::$app->getRequest()->getQueryParam('tab');
+		
         $searchModelDetail = new IjinDetailSearch($cari);
         $dataProviderDetail = $searchModelDetail->search(Yii::$app->request->queryParams);
 		
@@ -110,6 +112,7 @@ class IjinDetailController extends Controller
 			'aryIjinHeader'=>$this->aryIjinHeader(),
 			'aryCbg'=>$this->aryCbg(),
 			'aryDep'=>$this->aryDep(),
+			'tab'=>$tab
         ]);
     }
 
@@ -137,6 +140,30 @@ class IjinDetailController extends Controller
 			]);
 		}
     }
+	
+	/**
+     * View Editing IjinHeader.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionViewHeader($id)
+    {
+		$model = IjinHeader::findOne($id);
+     
+		if ($model->load(Yii::$app->request->post())){
+			//$model->save(false);
+			if($model->save()){
+				//$model->refresh();
+				
+				return $this->redirect(['/master/ijin-detail/index?tab=1']);
+				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+			};
+		}else{
+			return $this->renderAjax('_viewHeader', [
+				'model' => $model,
+			]);
+		}
+    }
 
     /**
      * Creates a new IjinDetail model.
@@ -160,6 +187,20 @@ class IjinDetailController extends Controller
         }
     }
 
+	public function actionCreateHeader(){
+		$model = new  IjinHeader();
+		if ($model->load(Yii::$app->request->post())){
+			$result = \Yii::$app->request->post();	
+			$model->IIJN_NM = strtoupper($result['IjinHeader']['IIJN_NM']);
+			if($model->save()){
+				return $this->redirect(['/master/ijin-detail','tab'=>1]);
+			};
+		}else{	
+			return $this->renderAjax('_formHeader',['model'=>$model]);
+		}
+				
+	}
+	
 	/**
      * DepDrop CABANG | KARYAWAN
      * @author ptrnov  <piter@lukison.com>

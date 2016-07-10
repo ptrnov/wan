@@ -41,7 +41,7 @@ class IjinHeaderSearch extends IjinHeader
      */
     public function search($params)
     {
-        $query = IjinHeader::find();
+        $query = IjinHeader::find()->orderBy(['IJN_ID'=>SORT_DESC]);
 
         // add conditions that should always apply here
 

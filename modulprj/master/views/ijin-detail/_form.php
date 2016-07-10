@@ -22,12 +22,12 @@ use kartik\widgets\TimePicker;
 	<?=$form->field($model, 'CAB_ID')->dropDownList($aryCbg,[
 			'id'=>'ijindetail-cab_id',
 			'prompt'=>' -- Pilih Cabang --',
-		]);
+		])->label('Branch');
 	?>	
 	<?=$form->field($model, 'DEP_ID')->dropDownList($aryDep,[
 			'id'=>'ijindetail-dep_id',
 			'prompt'=>' -- Pilih Department --',
-		]);
+		])->label('Department');
 	?>	
 	<?=$form->field($model, 'KAR_ID')->widget(DepDrop::classname(), [
 			'type'=>DepDrop::TYPE_SELECT2,
@@ -38,7 +38,7 @@ use kartik\widgets\TimePicker;
 				'url'=>Url::to(['/master/ijin-detail/cabang-employe']),
 				'initialize'=>true,
 			],
-		])->label('Karyawan');
+		])->label('Employee');
 	?>
 	<?=$form->field($model, 'IJN_ID')->widget(Select2::classname(), [
 			'data' => $aryIjinHeader,
@@ -46,7 +46,7 @@ use kartik\widgets\TimePicker;
 			'pluginOptions' => [
 				'allowClear' => true
 			 ],
-		])->label('Ijin Nama');
+		])->label('Exception Name');
 	?>
 	<?=$form->field($model, 'IJN_SDATE')->widget(datetimepicker::classname(), [
 			'options' => ['placeholder' => ' Jam dan waktu Mulai  ...'],
@@ -79,7 +79,7 @@ use kartik\widgets\TimePicker;
 
     
 
-    <?= $form->field($model, 'IJN_NOTE')->textarea(['rows' => 6])->label('Alasan') ?>
+    <?= $form->field($model, 'IJN_NOTE')->textarea(['rows' => 6])->label('Discription') ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

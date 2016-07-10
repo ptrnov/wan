@@ -7,6 +7,8 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
+use yii\helpers\Url;
+
 use modulprj\assets\AppAsset; 	
 AppAsset::register($this);
 use modulprj\master\models\Dept;
@@ -42,13 +44,46 @@ use modulprj\master\models\Dept;
 					]
 				],
 			],
+			[
+				'class' => 'kartik\grid\ActionColumn', 
+				'template' => '{view}',
+				'header'=>'Action',
+				'buttons' => [
+					'view' =>function($url, $model, $key){
+							return  Html::button(Yii::t('app', 'view'),
+								['value'=>url::to(['/master/dept/view-dept','id'=>$model->DEP_ID]),
+								'id'=>'modalButtonDept',
+								'class'=>"btn btn-primary btn-xs",			
+								'style'=>['width'=>'40px', 'height'=>'25px'],
+							]);
+					},					
+				],
+				'headerOptions'=>[					
+					'style'=>[
+						'vAlign'=>'bottem',
+						'text-align'=>'center',
+						'width'=>'5px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'5px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],	
+			],
 			//'DEP_ID',
 			[
 				'attribute'=>'DEP_NM',
 				'headerOptions'=>[
 					'style'=>[
 						'text-align'=>'center',
-						'width'=>'10px',
+						'width'=>'250px',
 						'font-family'=>'verdana, arial, sans-serif',
 						'font-size'=>'9pt',
 						'background-color'=>'rgba(97, 211, 96, 0.3)',
@@ -57,7 +92,7 @@ use modulprj\master\models\Dept;
 				'contentOptions'=>[
 					'style'=>[
 						'text-align'=>'left',
-						'width'=>'150px',
+						'width'=>'250px',
 						'font-family'=>'tahoma, arial, sans-serif',
 						'font-size'=>'9pt',
 					]

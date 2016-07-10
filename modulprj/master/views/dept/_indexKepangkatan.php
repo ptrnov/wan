@@ -7,6 +7,7 @@ use kartik\widgets\ActiveForm;
 use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
+use yii\helpers\Url;
 use modulprj\assets\AppAsset; 	
 AppAsset::register($this);
 
@@ -18,7 +19,40 @@ AppAsset::register($this);
 		'filterModel' => $searchModel_Gf,
 		'filterRowOptions'=>['style'=>'background-color:rgba(97, 211, 96, 0.3); align:center'],	
 		'columns' => [
-           [
+			[
+				'class' => 'kartik\grid\ActionColumn', 
+				'template' => '{view}',
+				'header'=>'Action',
+				'buttons' => [
+					'view' =>function($url, $model, $key){
+							return  Html::button(Yii::t('app', 'view'),
+								['value'=>url::to(['/master/dept/view-gfnc','id'=>$model->GF_ID]),
+								'id'=>'modalButtonGfnc',
+								'class'=>"btn btn-primary btn-xs",			
+								'style'=>['width'=>'40px', 'height'=>'25px'],
+							]);
+					},					
+				],
+				'headerOptions'=>[					
+					'style'=>[
+						'vAlign'=>'bottem',
+						'text-align'=>'center',
+						'width'=>'5px',
+						'font-family'=>'verdana, arial, sans-serif',
+						'font-size'=>'9pt',
+						'background-color'=>'rgba(97, 211, 96, 0.3)',
+					]
+				],
+				'contentOptions'=>[
+					'style'=>[
+						'text-align'=>'center',
+						'width'=>'5px',
+						'font-family'=>'tahoma, arial, sans-serif',
+						'font-size'=>'9pt',
+					]
+				],	
+			],
+			[
 				'attribute'=>'GF_ID',
 				'headerOptions'=>[
 					'style'=>[
