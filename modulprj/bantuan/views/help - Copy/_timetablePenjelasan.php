@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 ?>
 <div style="font-family: verdana, arial, sans-serif ;font-size: 9pt"> 
-	TIME TABLE, merupakan rule atau aturan pada attencance. Setiap Employee melakukan finger In atau out pada mesin absensi, data tersebut akan langsung masuk ke server dan dideteksi oleh time table, dan di kelompokan sesuai kereteria yang sudah di tetapkan.
 	Timetable terdiri dari Timetable Normal dan Timetable Overtime. Untuk timetable Normal, berisikan data-data waktu untuk aturan karyawan yang masuk office hour.
 	Sedangkan Timetable Overtime mengatur waktu dan pembagian presentase overtime atau lemburan.
 	<br><br>

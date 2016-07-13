@@ -2,8 +2,6 @@
 use yii\helpers\Html;
 ?>
 <div style="font-family: verdana, arial, sans-serif ;font-size: 9pt"> 
-	TIME TABLE, merupakan rule atau aturan pada attencance. Setiap Employee melakukan finger In atau out pada mesin absensi, 
-	data tersebut akan langsung masuk ke server dan dideteksi oleh time table, dan di kelompokan sesuai kereteria yang sudah di tetapkan.
 	Finger Maintain merupakan modul syncronize Finger Machine dengan Aplikasi Attendance. Untuk mendapatkan log yang online dan tepat waktu, 
 	pada saat registrasi karyawan pada mesin Finger haruslah mencantumkan nama karyawan secara Jelas dan lengkap.
 	Jika nama karyawan pada mesin finger sudah di input, maka akan muncul pada modul Finger Maintain, yang selanjutnya kita tambahkan nama Karyawan 

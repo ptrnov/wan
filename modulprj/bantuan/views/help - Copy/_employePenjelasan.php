@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 ?>
 <div style="font-family: verdana, arial, sans-serif ;font-size: 9pt"> 
-	Employee Data, merupakan komponen mendasar dalam aplikasi Attendance dan payroll, sehingga data karyawan disebut menjadi data master yang tidak bisa di ubah-ubah tanpa adanya request yang jelas.
 	Ada beberapa aplikasi membolehkan penggunaan metode Export/Import untuk data karyawan, dengan alasan memudahkan penginputan data, akan tetapi
 	banyak dari prosess Export/Import data karyawan tidak semua bisa berhasil terinput secara detail, sehingga menganggu prosess modul modul lainya.
 	Alasan dari semua ini karena data karyawan memiliki hubungan sangan banyak dengan: JobsFunction/leveling, grading/golongan, department, komponen pengajian,

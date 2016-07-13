@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 ?>
 <div style="font-family: verdana, arial, sans-serif ;font-size: 9pt"> 
-	Exception Modul merupakan modul pengambilan ijin/sakit/cuti yang diperuntukan/digunakan oleh karyawan.
+	Exception Modul merupakan modul pengambilan ijin yang digunakan oleh karyawan.
 	<br><br>
 	<b>Exception List Fungsi :</b>
 	<br>
