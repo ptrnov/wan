@@ -39,6 +39,8 @@ class HelpController extends Controller
 		$fingerMaintainPenjelasan =$this->renderPartial('_fingerMaintainPenjelasan');
 		/*Modul TIME TABEl */
 		$timetablePenjelasan =$this->renderPartial('_timetablePenjelasan');
+		/*Modul Exception */
+		$exceptionPenjelasan =$this->renderPartial('_exceptionPenjelasan');
 		
 		return $this->render('index',[
 			/* Modul Employe */
@@ -46,7 +48,9 @@ class HelpController extends Controller
 			/* Modul Finger Maintain */
 			'fingerMaintainPenjelasan'=>$fingerMaintainPenjelasan,
 			/* Modul Time Table */
-			'timetablePenjelasan'=>$timetablePenjelasan
+			'timetablePenjelasan'=>$timetablePenjelasan,
+			/* Modul Exception */
+			'exceptionPenjelasan'=>$exceptionPenjelasan
 		]);
     }
 }

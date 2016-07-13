@@ -39,7 +39,7 @@ use kartik\affix\Affix;
 			'content' => 'Syncronkan data finger dengan data karyawan, agar mendapatkan log absensi yang valid.',
 			'items' => [
 				[
-					'url' => '#sec-1-1', 'label' =>'PENJELASAN',
+					'url' => '#sec-1-2', 'label' =>'PENJELASAN',
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
 					'content' => $fingerMaintainPenjelasan
 				],
@@ -60,7 +60,7 @@ use kartik\affix\Affix;
 			'content' => 'TIME TABLE, merupakan rule atau aturan pada attencance. Setiap Employee melakukan finger In atau out pada mesin absensi, data tersebut akan langsung masuk ke server dan dideteksi oleh time table, dan di kelompokan sesuai kereteria yang sudah di tetapkan.',
 			'items' => [
 				[
-					'url' => '#sec-1-4', 'label' =>'PENJELASAN',
+					'url' => '#sec-1-3', 'label' =>'PENJELASAN',
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
 					'content' => $timetablePenjelasan
 				],
@@ -72,7 +72,28 @@ use kartik\affix\Affix;
 					'text-align'=>'left',
 				],
 			],			
-		],	
+		],
+		[
+			'url' => '#sec-1',
+			'label' => 'EXCEPTION',
+			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>Exception</b></div>',
+			'icon' => 'play-circle',
+			'content' => 'Exception, merupakan modul pengambilan ijin/sakit/cuti oleh karyawan.',
+			'items' => [
+				[
+					'url' => '#sec-1-4', 'label' =>'PENJELASAN',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:10pt;text-align:left;"><b>PENJELASAN</b></div>', 
+					'content' => $exceptionPenjelasan
+				],
+			],
+			'options'=>[
+				'style'=>[
+					'font-family'=>'tahoma, arial, sans-serif',
+					'font-size'=>'10pt',
+					'text-align'=>'left',
+				],
+			],			
+		],		
 		
 	];
 	
