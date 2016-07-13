@@ -76,7 +76,7 @@ use kartik\affix\Affix;
 		[
 			'url' => '#sec-1',
 			'label' => 'EXCEPTION',
-			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>Exception</b></div>',
+			'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:16pt;text-align:left;color:red"><b>EXCEPTION</b></div>',
 			'icon' => 'play-circle',
 			'content' => 'Exception, merupakan modul pengambilan ijin/sakit/cuti oleh karyawan.',
 			'items' => [

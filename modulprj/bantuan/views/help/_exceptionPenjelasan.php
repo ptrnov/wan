@@ -21,17 +21,28 @@ use yii\helpers\Html;
 	<br><br>
 	<b>Tombol Function :</b>
 	<br>
-		1. <b>Add Exception</b>, Adalah tombol untuk melakukan penambahan  list master data ijin/exception .
+		a. <b>Add Exception</b>, Adalah tombol untuk melakukan penambahan  list master data ijin/exception .
 		<br>
 		<?php echo Html::img('@web/upload/help/exception/hd2.png',  ['class' => 'pnjg', 'style'=>'width:500px;height:250px;']); ?>
 		<br></br>
-		2. <b>View</b>, Adalah menampilkan.
+		b. <b>View</b>, Adalah menampilkan.
 		<br>
 		<?php echo Html::img('@web/upload/help/exception/hd3.png',  ['class' => 'pnjg', 'style'=>'width:500px;height:250px;']); ?>
+		<br>
+		b1. <b>Tombol Edting</b>, Tekan tombol Editing untuk update data master.
+		<br>
 		<br></br>
-		3. <b>View Editor</b>, Adalah update list master data ijin/exception.
+		c. <b>View Editor</b>, Adalah update list master data ijin/exception.
 		<br>
 		<?php echo Html::img('@web/upload/help/exception/hd4.png',  ['class' => 'pnjg', 'style'=>'width:500px;height:250px;']); ?>
+		<br>
+		c1. <b>Tombol View</b>, Tekan menampilkan kembali list master data ijin/exception jika mengagalkan update data.
+		<br>
+		c2. <b>Tombol Save</b>, menyimpan data update dati list master data ijin/exception yang sudah di edit.
+		<br>
+		c3. <b>Input Data</b>, Masukan Nama Exception/ijin yang akan di update.
+		<br>
+		c4. <b>input Description</b>, Masukan catatan dari Exception/ijin yang akan di update.
 		<br>
 	<br><br>
 </div>
