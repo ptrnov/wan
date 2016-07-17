@@ -1,4 +1,8 @@
 $(document).ready(function () {
+	if(localStorage.getItem('stt')==null){
+			//alert(sts);
+			localStorage.setItem('stt','hidden');
+		};
 	var stt  = localStorage.getItem("sts");
 	var nilaiValue = localStorage.getItem("nilai");
 	localStorage.setItem('sts','hidden');

@@ -15,9 +15,33 @@ use yii\helpers\Html;
 		<br>
 		2. <b>TAB Employe Resign</b>, Adalah tab main menu Employe Resign, merupakan data karyawan yang sudah keluar.
 		<br>
-		3. <b>TAB Chart</b>, Adalah tab main menu Chart Employe, grafik analiza employee data.
+		3. <b>Tombol Create</b>, Adalah tab main menu Chart Employe, grafik analiza employee data.
+		<br>
+		4. <b>Tombol Refresh</b>, Adalah tab main menu Chart Employe, grafik analiza employee data.
+		<br>
+		5. <b>Tombol  Export</b>, Adalah tab main menu Chart Employe, grafik analiza employee data.
+		<br>
+		6. <b>Tombol  Action View/Edit</b>, Adalah tab main menu Chart Employe, grafik analiza employee data.
 		<br>
 	<br>
 	<?php echo Html::img('@web/upload/help/employee/emp1.png',  ['class' => 'pnjg', 'style'=>'width:800px;height:450px;']); ?>
-	
+	<br><br>
+	<b>Tombol Create :</b>
+	<br>
+		1. <b>Cabang</b>, Pilih cabang tempat karyawan di daftarkan.
+		<br>
+		2. <b>Employe Name</b>, masukan Nama Karyawan lengkap,nama depan, nama tengah atau nama belakanag.
+		<br>
+		3. <b>Photo</b>, masukan photo karyawan dengan memilih browser path, tempat photo berada.
+		<br>
+		3. <b>Save</b>, Tombol menyimpan data karyawan.
+	<br>
+	<?php echo Html::img('@web/upload/help/employee/emp-add.png',  ['class' => 'pnjg', 'style'=>'width:350px;height:200px;']); ?>
+	<br><br>
+	<b>Tombol Action View/Edit :</b>
+	<br>
+		1. <b>Tombol Edit Data</b>, Pilih Tombol edit untuk update data karyawan.
+	<br>
+	<?php echo Html::img('@web/upload/help/employee/emp-viewEdit.png',  ['class' => 'pnjg', 'style'=>'width:700px;height:500px;']); ?>
+	<br><br>
 </div>
