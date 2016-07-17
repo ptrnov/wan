@@ -43,21 +43,27 @@ use kartik\affix\Affix;
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:12pt;text-align:left;color:blue"><b>EMPLOYEE DATA</b></div>', 
 					'content' => $employePenjelasan
 				],
+				/*MODUL KEPANGKATAN*/
+				[
+					'url' => '#sec-1-2', 'label' =>'KEPANGKATAN',
+					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:12pt;text-align:left;color:blue"><b>KEPANGKATAN</b></div>', 
+					'content' => $kepangkatanPenjelasan
+				],
 				/*MODUL FINGER MAINTAIN*/
 				[
-					'url' => '#sec-1-2', 'label' =>'FINGER MAINTAIN',
+					'url' => '#sec-1-3', 'label' =>'FINGER MAINTAIN',
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:12pt;text-align:left;color:blue"><b>FINGER MAINTAIN</b></div>', 
 					'content' => $fingerMaintainPenjelasan
 				],
 				/*MODUL TIME TABLE*/
 				[
-					'url' => '#sec-1-3', 'label' =>'TIME TABLE',
+					'url' => '#sec-1-4', 'label' =>'TIME TABLE',
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:12pt;text-align:left;color:blue"><b>TIME TABLE</b></div>', 
 					'content' => $timetablePenjelasan
 				],
 				/*MODUL EXCEPTION*/
 				[
-					'url' => '#sec-1-4', 'label' =>'EXCEPTION',
+					'url' => '#sec-1-5', 'label' =>'EXCEPTION',
 					'header'=>'<div class="panel-title" style="font-family:tahoma, arial, sans-serif;font-size:12pt;text-align:left;color:blue"><b>EXCEPTION</b></div>', 
 					'content' => $exceptionPenjelasan
 				],
