@@ -26,7 +26,7 @@ AppAsset::register($this);
 				'buttons' => [
 					'view' =>function($url, $model, $key){
 							return  Html::button(Yii::t('app', 'view'),
-								['value'=>url::to(['/master/dept/view-grading','id'=>$model->GF_ID]),
+								['value'=>url::to(['/master/dept/view-grading','id'=>$model->ID]),
 								'id'=>'modalButtonGrading',
 								'class'=>"btn btn-primary btn-xs",			
 								'style'=>['width'=>'40px', 'height'=>'25px'],

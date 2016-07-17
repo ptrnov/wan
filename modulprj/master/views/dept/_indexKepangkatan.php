@@ -26,8 +26,8 @@ AppAsset::register($this);
 				'buttons' => [
 					'view' =>function($url, $model, $key){
 							return  Html::button(Yii::t('app', 'view'),
-								['value'=>url::to(['/master/dept/view-gfnc','id'=>$model->GF_ID]),
-								'id'=>'modalButtonGfnc',
+								['value'=>url::to(['/master/dept/view-kepangkatan','id'=>$model->ID]),
+								'id'=>'modalButtonKepangkatan',
 								'class'=>"btn btn-primary btn-xs",			
 								'style'=>['width'=>'40px', 'height'=>'25px'],
 							]);

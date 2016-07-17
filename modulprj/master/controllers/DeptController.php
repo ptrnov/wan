@@ -117,5 +117,73 @@ class DeptController extends Controller
 	}
 	
 	
+	/**
+     * View Editing Department.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionViewDept($id)
+    {
+		$model = Dept::findOne($id);
+     
+		if ($model->load(Yii::$app->request->post())){
+			//$model->save(false);
+			if($model->save()){
+				//$model->refresh();
+				
+				return $this->redirect(['/master/dept/']);
+				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+			};
+		}else{
+			return $this->renderAjax('_viewDept', [
+				'model' => $model
+			]);
+		}
+    }
 	
+	/**
+     * View Editing Function/ Level.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionViewKepangkatan($id)
+    {
+		$model = Kepangkatan::findOne($id);     
+		if ($model->load(Yii::$app->request->post())){
+			//$model->save(false);
+			if($model->save()){
+				//$model->refresh();
+				
+				return $this->redirect(['/master/dept/']);
+				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+			};
+		}else{
+			return $this->renderAjax('_viewKepangkatan', [
+				'model' => $model
+			]);
+		}
+    }
+	
+	/**
+     * View Editing Grading.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionViewGrading($id)
+    {
+		$model = Grading::findOne($id);     
+		if ($model->load(Yii::$app->request->post())){
+			//$model->save(false);
+			if($model->save()){
+				//$model->refresh();
+				
+				return $this->redirect(['/master/dept/']);
+				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+			};
+		}else{
+			return $this->renderAjax('_viewGrading', [
+				'model' => $model
+			]);
+		}
+    }
 }
