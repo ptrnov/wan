@@ -11,7 +11,7 @@ use kartik\builder\Form;
 use yii\helpers\Url;
  
 	$aryField= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_ID','SIZE' => '20px','label'=>'Employee','align'=>'left']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'empNm','SIZE' => '20px','label'=>'Employee','align'=>'left']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '10px','label'=>'Upah Harian','align'=>'left']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_MONTH','SIZE' => '10px','label'=>'Upah Bulanan','align'=>'left']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'PAY_TUNJANGAN','SIZE' => '10px','label'=>'Tunjangan Jabatan','align'=>'left']],
@@ -53,14 +53,76 @@ use yii\helpers\Url;
 				]
 			],					
 	];
-	
+	$attDinamik[] =[
+		'class' => 'kartik\grid\ActionColumn', 
+		'template' => '{view}',
+		'header'=>'Action',
+		'buttons' => [
+			'view' =>function($url, $model, $key){
+					return  Html::button(Yii::t('app', 'view'),
+						['value'=>url::to(['/master/payroll-salary/view','id'=>$model->KAR_ID]),
+						'id'=>'modalButtonSalary',
+						'class'=>"btn btn-primary btn-xs",			
+						'style'=>['width'=>'40px', 'height'=>'25px'],
+					]);
+			},					
+		],
+		'headerOptions'=>[					
+			'style'=>[
+				'vAlign'=>'bottem',
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'verdana, arial, sans-serif',
+				'font-size'=>'9pt',
+				'background-color'=>'rgba(97, 211, 96, 0.3)',
+			]
+		],
+		'contentOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'10px',
+				'font-family'=>'tahoma, arial, sans-serif',
+				'font-size'=>'9pt',
+			]
+		],		
+	];
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){
+		$filterWidgetOpt='';
+		if ($value[$key]['FIELD']=='empNm'){				
+			$gvfilterType=GridView::FILTER_SELECT2;
+			//$gvfilterType=false;
+			$gvfilter =true;
+			$filterWidgetOpt=[	
+				'data'=>$aryKaryawan,			
+				'pluginOptions'=>['allowClear'=>true,'placeholder'=>'Cari Employee'],	
+			];
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}else{
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			//$filterInputOpt=false;
+			$filterOptCspn=1;
+			//$filterColor=false;
+			$filterColor='rgba(97, 211, 96,1)';
+		};
+		
+		
+		
 		$attDinamik[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
+			'filter'=>$gvfilter,
+			'filterType'=>$gvfilterType,
+			'filterWidgetOptions'=>$filterWidgetOpt,
+			'filterOptions'=>[
+				'colspan'=>$filterOptCspn,
+				'style'=>['background-color'=>$filterColor],
+			],			
 			//'mergeHeader'=>true,
 			'noWrap'=>true,			
 			'headerOptions'=>[		
@@ -111,15 +173,15 @@ use yii\helpers\Url;
 			//'heading'=>'<h3 class="panel-title">LIST EMPLOYEE SALARY</h3>',
 			'heading'=>false,
 			'type'=>'warning',
-			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Create Employee ',
-									['modelClass' => 'Kategori',]),'/master/employe/create',[
+			'before'=> Html::a('<i class="glyphicon glyphicon-plus"></i> '.Yii::t('app', 'Add Salary',
+									['modelClass' => 'Kategori',]),'/master/payroll-salary/create',[
 										'data-toggle'=>"modal",
-										'data-target'=>"#modal-create",
+										'data-target'=>"#modal-create-salary",
 										'class' => 'btn btn-success btn-sm'
 									]
 						).' '.
 						Html::a('<i class="fa fa-history "></i> '.Yii::t('app', 'Refresh'),
-									'/master/employe/',
+									'/master/payroll-salary/',
 									[
 									  // 'id'=>'refresh-cust',
 									   'class' => 'btn btn-info btn-sm',
@@ -127,7 +189,7 @@ use yii\helpers\Url;
 									]
 						).' '.
 						Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),
-									'/export/employe',
+									'/export/salary',
 									[
 										//'id'=>'export-data',
 										//'data-pjax' => true,

@@ -3,7 +3,7 @@
 namespace modulprj\master\models;
 
 use Yii;
-
+use modulprj\master\models\Karyawan;
 /**
  * This is the model class for table "payroll_salary".
  *
@@ -20,6 +20,9 @@ use Yii;
  */
 class PayrollSalary extends \yii\db\ActiveRecord
 {
+	public $cAB_ID;
+	public $dEP_ID;
+	
     /**
      * @inheritdoc
      */
@@ -35,12 +38,31 @@ class PayrollSalary extends \yii\db\ActiveRecord
     {
         return [
             [['KAR_ID'], 'required'],
+			['KAR_ID','findKarids'],
             [['PAY_DAY', 'PAY_MONTH', 'PAY_TUNJANGAN', 'PAY_TRANPORT', 'PAY_EAT', 'BONUS', 'PAY_ENTERTAIN'], 'number'],
             [['STATUS_ACTIVE'], 'integer'],
+            [['CREATE_BY','UPDATE_BY'], 'string'],
+            [['CREATE_AT','UPDATE_AT','NOTE'], 'safe'],
             [['KAR_ID'], 'string', 'max' => 20],
         ];
     }
 
+	/**
+     * SATU MESIN ABSEN SATU EMPLOYE AND FINGER
+	 * @author ptrnov  <piter@lukison.com>
+	 * @since 1.1
+     */
+	public function findKarids($attribute, $params)
+    {
+		if (!$this->hasErrors()) {
+			$data = $this::find()->where("KAR_ID='".$this->KAR_ID."'")->one();
+			if ($data!=0)
+            {
+              $this->addError($attribute, 'Employee Already Register to Salary, please use button Avction View Salary Update');
+            }       
+       }
+    }
+	
     /**
      * @inheritdoc
      */
@@ -56,7 +78,21 @@ class PayrollSalary extends \yii\db\ActiveRecord
             'PAY_EAT' => Yii::t('app', 'Pay  Eat'),
             'BONUS' => Yii::t('app', 'Bonus'),
             'PAY_ENTERTAIN' => Yii::t('app', 'Pay  Entertain'),
-            'STATUS_ACTIVE' => Yii::t('app', 'Status  Active'),
+			'STATUS_ACTIVE' => Yii::t('app', 'Status  Active'),
+			'NOTE' => Yii::t('app', 'Note'),
+            'CREATE_BY' => Yii::t('app', 'Create By'),
+            'UPDATE_BY' => Yii::t('app', 'Update By'),            
+            'CREATE_AT' => Yii::t('app', 'Create At'),
+            'UPDATE_AT' => Yii::t('app', 'Update At'),
         ];
     }
+	
+	/*Join Karyawan*/
+	public function getEmp(){
+		 return $this->hasOne(Karyawan::className(), ['KAR_ID' => 'KAR_ID']);
+	}
+	
+	public function getEmpNm(){
+		return $this->emp!=''?$this->emp->KAR_NM:'none';
+	}
 }

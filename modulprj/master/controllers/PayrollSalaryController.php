@@ -3,17 +3,34 @@
 namespace modulprj\master\controllers;
 
 use Yii;
-use modulprj\master\models\PayrollSalary;
-use modulprj\master\models\PayrollSalarySearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
+use yii\web\Response;
+use yii\web\Request;
+use yii\helpers\Url;
 
+use modulprj\master\models\PayrollSalary;
+use modulprj\master\models\PayrollSalarySearch;
+use modulprj\master\models\Karyawan;
+use modulprj\master\models\Cbg;
+use modulprj\master\models\Dept;
 /**
  * PayrollSalaryController implements the CRUD actions for PayrollSalary model.
  */
 class PayrollSalaryController extends Controller
 {
+	public function aryCbg(){ 
+		return ArrayHelper::map(Cbg::find()->all(), 'CAB_ID','CAB_NM');
+	}
+	public function aryDep(){ 
+		return ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
+	}
+	public function aryKaryawan(){ 
+		return ArrayHelper::map(Karyawan::find()->all(), 'KAR_ID','KAR_NM');
+	}
     /**
      * @inheritdoc
      */
@@ -41,9 +58,34 @@ class PayrollSalaryController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+			'aryKaryawan'=>$this->aryKaryawan(),
         ]);
     }
 
+	/**
+     * DepDrop CABANG | KARYAWAN
+     * @author ptrnov  <piter@lukison.com>
+     * @since 1.1
+     */
+	public function actionCabangEmploye() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			$parents = $_POST['depdrop_parents'];
+			if ($parents != null) {
+				$cab_id = $parents[0];
+				$dep_id = $parents[1];
+				$model = Karyawan::find()->asArray()->where(['CAB_ID'=>$cab_id,'DEP_ID'=>$dep_id])->all();
+				foreach ($model as $key => $value) {
+					   $out[] = ['id'=>$value['KAR_ID'],'name'=> $value['KAR_NM']];
+				   }
+
+				   echo json_encode(['output'=>$out, 'selected'=>'']);
+				   return;
+			   }
+		   }
+		   echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
     /**
      * Displays a single PayrollSalary model.
      * @param string $id
@@ -65,13 +107,24 @@ class PayrollSalaryController extends Controller
     {
         $model = new PayrollSalary();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+		if(!$model->load(Yii::$app->request->post())){
+			return $this->renderAjax('_form', [
+						'model' => $model,
+						'aryCbg'=>$this->aryCbg(),
+						'aryDep'=>$this->aryDep(),
+						'aryKaryawan'=>$this->aryKaryawan(),
+					]);
+		}else{
+			if(Yii::$app->request->isAjax){
+					$model->load(Yii::$app->request->post());
+					return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post()) && $model->save()) {
+					// return $this->redirect(['view', 'id' => $model->ID]);
+					return $this->redirect(['index']);
+				}		
+			}   
+		}
     }
 
     /**

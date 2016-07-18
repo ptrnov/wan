@@ -12,6 +12,11 @@ use modulprj\master\models\PayrollSalary;
  */
 class PayrollSalarySearch extends PayrollSalary
 {
+	public function attributes()
+	{
+		//Author -ptr.nov- add related fields to searchable attributes
+       return array_merge(parent::attributes(), ['empNm']);
+    }
     /**
      * @inheritdoc
      */
@@ -19,8 +24,10 @@ class PayrollSalarySearch extends PayrollSalary
     {
         return [
             [['ID', 'STATUS_ACTIVE'], 'integer'],
-            [['KAR_ID'], 'safe'],
+            [['KAR_ID','empNm'], 'safe'],
             [['PAY_DAY', 'PAY_MONTH', 'PAY_TUNJANGAN', 'PAY_TRANPORT', 'PAY_EAT', 'BONUS', 'PAY_ENTERTAIN'], 'number'],
+			[['CREATE_BY','UPDATE_BY'], 'string'],
+            [['CREATE_AT','UPDATE_AT','NOTE'], 'safe'],
         ];
     }
 
@@ -71,7 +78,7 @@ class PayrollSalarySearch extends PayrollSalary
             'STATUS_ACTIVE' => $this->STATUS_ACTIVE,
         ]);
 
-        $query->andFilterWhere(['like', 'KAR_ID', $this->KAR_ID]);
+        $query->andFilterWhere(['like', 'KAR_ID',  $this->getAttribute('empNm')]);
 
         return $dataProvider;
     }
