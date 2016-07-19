@@ -104,6 +104,30 @@ class PayrollSalaryController extends Controller
         ]);
     }
 
+	/**
+     * View Editing Salary.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionViewSalary($id)
+    {
+		$model = $this::findModel($id);
+     
+		if ($model->load(Yii::$app->request->post())){
+			//$model->save(false);
+			if($model->save()){
+				//$model->refresh();
+				
+				return $this->redirect(['/master/payroll-salary/']);
+				 //Yii::$app->session->setFlash('kv-detail-success', 'Success Message');
+			};
+		}else{
+			return $this->renderAjax('_viewSalary', [
+				'model' => $model,
+			]);
+		}
+    }
+	
     /**
      * Creates a new PayrollSalary model.
      * If creation is successful, the browser will be redirected to the 'view' page.

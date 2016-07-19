@@ -19,6 +19,18 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->sideCorp="Employee"; 
 
 
+	/*Modal View|Edit Salary*/
+	Modal::begin([
+		'id' => 'modal-view-salary',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-clock-o"></div><div><h5 class="modal-title"><b>VIEW SALARY</b></h5></div>',
+		'size' => 'modal-lg',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
+		],
+	]);
+	echo "<div id='modalContentSalary'></div>";
+	Modal::end();
+	
 	$itemSalary=$this->render('_salary',[
 		'dataProvider' => $dataProvider,
         'searchModel' => $searchModel,
@@ -78,7 +90,74 @@ $this->sideCorp="Employee";
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(74, 206, 231, 1)',
 		],
-		'size'=>'modal-lg'
+		'size'=>'modal-dm'
     ]);
     Modal::end();
+	
+	
+	
+	/*
+	 * VIEW EDITING SALARY
+	 * @author ptrnov [ptr.nov@gmail.com]
+	 * @since 1.2
+	 */
+	$this->registerJs("
+	$(document).ready(function () {
+		if(localStorage.getItem('stsSalary')==null){
+			//alert(stsSalary);
+			localStorage.setItem('stsSalary','hidden');
+		};
+		if(localStorage.getItem('stsSalary')!=null){
+			localStorage.setItem('sts','hidden');
+		};
+		var stsSalary  = localStorage.getItem('stsSalary');
+		var nilaiValueHdr = localStorage.getItem('nilaiSalary');
+		localStorage.setItem('stsSalary','hidden');
+		/*
+		 * FIRST SHOW MODAL
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/
+		$(document).on('click','#modalButtonSalary', function(ehead){	
+				$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+				//e.preventDefault(); 		
+				localStorage.clear();
+				localStorage.setItem('nilaiSalary',ehead.target.value);			
+				localStorage.setItem('stsSalary','show');
+				$('#modal-view-salary').modal('show')
+				.find('#modalContentSalary')
+				.load(ehead.target.value);
+		});
+		
+		/* TEST VALUE */
+		//alert(stsSalary);
+		//alert(nilaiValue);
+		
+		/*
+		 * STATUS SHOW IF EVENT BUTTON SAVED
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/
+		$(document).on('click','#saveBtnSalary', function(e){		
+			localStorage.setItem('stsSalary','show');
+			localStorage.setItem('sts','hidden');			
+		}); 
+		
+		/*
+		 * STATUS HIDDEN IF EVENT MODAL HIDE
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/
+		$(document).one('hidden.bs.modal','#modal-view-salary', function () {
+			localStorage.setItem('stsSalary','hidden');
+		});
+		
+		/*
+		 * CALL BACK SHOW MODAL
+		 * @author Ptr.nov [ptr.nov@gmail.com]
+		*/	
+		setTimeout(function(){
+			$('#modal-view-salary').modal(stsSalary)
+			.find('#modalContentSalary')
+			.load(nilaiValueHdr);
+		}, 1000);  
+	});
+	",$this::POS_READY);
 ?>

@@ -12,7 +12,7 @@ use yii\helpers\Url;
 
 	$aryField= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'empNm','SIZE' => '20%','label'=>'Employee','align'=>'left','mergeHeader'=>false,'vAlign'=>'middle']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'cabNm','SIZE' => '10%','label'=>'Cabang','align'=>'left','mergeHeader'=>false,'vAlign'=>'middle']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'cabNm','SIZE' => '10%','label'=>'Branch','align'=>'left','mergeHeader'=>false,'vAlign'=>'middle']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'depNm','SIZE' => '10%','label'=>'Exception','align'=>'left','mergeHeader'=>false,'vAlign'=>'middle']],
 		['ID' =>3, 'ATTR' =>['FIELD'=>'ijinNm','SIZE' => '10%','label'=>'Exception','align'=>'left','mergeHeader'=>false,'vAlign'=>'middle']],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'IJN_SDATE','SIZE' => '5%','label'=>'Start Date','align'=>'left','mergeHeader'=>false,'vAlign'=>'top']],

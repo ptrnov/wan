@@ -71,11 +71,11 @@ class PayrollSalary extends \yii\db\ActiveRecord
         return [
             'ID' => Yii::t('app', 'ID'),
             'KAR_ID' => Yii::t('app', 'Kar  ID'),
-            'PAY_DAY' => Yii::t('app', 'Pay  Day'),
-            'PAY_MONTH' => Yii::t('app', 'Pay  Month'),
-            'PAY_TUNJANGAN' => Yii::t('app', 'Pay  Tunjangan'),
-            'PAY_TRANPORT' => Yii::t('app', 'Pay  Tranport'),
-            'PAY_EAT' => Yii::t('app', 'Pay  Eat'),
+            'PAY_DAY' => Yii::t('app', 'Pay Of Day'),
+            'PAY_MONTH' => Yii::t('app', 'Pay Of Month'),
+            'PAY_TUNJANGAN' => Yii::t('app', 'Positional Allowance'),
+            'PAY_TRANPORT' => Yii::t('app', 'Pay For Tranport'),
+            'PAY_EAT' => Yii::t('app', 'Pay For Eat'),
             'BONUS' => Yii::t('app', 'Bonus'),
             'PAY_ENTERTAIN' => Yii::t('app', 'Pay  Entertain'),
 			'STATUS_ACTIVE' => Yii::t('app', 'Status  Active'),
@@ -95,4 +95,24 @@ class PayrollSalary extends \yii\db\ActiveRecord
 	public function getEmpNm(){
 		return $this->emp!=''?$this->emp->KAR_NM:'none';
 	}
+	
+	public function getCabNm(){
+		return $this->emp!=''?$this->emp->cabNm:'none';
+	}
+	public function getDepNm(){
+		return $this->emp!=''?$this->emp->depNm:'none';
+	}
+	public function getCodeGolongan(){
+		return $this->emp!=''?$this->emp->codeGolongan:'none';
+	}
+	public function getGfNm(){
+		return $this->emp!=''?$this->emp->gfNm:'none';
+	}
+	public function getGradingNm(){
+		return $this->emp!=''?$this->emp->gradingNm:'none';
+	}
+	public function getStsKerjaNm(){
+		return $this->emp!=''?$this->emp->stsKerjaNm:'none';
+	}
+	
 }

@@ -60,7 +60,7 @@ use yii\helpers\Url;
 		'buttons' => [
 			'view' =>function($url, $model, $key){
 					return  Html::button(Yii::t('app', 'view'),
-						['value'=>url::to(['/master/payroll-salary/view','id'=>$model->KAR_ID]),
+						['value'=>url::to(['/master/payroll-salary/view-salary','id'=>$model->ID]),
 						'id'=>'modalButtonSalary',
 						'class'=>"btn btn-primary btn-xs",			
 						'style'=>['width'=>'40px', 'height'=>'25px'],
