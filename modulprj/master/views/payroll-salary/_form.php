@@ -8,6 +8,8 @@ use kartik\widgets\Select2;
 use kartik\widgets\FileInput;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
+use kartik\money\MaskMoney;
+
 /* @var $this yii\web\View */
 /* @var $model modulprj\master\models\PayrollSalary */
 /* @var $form yii\widgets\ActiveForm */
@@ -48,22 +50,59 @@ use yii\helpers\Url;
 				
 			</div>
 			<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-				<?= $form->field($model, 'PAY_DAY')->textInput() ?>
-
-				<?= $form->field($model, 'PAY_MONTH')->textInput() ?>
-
-				<?= $form->field($model, 'PAY_TUNJANGAN')->textInput() ?>
+				<?= $form->field($model, 'PAY_DAY')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>
+				<?= $form->field($model, 'PAY_MONTH')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>
+				<?= $form->field($model, 'PAY_TUNJANGAN')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>
 			
 			</div>
 			<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 				
-				<?= $form->field($model, 'PAY_TRANPORT')->textInput() ?>
-
-				<?= $form->field($model, 'PAY_EAT')->textInput() ?>
-
-				<?= $form->field($model, 'BONUS')->textInput() ?>
-
-				<?= $form->field($model, 'PAY_ENTERTAIN')->textInput() ?>			
+				<?= $form->field($model, 'PAY_TRANPORT')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>
+				<?= $form->field($model, 'PAY_EAT')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>
+				<?= $form->field($model, 'BONUS')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>
+				<?= $form->field($model, 'PAY_ENTERTAIN')->widget(MaskMoney::classname(), [
+						'pluginOptions' => [
+							'prefix' => 'Rp.',
+							'allowNegative' => false
+						]
+					]);
+				?>			
 			</div>
 			<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 				<?= $form->field($model, 'STATUS_ACTIVE')->textInput() ?>
@@ -72,7 +111,7 @@ use yii\helpers\Url;
 				
 				<?= $form->field($model, 'NOTE')->textarea(['rows' => 6]) ?>
 			
-				<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+				<?php echo Html::submitButton('Save',['class' => 'btn btn-primary']); ?>
 			</div>
 		</div>
 	</div>

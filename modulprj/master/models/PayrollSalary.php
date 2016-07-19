@@ -39,7 +39,7 @@ class PayrollSalary extends \yii\db\ActiveRecord
         return [
             [['KAR_ID'], 'required'],
 			['KAR_ID','findKarids'],
-            [['PAY_DAY', 'PAY_MONTH', 'PAY_TUNJANGAN', 'PAY_TRANPORT', 'PAY_EAT', 'BONUS', 'PAY_ENTERTAIN'], 'number'],
+            [['PAY_DAY', 'PAY_MONTH', 'PAY_TUNJANGAN', 'PAY_TRANPORT', 'PAY_EAT', 'BONUS', 'PAY_ENTERTAIN'], 'safe'],
             [['STATUS_ACTIVE'], 'integer'],
             [['CREATE_BY','UPDATE_BY'], 'string'],
             [['CREATE_AT','UPDATE_AT','NOTE'], 'safe'],

@@ -78,7 +78,8 @@ class PayrollSalarySearch extends PayrollSalary
             'STATUS_ACTIVE' => $this->STATUS_ACTIVE,
         ]);
 
-        $query->andFilterWhere(['like', 'KAR_ID',  $this->getAttribute('empNm')]);
+        $query->andFilterWhere(['like', 'KAR_ID',  $this->getAttribute('empNm')])
+			  ->andFilterWhere(['like', 'KAR_ID',  $this->KAR_ID]);
 
         return $dataProvider;
     }

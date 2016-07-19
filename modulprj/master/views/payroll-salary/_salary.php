@@ -19,7 +19,7 @@ use yii\helpers\Url;
 		['ID' =>5, 'ATTR' =>['FIELD'=>'PAY_EAT','SIZE' => '10px','label'=>'Uang Makan','align'=>'left']],
 		['ID' =>6, 'ATTR' =>['FIELD'=>'BONUS','SIZE' => '10px','label'=>'Bonus','align'=>'left']],
 		['ID' =>7, 'ATTR' =>['FIELD'=>'PAY_ENTERTAIN','SIZE' => '10px','Uang Intertain'=>'Status','align'=>'left']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'STATUS_ACTIVE','SIZE' => '10px','label'=>'Status','align'=>'left']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'STATUS_ACTIVE','SIZE' => '10px','label'=>'Status','align'=>'left']],
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 	
@@ -99,6 +99,56 @@ use yii\helpers\Url;
 			];
 			$filterOptCspn=1;
 			$filterColor='rgba(97, 211, 96,1)';
+			$format="HTML";
+		}elseif($value[$key]['FIELD']=='PAY_DAY'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}elseif($value[$key]['FIELD']=='PAY_MONTH'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}elseif($value[$key]['FIELD']=='PAY_TUNJANGAN'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}elseif($value[$key]['FIELD']=='PAY_TRANPORT'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}elseif($value[$key]['FIELD']=='PAY_EAT'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}elseif($value[$key]['FIELD']=='BONUS'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
+		}elseif($value[$key]['FIELD']=='PAY_ENTERTAIN'){
+			$format='decimal';
+			$gvfilterType=false;
+			$gvfilter=true;
+			$filterWidgetOpt=false;		
+			$filterOptCspn=1;
+			$filterColor='rgba(97, 211, 96,1)';
 		}else{
 			$gvfilterType=false;
 			$gvfilter=true;
@@ -107,6 +157,7 @@ use yii\helpers\Url;
 			$filterOptCspn=1;
 			//$filterColor=false;
 			$filterColor='rgba(97, 211, 96,1)';
+			$format="HTML";
 		};
 		
 		
@@ -143,6 +194,7 @@ use yii\helpers\Url;
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
+			'format'=>$format,
 			//'pageSummaryFunc'=>GridView::F_SUM,
 			//'pageSummary'=>true,
 			'pageSummaryOptions' => [

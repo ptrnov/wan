@@ -52,7 +52,13 @@ class PayrollSalaryController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PayrollSalarySearch();
+		$paramCari=Yii::$app->getRequest()->getQueryParam('id');
+		if ($paramCari!=''){
+			$cari=['KAR_ID'=>$paramCari];
+		}else{
+			$cari='';
+		};
+        $searchModel = new PayrollSalarySearch($cari);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -120,8 +126,7 @@ class PayrollSalaryController extends Controller
 					return Json::encode(\yii\widgets\ActiveForm::validate($model));
 			}else{
 				if ($model->load(Yii::$app->request->post()) && $model->save()) {
-					// return $this->redirect(['view', 'id' => $model->ID]);
-					return $this->redirect(['index']);
+					return $this->redirect(['index', 'id' => $model->KAR_ID]);
 				}		
 			}   
 		}
