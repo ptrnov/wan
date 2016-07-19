@@ -39,6 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
 				'STATUS_ACTIVE',
 			],
 		]);
+					
+		$gvSalaryhistory=$this->render('_viewGridView',[
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
+		]);	
+		
 	?>
 
 
@@ -49,6 +55,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 			<?=$salary?>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top:5px">				
+			<?=$gvSalaryhistory?>
 		</div>
 	</div>
 </div>

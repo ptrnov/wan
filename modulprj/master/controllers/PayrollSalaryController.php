@@ -112,7 +112,17 @@ class PayrollSalaryController extends Controller
     public function actionViewSalary($id)
     {
 		$model = $this::findModel($id);
-     
+		
+		if ($id!=''){
+			$cari=['ID'=>$id];
+		}else{
+			$cari='';
+		};
+		
+		$searchModel = new PayrollSalarySearch($cari);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+            
 		if ($model->load(Yii::$app->request->post())){
 			//$model->save(false);
 			if($model->save()){
@@ -124,6 +134,8 @@ class PayrollSalaryController extends Controller
 		}else{
 			return $this->renderAjax('_viewSalary', [
 				'model' => $model,
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
 			]);
 		}
     }

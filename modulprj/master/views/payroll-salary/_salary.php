@@ -53,19 +53,30 @@ use yii\helpers\Url;
 				]
 			],					
 	];
-	$attDinamik[] =[
-		'class' => 'kartik\grid\ActionColumn', 
-		'template' => '{view}',
-		'header'=>'Action',
-		'buttons' => [
+	/*ACTION ATTRIBUTE*/
+	$attDinamik[]=[
+		'class'=>'kartik\grid\ActionColumn',
+		'dropdown' => true,
+		'template' => '{view}{update}',
+		'dropdownOptions'=>['class'=>'pull-left dropdown'],
+		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+		'buttons' => [				
 			'view' =>function($url, $model, $key){
-					return  Html::button(Yii::t('app', 'view'),
-						['value'=>url::to(['/master/payroll-salary/view-salary','id'=>$model->ID]),
-						'id'=>'modalButtonSalary',
-						'class'=>"btn btn-primary btn-xs",			
-						'style'=>['width'=>'40px', 'height'=>'25px'],
-					]);
-			},					
+					return  '<li>' . Html::button(Yii::t('app', 'view'),
+											['value'=>url::to(['/master/payroll-salary/view-salary','id'=>$model->ID]),
+											'id'=>'modalButtonSalary',
+											//'class'=>"btn btn-primary btn-xs",			
+											'style'=>['width'=>'100%', 'height'=>'25px'],
+										]). '</li>' . PHP_EOL;
+			},
+			'update' =>function($url, $model, $key){
+					return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update Salary'),
+												['master/payroll-salary/edit','id'=>$model->KAR_ID],[
+												'data-toggle'=>"modal",
+												'data-target'=>"#edit-title",
+												'data-title'=> $model->KAR_ID,
+												]). '</li>' . PHP_EOL;
+			}
 		],
 		'headerOptions'=>[					
 			'style'=>[
@@ -84,7 +95,8 @@ use yii\helpers\Url;
 				'font-family'=>'tahoma, arial, sans-serif',
 				'font-size'=>'9pt',
 			]
-		],		
+		],	
+	
 	];
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){
