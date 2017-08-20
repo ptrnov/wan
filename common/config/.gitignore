@@ -1,7 +1,8 @@
-aliases.php
-bootstrap.php
-main.php
-params.php
-params-local.php
+*
+!aliases.php
+!bootstrap.php
+!main.php
+!params.php
+!params-local.php
 !.gitignore
 
