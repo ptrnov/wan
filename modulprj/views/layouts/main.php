@@ -1,6 +1,6 @@
 <?php
 
-use \Yii;
+//use Yii;
 use kartik\helpers\Html;
 use yii\bootstrap\Carousel;
 use kartik\form\ActiveForm;

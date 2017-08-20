@@ -67,7 +67,7 @@ class PersonallogSearch extends Personallog
 			 X.UserName,C.MESIN_NM AS TerminalNm,Y.KAR_ID,Y.NAMA
 			FROM personallog X LEFT JOIN
 				(	SELECT A.TerminalID,A.FingerPrintID,A.KAR_ID,CONCAT(B.KAR_NM) AS NAMA 
-					FROM kar_finger A LEFT JOIN Karyawan B ON B.KAR_ID=A.KAR_ID
+					FROM kar_finger A LEFT JOIN karyawan B ON B.KAR_ID=A.KAR_ID
 				) Y 
 				ON Y.FingerPrintID=X.UserID AND X.TerminalID=Y.TerminalID
 				LEFT JOIN machine C ON C.TerminalID=X.TerminalID

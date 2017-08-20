@@ -18,12 +18,19 @@ use Yii;
  */
 class Kepangkatan extends \yii\db\ActiveRecord
 {
+	/* [1] SOURCE DB */
+    public static function getDb()
+    {
+        /* Author -ptr.nov- : HRD */
+        return \Yii::$app->db;
+    }
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'Kepangkatan';
+        return 'kepangkatan';
     }
 
     /**

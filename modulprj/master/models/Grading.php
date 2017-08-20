@@ -24,7 +24,7 @@ class Grading extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Grading';
+        return 'grading';
     }
 
     /**

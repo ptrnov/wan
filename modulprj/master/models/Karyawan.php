@@ -39,7 +39,7 @@ class Karyawan extends \yii\db\ActiveRecord{
     /* [2] TABLE SELECT */
     public static function tableName()
     {
-        return '{{karyawan}}';
+        return 'karyawan';
     }
 
     /* [3] RULE SCENARIO -> DetailView */

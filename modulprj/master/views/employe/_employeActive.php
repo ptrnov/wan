@@ -150,7 +150,7 @@ use yii\helpers\Url;
 	
 	];
 	/*IMG*/
-	$attDinamik[] =[
+	/* $attDinamik[] =[
 			'attribute'=>'IMG64',
 			'format'=>'raw', 
 			'value'=>function($model){				
@@ -178,7 +178,7 @@ use yii\helpers\Url;
 					'font-size'=>'9pt',
 				]
 			],
-	];	
+	];	 */
 	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFields as $key =>$value[]){
