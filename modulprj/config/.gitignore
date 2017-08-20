@@ -1,3 +1,6 @@
-*
-!main
+!bootstrap.php
+!main-local.php
+!params.php
+!params-local.php
+main.php
 !.gitignore
