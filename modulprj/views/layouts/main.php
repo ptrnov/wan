@@ -83,7 +83,7 @@ $this->title = 'wandindo';
 
 		<! -LOGIN- Author : -ptr.nov- >
 		<?php if (!Yii::$app->user->isGuest) { ?>
-			<body class="hold-transition skin-red"> <!--  sidebar-mini !-->
+			<body class="hold-transition skin-red" > <!--  sidebar-mini !-->
 				<?php $this->beginBody(); ?>
                 <div class="wrapper">
                     <header class="main-header"> <!-- navbar-fixed-top !-->
@@ -245,7 +245,7 @@ $this->title = 'wandindo';
                                 );
 								*/
 							 ?>
-							  <div style="margin-top: 20px";>
+							  <div style="margin-top: 20px;min-height:600px";>
 								<?php echo $content; ?>
 							  </div>
                             
