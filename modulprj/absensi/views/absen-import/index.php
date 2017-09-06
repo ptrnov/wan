@@ -95,10 +95,16 @@ $this->registerCss("
 	];	
 	$valFields = ArrayHelper::map($aryField, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
-	$pageNm='<span class="fa-stack fa-xs text-right">				  
-				  <i class="fa fa-share fa-1x"></i>
-				</span><b>Absensi Import</b>
-	';
+	$pageNm='<span class="fa-stack fa-sm text-left">
+			  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+			  <b class="fa fa-clock-o fa-stack-2x" style="color:#000000"></b>
+			</span> <b>Absensi Import</b>
+			<span class="fa-stack fa-xs text-right">				  
+				  <i class="fa fa-mail-forward fa-1x"></i>
+				</span>
+			'			
+	;
+	
 	$attDinamik[] =[			
 			'class'=>'kartik\grid\SerialColumn',
 			'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -225,7 +231,7 @@ $this->registerCss("
 			'{export}',
 		],	
 		'panel'=>[
-			'heading'=>$pageNm.'  '.tombolExportFormat($paramUrl),					
+			'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,

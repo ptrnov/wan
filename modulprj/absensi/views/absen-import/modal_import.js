@@ -8,6 +8,30 @@
 */
 
 /*
+ * Import-Create.
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
+$(document).on('click','#import-button-create', function(ehead){ 			  
+	$('#import-modal-create').modal('show')
+	.find('#import-modal-content-create').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	//.load(ehead.target.value);
+	.load($(this).attr('value'));
+});
+
+/*
+ * Import-upload.
+*/
+/* $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
+$(document).on('click','#import-button-upload', function(ehead){ 			  
+	$('#import-modal-upload').modal('show')
+	.find('#import-modal-content-upload').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	//.load(ehead.target.value);
+	.load($(this).attr('value'));
+}); */
+
+/*
  * Import-review.
 */
 $.fn.modal.Constructor.prototype.enforceFocus = function(){};

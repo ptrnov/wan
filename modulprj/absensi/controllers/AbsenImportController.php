@@ -22,7 +22,7 @@ use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 use modulprj\absensi\models\AbsenImport;
 use modulprj\absensi\models\AbsenImportSearch;
-
+use modulprj\absensi\models\AbsenImportFile;
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -89,7 +89,7 @@ class AbsenImportController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
         }
@@ -142,6 +142,29 @@ class AbsenImportController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+	
+	 /**
+     * UPLOAD FILE 
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+     */
+	public function actionUpload(){
+		$model = new AbsenImportFile();
+		if ($model->load(Yii::$app->request->post()) ) {
+			if($model->validate()){
+				$model->USER_ID = Yii::$app->user->identity->username;
+				$exportFile = $model->uploadFile();
+				if ($model->save()) {
+				 //upload only if valid uploaded file instance found
+					 if ($exportFile !== false) {
+						$path = $model->getImageFile();
+						$exportFile->saveAs($path);
+						return $this->redirect(['index','id'=>$model->FILE_NM]);
+					}
+				}
+			}
+		}
+	}
 	
 	/**====================================
      * EXPORT FORMAT

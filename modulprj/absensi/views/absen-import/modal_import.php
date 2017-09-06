@@ -2,7 +2,10 @@
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
-
+use kartik\widgets\ActiveForm;
+use kartik\widgets\FileInput;
+use modulprj\absensi\models\AbsenImportFile;
+$model = new AbsenImportFile();
 $this->registerCss("
 	/**
 	 * CSS - Border radius Sudut.
@@ -69,19 +72,49 @@ $this->registerCss("
 	}
 	
 	/*
-	 * LINK BUTTON : Button - EXPORT Formula.
+	 * CREATE BUTTON
+	*/
+	function tombolCreate(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){				
+				$title1 = Yii::t('app','');
+				$url = Url::toRoute(['/absensi/absen-import/create']);
+				$options1 = ['value'=>$url,
+							'id'=>'import-button-create',
+							'data-pjax' => true,
+							'class'=>"btn btn-success btn-xs",
+							'title'=>'Tambah Data Secara Manual'
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+						  <b class="fa fa-plus fa-stack-1x" style="color:#000000"></b>
+						</span>
+				';
+				$label1 = $icon1;
+				$content = Html::button($label1,$options1);
+				return $content;
+			// }
+		// }
+	}
+	
+	/*
+	 * LINK EXPORT FORMAT
 	*/
 	function tombolExportFormat(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){
-				$title1 = Yii::t('app', ' Download Format');
+				$title1 = Yii::t('app', '');
 				$url = Url::toRoute(['/absensi/absen-import/export']);
 				$options1 = [
 							'id'=>'import-button-export-formula',
 							'data-pjax' => true,
-							'class'=>"btn btn-info btn-sm"  
+							'class'=>"btn btn-info btn-xs",
+							'title'=>'Download Format'
 				];
-				$icon1 = '<span class="fa fa-clone fa-lg"></span>';
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+						  <b class="fa fa-download fa-stack-1x" style="color:#000000"></b>
+						</span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::a($label1,$url,$options1);
 				return $content;
@@ -89,7 +122,61 @@ $this->registerCss("
 		// }
 	}
 
-/*
+	/*
+	 * UPLOAD BUTTON
+	*/
+	function tombolUpload(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){				
+				$title1 = Yii::t('app','');
+				//$url = Url::toRoute(['/absensi/absen-import/upload']);
+				$options1 = [
+							//'value'=>$url,
+							//'id'=>'import-button-upload',
+							'data-toggle'=>"modal",
+							'data-target'=>"#file-import",
+							'data-pjax' => true,
+							'class'=>"btn btn-danger btn-xs",
+							'title'=>'Upload Absensi'
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+						  <b class="fa fa-upload fa-stack-1x" style="color:#000000"></b>
+						</span>
+				';
+				$label1 = $icon1;
+				$content = Html::a($label1,'',$options1);
+				return $content;
+			// }
+		// }
+	}
+	
+	/*
+	 * LINK SYNC DATABASE
+	*/
+	function tombolSync(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', '');
+				$url = Url::toRoute(['/absensi/absen-import/sync']);
+				$options1 = [
+							'id'=>'import-button-export-sync',
+							'data-pjax' => true,
+							'class'=>"btn btn-primary btn-xs",
+							'title'=>'Synconize to Database'							
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+						  <b class="fa fa-database fa-stack-1x" style="color:#000000"></b>
+						</span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,$url,$options1);
+				return $content;
+			// }
+		// }
+	}
+	
+	/*
 	 * LINK BUTTON : Button - EXPORT EXCEL.
 	*/
 	function tombolExportExcel(){
@@ -149,7 +236,7 @@ $this->registerCss("
 	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
 	
 	/*
-	 * store - VIEW.
+	 * ABSENT IMPORT - REVIEW.
 	*/
 	Modal::begin([
 		'id' => 'import-modal-review',
@@ -174,5 +261,72 @@ $this->registerCss("
 	echo "<div id='import-modal-content-review'></div>";
 	Modal::end();
 	
+	/*
+	 * ABSENT IMPORT - CREATE.
+	*/
+	Modal::begin([
+		'id' => 'import-modal-create',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-pencil-square-o fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> Tambah Absensi Manual </b>
+		',	
+		'size' => 'modal-dm',
+		//'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+			//'toggleButton' => ['label' => 'click me'],
+		],
+		//'clientOptions' => ['backdrop' => 'static', 'keyboard' => TRUE]
+		'clientOptions' => [
+			'backdrop' => FALSE, //Static=disable, false=enable
+			'keyboard' => TRUE,	// Kyboard 
+		]
+	]);
+	echo "<div id='import-modal-content-create'></div>";
+	Modal::end();
+	
+	/*
+	 * UPLOAD.
+	*/
+	Modal::begin([
+		'id' => 'file-import',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-pencil-square-o fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> Tambah Absensi Manual </b>
+		',	
+		'size' => 'modal-dm',
+		//'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+			//'toggleButton' => ['label' => 'click me'],
+		],
+		//'clientOptions' => ['backdrop' => 'static', 'keyboard' => TRUE]
+		'clientOptions' => [
+			'backdrop' => FALSE, //Static=disable, false=enable
+			'keyboard' => TRUE,	// Kyboard 
+		]
+	]);
+		$form = ActiveForm::begin([
+			'options'=>['enctype'=>'multipart/form-data'], // important,
+			'method' => 'post',
+			'action' => ['/absensi/absen-import/upload'],
+		]);
+			echo $form->field($model, 'uploadExport')->widget(FileInput::classname(), [
+				'options' => ['accept' => '*'],
+				'pluginOptions' => [
+					'showPreview' => false,
+					'showUpload' => false,
+					//'uploadUrl' => Url::to(['/sales/import-data/upload']),
+				] 
+			]);
+			echo '<div style="text-align:right; padding-top:10px">';
+			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
+			echo '</div>';
+		ActiveForm::end();
+	Modal::end();
 	
 ?>

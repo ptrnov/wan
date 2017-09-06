@@ -35,6 +35,7 @@ use Yii;
  */
 class AbsenImport extends \yii\db\ActiveRecord
 {
+	public $uploadExport;
     /**
      * @inheritdoc
      */
@@ -54,7 +55,7 @@ class AbsenImport extends \yii\db\ActiveRecord
             [['PAY_DAY', 'VAL_PAGI', 'VAL_LEMBUR', 'PAY_PAGI', 'PAY_LEMBUR'], 'number'],
             [['DCRP_DETIL'], 'string'],
             [['TERMINAL_ID', 'KAR_NM'], 'string', 'max' => 100],
-            [['FINGER_ID'], 'string', 'max' => 255],
+            [['FINGER_ID','FILE_NM'], 'string', 'max' => 255],
             [['MESIN_NM', 'HARI'], 'string', 'max' => 20],
             [['KAR_ID'], 'string', 'max' => 15],
             [['DEP_ID'], 'string', 'max' => 5],
