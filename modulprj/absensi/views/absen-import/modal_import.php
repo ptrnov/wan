@@ -163,7 +163,7 @@ $this->registerCss("
 							'id'=>'import-button-export-sync',
 							'data-pjax' => true,
 							'class'=>"btn btn-primary btn-xs",
-							'title'=>'Synconize to Database'							
+							'title'=>'Save to Database'							
 				];
 				$icon1 = '<span class="fa-stack fa-sm text-left">
 						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
@@ -295,8 +295,8 @@ $this->registerCss("
 		'header' => '
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
-				<i class="fa fa-pencil-square-o fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> Tambah Absensi Manual </b>
+				<i class="fa fa-upload fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> Upload Excel Data Absensi </b>
 		',	
 		'size' => 'modal-dm',
 		//'options' => ['class'=>'slide'],
@@ -322,7 +322,7 @@ $this->registerCss("
 					'showUpload' => false,
 					//'uploadUrl' => Url::to(['/sales/import-data/upload']),
 				] 
-			]);
+			])->label("Upload for Import");
 			echo '<div style="text-align:right; padding-top:10px">';
 			echo Html::submitButton('Upload',['class' => 'btn btn-success']);
 			echo '</div>';

@@ -58,11 +58,17 @@ class AbsenImportController extends Controller
     {
         $searchModel = new AbsenImportSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
+		
+		//return self::getValidateDate('2017-12-12');
+		//return self::getValidateDate('12-12-2017');
+		//return date('Y-m-d', strtotime('2037-12-12')); //BUG di tahun 3038
+		//return date('H:i:s', strtotime('10:00:00')); //BUG di tahun 3038
+		//return checkdate('2017','12', '12');
+		//getValidateTime
+       /*  return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
+        ]); */
     }
 
     /**
@@ -151,8 +157,10 @@ class AbsenImportController extends Controller
 	public function actionUpload(){
 		$model = new AbsenImportFile();
 		if ($model->load(Yii::$app->request->post()) ) {
+			$hsl = \Yii::$app->request->post();
+			$fileNm = $hsl['AbsenImportFile']['FILE_NM'];
 			if($model->validate()){
-				$model->USER_ID = Yii::$app->user->identity->username;
+				//$model->USER_ID = Yii::$app->user->identity->username;
 				$exportFile = $model->uploadFile();
 				if ($model->save()) {
 				 //upload only if valid uploaded file instance found
@@ -160,11 +168,113 @@ class AbsenImportController extends Controller
 						$path = $model->getImageFile();
 						$exportFile->saveAs($path);
 						return $this->redirect(['index','id'=>$model->FILE_NM]);
+						// $dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
+						
+						
+						// $searchModel = new AbsenImportSearch();
+						// $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+						// return $this->render('index', [
+							// 'searchModel' => $searchModel,
+							// 'dataProvider' => $dataProvider,
+							// 'dataModelImport'=>$dataModelImport
+						// ]);
 					}
 				}
 			}
 		}
 	}
+	/**=====================================
+     * GET ARRAY FROM FILE
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * =====================================
+     */
+	public function getArryFile($paramFile){
+		
+			$pathDefault='/var/www/backup/ExternalData/default_format/';
+			$pathImport=realpath(Yii::$app->basePath) . '/web/uploads/temp/';
+			//$fileData=$paramFile!=''?$pathImport.$paramFile:$pathDefault.'default_import_gudang.xlsx';
+			$fileData=$pathImport.$paramFile;
+			//$fileData=$pathImport.'absen_import2017-09-06-115804.xlsx';
+			//$fileName='/var/www/backup/ExternalData/import_gudang/'.$fileData;
+			$config='';
+			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
+
+			$data = \moonland\phpexcel\Excel::widget([
+				'id'=>'import-absensi',
+				'mode' => 'import',
+				'fileName' => $fileData,
+				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
+				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
+				'getOnlySheet' => 'Import-Absensi', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+				]);
+
+			//print_r($data);
+			$aryDataProvider= new ArrayDataProvider([
+				//'key' => 'ID',
+				'allModels'=>$data,
+				 'pagination' => [
+					'pageSize' => 1000,
+				]
+			]);
+
+			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
+			return $aryDataProvider;
+			
+	}
+	
+	/**====================================
+     * VALIDATION INPUT DATE
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	function getValidateDate($date)
+	{		
+		$tgl=date('Y-m-d', strtotime($date)); 
+		if($tgl<>'1970-01-01'){ //check String
+			if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$tgl))
+			{
+				$tempDate = explode('-', $tgl);
+				// checkdate(month, day, year)
+				return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+			}else{
+				//echo 'Date is invalid';
+				return false;
+			}
+		}else{
+			return false;
+		}		 
+	}
+
+	/* function getValidateTime($time)
+	{
+		
+		$tgl=time('H:i:s', strtotime($time));
+		if($tgl<>'1970-01-01'){
+			if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$tgl))
+			{
+				$tempDate = explode('-', $tgl);
+				// checkdate(month, day, year)
+				return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+			}else{
+				//echo 'Date is invalid';
+				return false;
+			}
+		}else{
+			return false;
+		}
+		//$tgl=date('Y-m-d H:i:s', strtotime($date));
+		 // $tempDate = explode('-', $date);
+		////  checkdate(month, day, year)
+		// return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+		  
+		 
+	} */
+	
+	
+	
 	
 	/**====================================
      * EXPORT FORMAT

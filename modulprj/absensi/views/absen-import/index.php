@@ -11,6 +11,7 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
 
+print_r($dataModelImport);
 $this->registerCss("
 	:link {
 		color: #fdfdfd;
