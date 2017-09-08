@@ -108,11 +108,9 @@ class AbsenImportController extends Controller
     }
 
     /**
-     * Creates a new AbsenImport model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * CREATE TEMPORARY
      */
-    public function actionCreate()
+    public function actionCreateAct()
     {
         $model = new AbsenImport();
 
@@ -124,7 +122,22 @@ class AbsenImportController extends Controller
             ]);
         }
     }
+	
+	/**
+     * CREATE ACTUAL
+     */
+    public function actionCreateTmp()
+    {
+        $model = new AbsenImportTmp();
 
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->ID]);
+        } else {
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+        }
+    }
     /**
      * Updates an existing AbsenImport model.
      * If update is successful, the browser will be redirected to the 'view' page.

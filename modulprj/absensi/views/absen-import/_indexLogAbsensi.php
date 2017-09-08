@@ -23,7 +23,7 @@ use yii\web\View;
 		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
 	];	
 	$valFieldsLog = ArrayHelper::map($aryFieldLog, 'ID', 'ATTR'); 
-	$bColor='rgba(87,114,111, 1)';
+	$bColor='rgba(104, 49, 54, 1)';
 	$pageNm='<span class="fa-stack fa-sm text-left">
 			  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
 			  <b class="fa fa-clock-o fa-stack-2x" style="color:#000000"></b>
@@ -160,9 +160,8 @@ use yii\web\View;
 			'{export}',
 		],	
 		'panel'=>[
-			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
-			'heading'=>tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
-			'type'=>'info',
+			'heading'=>tombolRefreshLog().' '.tombolCreateAct(),					
+			'type'=>'success',
 			'after'=>false,
 			'before'=>false,
 			'footer'=>false,

@@ -61,7 +61,7 @@ $this->registerCss("
 	function tombolRefresh(){
 		$title = Yii::t('app','');
 		$url =  Url::toRoute(['/absensi/absen-import']);
-		$options = ['id'=>'import-id-refresh',
+		$options = ['id'=>'tmp-id-refresh',
 				  'data-pjax' => true,
 				  'class'=>"btn btn-warning btn-xs",
 				  'title'=>'Refresh'
@@ -76,13 +76,59 @@ $this->registerCss("
 	}
 	
 	/*
-	 * CREATE BUTTON
+	 * LINK BUTTON : Link Button Refresh
 	*/
-	function tombolCreate(){
+	function tombolRefreshLog(){
+		$title = Yii::t('app','');
+		$url =  Url::toRoute(['/absensi/absen-import#ai-tab1']);
+		$options = ['id'=>'actual-id-refresh',
+				  'data-pjax' => true,
+				  'class'=>"btn btn-warning btn-xs",
+				  'title'=>'Refresh'
+				];
+		$icon = '<span class="fa-stack fa-sm text-left">
+				  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+				  <b class="fa fa-history fa-stack-1x" style="color:#000000"></b>
+				</span>
+		';
+		$label = $icon;
+		return $content = Html::a($label,$url,$options);
+	}
+	
+	/*
+	 * TEMPORARY: CREATE
+	*/
+	function tombolCreateTmp(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){				
 				$title1 = Yii::t('app','');
-				$url = Url::toRoute(['/absensi/absen-import/create']);
+				$url = Url::toRoute(['/absensi/absen-import/create-tmp']);
+				$options1 = ['value'=>$url,
+							'id'=>'import-button-create',
+							'data-pjax' => true,
+							'class'=>"btn btn-success btn-xs",
+							'title'=>'Tambah Data Secara Manual'
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+						  <b class="fa fa-plus fa-stack-1x" style="color:#000000"></b>
+						</span>
+				';
+				$label1 = $icon1;
+				$content = Html::button($label1,$options1);
+				return $content;
+			// }
+		// }
+	}
+	
+	/*
+	 * ACTUAL: CREATE
+	*/
+	function tombolCreateAct(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){				
+				$title1 = Yii::t('app','');
+				$url = Url::toRoute(['/absensi/absen-import/create-act']);
 				$options1 = ['value'=>$url,
 							'id'=>'import-button-create',
 							'data-pjax' => true,
@@ -266,7 +312,7 @@ $this->registerCss("
 	Modal::end();
 	
 	/*
-	 * ABSENT IMPORT - CREATE.
+	 * TEMPORARY/ACTUAL: MODAL CREATE.
 	*/
 	Modal::begin([
 		'id' => 'import-modal-create',
@@ -274,7 +320,7 @@ $this->registerCss("
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
 				<i class="fa fa-pencil-square-o fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> Tambah Absensi Manual </b>
+			</span><b> Add Log Absensi </b>
 		',	
 		'size' => 'modal-dm',
 		//'options' => ['class'=>'slide'],
