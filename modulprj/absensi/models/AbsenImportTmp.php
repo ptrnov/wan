@@ -33,14 +33,14 @@ use Yii;
  * @property integer $STATUS
  * @property string $DCRP_DETIL
  */
-class AbsenImport extends \yii\db\ActiveRecord
+class AbsenImportTmp extends \yii\db\ActiveRecord
 {
-    /**
+	/**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'absen_import';
+        return 'absen_import_tmp';
     }
 
     /**

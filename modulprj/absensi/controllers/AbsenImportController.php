@@ -23,6 +23,8 @@ use ptrnov\postman4excel\Postman4ExcelBehavior;
 use modulprj\absensi\models\AbsenImport;
 use modulprj\absensi\models\AbsenImportSearch;
 use modulprj\absensi\models\AbsenImportFile;
+use modulprj\absensi\models\AbsenImportTmp;
+use modulprj\absensi\models\AbsenImportTmpSearch;
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -56,7 +58,26 @@ class AbsenImportController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new AbsenImportSearch();
+		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		if ($paramFile){
+			$dataModelImport=self::getArryFile($paramFile)->getModels();
+			if(!$dataModelImport){
+				$js='$("#msg-erro-format").modal("show")';
+				$this->getView()->registerJs($js);
+			}else{
+				
+			}
+		}else{
+			//DELETE STOCK GUDANG | SO_TYPE=1
+			$cmd_clear=Yii::$app->db->createCommand("
+					DELETE FROM absen_import_tmp;
+			");
+			$cmd_clear->execute();			
+		};
+		
+        $searchModelTmp = new AbsenImportTmpSearch();
+        $dataProviderTmp = $searchModelTmp->search(Yii::$app->request->queryParams);
+		$searchModel = new AbsenImportSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
 		//return self::getValidateDate('2017-12-12');
@@ -65,10 +86,13 @@ class AbsenImportController extends Controller
 		//return date('H:i:s', strtotime('10:00:00')); //BUG di tahun 3038
 		//return checkdate('2017','12', '12');
 		//getValidateTime
-       /*  return $this->render('index', [
+        return $this->render('index', [
+			'searchModelTmp' => $searchModelTmp,
+            'dataProviderTmp' => $dataProviderTmp,
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]); */
+            'dataProvider' => $dataProvider,			
+			'dataModelImport'=>$dataModelImport
+        ]);
     }
 
     /**
@@ -167,10 +191,30 @@ class AbsenImportController extends Controller
 					 if ($exportFile !== false) {
 						$path = $model->getImageFile();
 						$exportFile->saveAs($path);
-						return $this->redirect(['index','id'=>$model->FILE_NM]);
+						//return $this->redirect(['index','id'=>$model->FILE_NM]);
 						// $dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
+						$dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
+						if($dataModelImport){		
+													
+							foreach($dataModelImport as $key => $value){
+								$modelTmp = new AbsenImportTmp();
+								//$modelTmp->ID=null;
+								//$modelTmp->isNewRecord = true;							
+								$modelTmp->TERMINAL_ID=(string)$value['TERMINAL_ID'];
+								$modelTmp->FINGER_ID=(string)$value['FINGER_ID'];
+								$modelTmp->IN_TGL=$value['TGL_IN'];
+								$modelTmp->IN_WAKTU=$value['JAM_IN'];
+								$modelTmp->OUT_TGL=$value['TGL_OUT'];
+								$modelTmp->OUT_WAKTU=$value['JAM_OUT'];
+								$modelTmp->save();
+								//unset($modelTmp);
+							}
+						};
+						return $this->redirect(['index','id'=>$model->FILE_NM]);
+
+
 						
-						
+						// return $this->redirect(['index','id'=>$model->FILE_NM]);
 						// $searchModel = new AbsenImportSearch();
 						// $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 						// return $this->render('index', [
@@ -183,6 +227,7 @@ class AbsenImportController extends Controller
 			}
 		}
 	}
+	
 	/**=====================================
      * GET ARRAY FROM FILE
      * @return mixed
@@ -211,7 +256,6 @@ class AbsenImportController extends Controller
 
 			//print_r($data);
 			$aryDataProvider= new ArrayDataProvider([
-				//'key' => 'ID',
 				'allModels'=>$data,
 				 'pagination' => [
 					'pageSize' => 1000,
@@ -223,6 +267,15 @@ class AbsenImportController extends Controller
 			
 	}
 	
+	/**=====================================
+     * GET VALIDATE DATA
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * =====================================
+     */
+	public function getValidateDataImport($paramFile){
+		
+	}
 	/**====================================
      * VALIDATION INPUT DATE
      * @return mixed
@@ -287,8 +340,8 @@ class AbsenImportController extends Controller
 		
 		//DATA IMPORT
 		$aryImport=[
-			['TERMINAL_ID'=>'1234567890',''=>'FINGER_ID','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
-			['TERMINAL_ID'=>'1234567890',''=>'FINGER_ID','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
+			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
+			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
 		];		
 		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
         $excel_titleImport = $excel_dataImport['excel_title'];
@@ -299,8 +352,8 @@ class AbsenImportController extends Controller
 			'key' => 'ID',
 			'allModels'=>Yii::$app->db->createCommand("
 				SELECT 
-					MESIN_NM AS TERMINAL_ID,
-					MESIN_SN AS CABANG
+					MESIN_SN AS TERMINAL_ID,
+					MESIN_NM AS CABANG
 				FROM machine 
 			")->queryAll()
 		]);

@@ -59,15 +59,19 @@ $this->registerCss("
 	 * LINK BUTTON : Link Button Refresh
 	*/
 	function tombolRefresh(){
-		$title = Yii::t('app', 'Refresh');
+		$title = Yii::t('app','');
 		$url =  Url::toRoute(['/absensi/absen-import']);
 		$options = ['id'=>'import-id-refresh',
-				  'data-pjax' => 0,
-				  'class'=>"btn btn-info btn-xs",
+				  'data-pjax' => true,
+				  'class'=>"btn btn-warning btn-xs",
+				  'title'=>'Refresh'
 				];
-		$icon = '<span class="fa fa-history fa-lg"></span>';
-		$label = $icon . ' ' . $title;
-
+		$icon = '<span class="fa-stack fa-sm text-left">
+				  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+				  <b class="fa fa-history fa-stack-1x" style="color:#000000"></b>
+				</span>
+		';
+		$label = $icon;
 		return $content = Html::a($label,$url,$options);
 	}
 	
@@ -329,4 +333,26 @@ $this->registerCss("
 		ActiveForm::end();
 	Modal::end();
 	
+	/**
+	 * MODAL NOTIFY ERROR : WRONG FORMAT
+	*/
+	Modal::begin([
+		'id' => 'msg-erro-format',
+		//'header' => 'WARNING',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:black"></i>
+				<i class="fa fa-remove fa-stack-1x" style="color:red"></i>
+			</span><b> WARNING </b>
+		',	
+		'size' => Modal::SIZE_SMALL,
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:rgba(142, 202, 223, 0.9)'
+		]
+	]);
+		echo "<div>Check Excel File Format Data<br>";
+		echo "1.Pastikan Format nilai sudah sesuai.</br>";
+		echo "2.Pastikan Nama Sheet 'import-absensi' </br>";
+		echo "</div>";
+	Modal::end();
 ?>
