@@ -62,7 +62,7 @@ use yii\helpers\Url;
 						// ],	
 						
 						[
-							'content' => '<span class="fa fa-tasks fa-lg"></span>'. '   '.'Daily Absensi',
+							'content' => '<span class="fa fa-tasks fa-lg"></span>'. '   '.'Import Daily Absensi',
 							//'url' => '/master/absen-daily',
 							'url' => '/absensi/absen-import',
 							'badge' => ''
