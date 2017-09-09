@@ -31,11 +31,7 @@ use yii\helpers\Url;
 							'url' => '/master/absen-maintain',
 							
 						],										
-						[
-							'content' =>'<span class="fa fa-braille fa-lg"></span>'. '   '. ' WorkTime & Formula',
-							'url' => '/master/timetable-normal',
 							
-						],	
 					]),
 			],
 			Html::TYPE_DANGER
@@ -48,28 +44,34 @@ use yii\helpers\Url;
 		echo Html::panel([
 				'id'=>'task',
 				'heading' => '<b>PERSENSI</b>',
-				'postBody' => Html::listGroup([														
+				'postBody' => Html::listGroup([	
+						[
+							'content' =>'<span class="fa fa-braille fa-lg"></span>'. '   '. ' WorkTime & Formula',
+							'url' => '/master/timetable-normal',
+							
+						],
 						[
 							'content' =>'<span class="fa fa-wheelchair fa-lg"></span>'. '   '. 'Exception',
 							'url' => '/master/ijin-detail',
 							'badge' => ''
 						],	
-						[
-							'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Log Absensi',
-							'url' => '/master/absen-log/',
-							'badge' => ''
-						],	
+						// [
+							// 'content' =>'<span class="fa fa-tags fa-lg"></span>'. '   '. 'Log Absensi',
+							// 'url' => '/master/absen-log/',
+							// 'badge' => ''
+						// ],	
 						
 						[
-							'content' => '<span class="fa fa-tasks fa-lg"></span>'. '   '.'Daily Absensi',
-							'url' => '/master/absen-daily',
+							'content' => '<span class="fa fa-tasks fa-lg"></span>'. '   '.'Import Daily Absensi',
+							//'url' => '/master/absen-daily',
+							'url' => '/absensi/absen-import',
 							'badge' => ''
 						],
-						[
-							'content' => '<span class="fa fa-clone fa-lg"></span>'. '   '.'Daily Overtime',
-							'url' => '/master/absen-ot',
-							'badge' => ''
-						],	
+						// [
+							// 'content' => '<span class="fa fa-clone fa-lg"></span>'. '   '.'Daily Overtime',
+							// 'url' => '/master/absen-ot',
+							// 'badge' => ''
+						// ],	
 						/* [
 							'content' => '<span class="fa fa-book fa-lg"></span>'. '   '.'Exception',
 							'url' => '#',

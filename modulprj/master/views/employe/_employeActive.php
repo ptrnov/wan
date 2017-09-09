@@ -304,10 +304,10 @@ use yii\helpers\Url;
 									]
 						).' '.
 						Html::a('<i class="fa fa-file-excel-o"></i> '.Yii::t('app', 'Export'),
-									'/export/employe',
+									'/master/employe-export',
 									[
-										//'id'=>'export-data',
-										//'data-pjax' => true,
+										'id'=>'export-data',
+										'data-pjax' => 0,
 										'class' => 'btn btn-info btn-sm'
 									]
 						),
