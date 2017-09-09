@@ -223,17 +223,13 @@ class AbsenImportController extends Controller
      */
     public function actionSync()
     {
-		$sql="SELECT sum(STATUS) FROM absen_import_tmp";		
-        $sumStt=Yii::$app->db->createCommand($sql)->queryScalar();
-		if($sumStt<>0){
-			$js='$("#msg-erro-format").modal("show")';
-			$this->getView()->registerJs($js);
-			
-		}else{
-			
-		}
-		
-		//return $this->redirect(['index']);
+		$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
+			  SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
+			  FROM absen_import_tmp
+		";
+		Yii::$app->db->CreateCommand($sql)->execute();
+		Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
+		return $this->redirect(['index','#ai-tab1']);
     } 
 	
 	/**

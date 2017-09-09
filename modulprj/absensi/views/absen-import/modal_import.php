@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\widgets\ActiveForm;
 use kartik\widgets\FileInput;
+use yii\base\DynamicModel;
 use modulprj\absensi\models\AbsenImportFile;
 $model = new AbsenImportFile();
 $this->registerCss("
@@ -231,7 +232,8 @@ $this->registerCss("
 				$title1 = Yii::t('app', 'Save');
 				$url = Url::toRoute(['/absensi/absen-import/sync']);
 				$options1 = [
-							'id'=>'import-button-export-sync',
+							'data-toggle'=>"modal",
+							'data-target'=>"#sync_save",
 							'data-pjax' => true,
 							'class'=>"btn btn-primary btn-xs",
 							'title'=>'Save to Database'							
@@ -422,4 +424,47 @@ $this->registerCss("
 		echo "2.Pastikan Nama Sheet 'import-absensi' </br>";
 		echo "</div>";
 	Modal::end();
+	
+	
+	/*
+	 * UPLOAD.
+	*/
+	Modal::begin([
+		'id' => 'sync_save',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:red"></i>
+				<i class="fa fa-save fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> Save to Database</b>
+		',	
+		'size' => 'modal-sm',
+		//'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+			//'toggleButton' => ['label' => 'click me'],
+		],
+		//'clientOptions' => ['backdrop' => 'static', 'keyboard' => TRUE]
+		'clientOptions' => [
+			'backdrop' => FALSE, //Static=disable, false=enable
+			'keyboard' => TRUE,	// Kyboard 
+		]
+	]);
+		$form = ActiveForm::begin([
+			'method' => 'post',
+			'action' => ['/absensi/absen-import/sync'],
+		]);		
+			$sql="SELECT sum(STATUS) FROM absen_import_tmp";		
+			$sumStt=Yii::$app->db->createCommand($sql)->queryScalar();
+			if($sumStt==0){
+				echo '<div style="text-align:center; padding-top:10px">';
+				echo Html::submitButton('PROCCESS SAVE',['class' => 'btn btn-success']);
+				echo '</div>';
+			}else{
+				echo '<div style="text-align:center; padding-top:10px">';
+				echo 'Data Import belum benar,Pastikan data sudah benar !';
+				echo '</div>';
+			}			
+		ActiveForm::end();
+	Modal::end();
+	
 ?>
