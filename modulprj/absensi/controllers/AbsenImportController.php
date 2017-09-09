@@ -233,32 +233,48 @@ class AbsenImportController extends Controller
     } 
 	
 	/**
-     * ACTUAL : VIEW 
-     */
+     * ACTION : VIEW 
+	 */
     public function actionView($id)
     {
-        return $this->renderAjax('view', [
-            'model' => $this->findModel($id),
-        ]);
-    } 
-	
+    	$model=$this->findModel($id);
+		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_viewTmp', [
+					'model' => $model
+				]); 				
+		}else{		
+			
+			if(Yii::$app->request->isAjax){				
+				$model->load(Yii::$app->request->post());				
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					if ($model->save()) {
+						return $this->redirect(['index']);
+					}			
+				}
+			}	
+		}		
+    }
 	
 	
     /**
      * ACTUAL : CREATE 
      */
-    public function actionCreateAct()
-    {
-        $model = new AbsenImport();
+    // public function actionCreateAct()
+    // {
+        // $model = new AbsenImport();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->renderAjax('_form', [
-                'model' => $model,
-            ]);
-        }
-    }
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            // return $this->redirect(['view', 'id' => $model->ID]);
+        // } else {
+            // return $this->renderAjax('_form', [
+                // 'model' => $model,
+            // ]);
+        // }
+    // }
 	
 	 
 	
@@ -284,15 +300,20 @@ class AbsenImportController extends Controller
     }
 
     /**
-     * Deletes an existing AbsenImport model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
+       * TEMPORARY : Delete
      */
-    public function actionDelete($id)
+    public function actionDeleteTmp($id)
     {
-        $this->findModel($id)->delete();
-
+        $this->findModelTmp($id)->delete();
+        return $this->redirect(['index']);
+    }
+	
+	/**
+       * TEMPORARY : Delete
+     */
+    public function actionDeleteAct($id)
+    {
+        self::findModel($id)->delete();
         return $this->redirect(['index']);
     }
 

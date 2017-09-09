@@ -271,9 +271,9 @@ $this->registerCss("
 	}		
 		
 	/*
-	 *  ACTION BUTTON : ABSEN IMPORT - VIEW.
+	 *  TEMPORARY = VIEW
 	*/
-	function tombolReview($url, $model){
+	function tombolReviewTmp($url, $model){
 		// if(getPermission()){
 			//Jika BTN_CREATE Show maka BTN_CVIEW Show.
 			// if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
@@ -297,6 +297,90 @@ $this->registerCss("
 		// }
 	}
 	
+	/*
+	 *  TEMPORARY = DELETE
+	*/
+	function tombolDeleteTmp($url, $model){
+		// if(getPermission()){
+			//Jika BTN_CREATE Show maka BTN_CVIEW Show.
+			// if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
+				$title1 = Yii::t('app', ' Delete');
+				//$url = Url::toRoute(['/absensi/absen-import/sync']);
+				//$url = Url::toRoute(['/absensi/absen-import/delete-tmp','id'=>$model->ID]);
+				$url = Url::toRoute(['/absensi/absen-import/delete-tmp','id'=>$model->ID]);
+				$options1 = [
+							'id'=>'tmp-button-delete',
+							'class'=>"btn btn-default btn-xs",
+							//'title'=>'Save to Database',		
+							'style'=>['text-align'=>'left','color:red','margin-left'=>'0px','width'=>'100%', 'height'=>'25px','border'=> 'none'],								
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle-thin fa-stack-2x" style="color:red"></b>
+						  <b class="fa fa-remove fa-stack-1x" style="color:red"></b>
+						</span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,$url,$options1);
+				return $content;
+				//return '<li>'.$content.'</li>';
+
+			// }
+		// }
+	}
+	
+	/*
+	 *  ACTION : VIEW.
+	*/
+	function tombolReview($url, $model){
+		// if(getPermission()){
+			//Jika BTN_CREATE Show maka BTN_CVIEW Show.
+			// if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
+				$title1 = Yii::t('app',' Review');
+				$options1 = [
+					'value'=>url::to(['/absensi/absen-import/view','id'=>$model->ID]),
+					'id'=>'import-button-review',
+					'class'=>"btn btn-default btn-xs",    
+					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
+				];
+				$icon1 = '
+					<span class="fa-stack fa-xs">																	
+						<i class="fa fa-circle-thin fa-stack-2x " style="color:'.bgIconColor().'"></i>
+						<i class="fa fa-eye fa-stack-1x" style="color:black"></i>
+					</span>
+				';      
+				$label1 = $icon1 . '  ' . $title1;
+				$content = Html::button($label1,$options1);		
+				return '<li>'.$content.'</li>';
+			// }
+		// }
+	}
+	
+	/*
+	 *  ACTUAL = DELETE
+	*/
+	function tombolDelete($url, $model){
+		// if(getPermission()){
+			//Jika BTN_CREATE Show maka BTN_CVIEW Show.
+			// if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
+				$title1 = Yii::t('app', ' Delete');
+				$url = Url::toRoute(['/absensi/absen-import/delete-act','id'=>$model->ID]);
+				$options1 = [
+					'id'=>'actual-delete',
+					'class'=>"btn btn-default btn-xs",
+					//'title'=>'Save to Database',		
+					'style'=>['text-align'=>'left','color:red','margin-left'=>'0px','width'=>'100%', 'height'=>'25px','border'=> 'none'],								
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle-thin fa-stack-2x" style="color:red"></b>
+						  <b class="fa fa-remove fa-stack-1x" style="color:red"></b>
+						</span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,$url,$options1);
+				return $content;
+				//return '<li>'.$content.'</li>';
+
+			// }
+		// }
+	}
 		
 	/**
 	 * ===============================

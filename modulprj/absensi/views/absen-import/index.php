@@ -39,6 +39,9 @@ use yii\web\View;
 		.kv-grid-container{
 			min-height:500px
 		}
+		.tmp-button-delete a:hover {
+			color:red;
+		}
 	");
 	
 	//Modal Ajax

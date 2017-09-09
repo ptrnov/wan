@@ -130,11 +130,11 @@ use yii\web\View;
 	//ACTION
 	$attDinamikLog[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{review}',
+		'template' => '{review}{delete}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
-			'class'=>'pull-left dropdown',
+			'class'=>'pull-right dropdown',
 			'style'=>'text-align:center;background-color:#E6E6FA'				
 		],
 		'dropdownButton'=>[
@@ -145,6 +145,9 @@ use yii\web\View;
 		'buttons' => [
 			'review' =>function ($url, $model){
 			  return  tombolReview($url, $model);
+			},
+			'delete' =>function ($url, $model){
+			  return  tombolDelete($url, $model);
 			},
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
@@ -160,7 +163,7 @@ use yii\web\View;
 			'{export}',
 		],	
 		'panel'=>[
-			'heading'=>tombolRefreshLog().' '.tombolCreateAct(),					
+			'heading'=>tombolRefreshLog(),//.' '.tombolCreateAct(),					
 			'type'=>'success',
 			'after'=>false,
 			'before'=>false,

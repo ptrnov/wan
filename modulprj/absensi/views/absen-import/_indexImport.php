@@ -147,7 +147,7 @@ use yii\web\View;
 	//ACTION
 	$attDinamikTmp[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{review}',
+		'template' => '{review}{delete}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
@@ -161,7 +161,10 @@ use yii\web\View;
 		],
 		'buttons' => [
 			'review' =>function ($url, $model){
-			  return  tombolReview($url, $model);
+			  return  tombolReviewTmp($url, $model);
+			},
+			'delete' =>function ($url, $model){
+			  return  tombolDeleteTmp($url, $model);
 			},
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
