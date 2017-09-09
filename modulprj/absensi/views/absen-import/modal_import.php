@@ -59,8 +59,9 @@ $this->registerCss("
 	 * LINK BUTTON : Link Button Refresh
 	*/
 	function tombolRefresh(){
-		$title = Yii::t('app','');
-		$url =  Url::toRoute(['/absensi/absen-import']);
+		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		$title = Yii::t('app','Refresh');
+		$url =  Url::toRoute(['/absensi/absen-import','id'=>$paramFile]);
 		$options = ['id'=>'tmp-id-refresh',
 				  'data-pjax' => true,
 				  'class'=>"btn btn-warning btn-xs",
@@ -71,7 +72,27 @@ $this->registerCss("
 				  <b class="fa fa-history fa-stack-1x" style="color:#000000"></b>
 				</span>
 		';
-		$label = $icon;
+		$label = $icon.' '.$title ;
+		return $content = Html::a($label,$url,$options);
+	}
+	
+	/*
+	 * LINK BUTTON : Link Button Refresh
+	*/
+	function tombolClear(){
+		$title = Yii::t('app','Clear');
+		$url =  Url::toRoute(['/absensi/absen-import/clear-tmp']);
+		$options = ['id'=>'tmp-id-clear',
+				  'data-pjax' => true,
+				  'class'=>"btn btn-danger btn-xs",
+				  'title'=>'Clear Data'
+				];
+		$icon = '<span class="fa-stack fa-sm text-left">
+				  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+				  <b class="fa fa-trash fa-stack-1x" style="color:#000000"></b>
+				</span>
+		';
+		$label = $icon.' '.$title ;
 		return $content = Html::a($label,$url,$options);
 	}
 	
@@ -79,7 +100,7 @@ $this->registerCss("
 	 * LINK BUTTON : Link Button Refresh
 	*/
 	function tombolRefreshLog(){
-		$title = Yii::t('app','');
+		$title = Yii::t('app','Refresh');
 		$url =  Url::toRoute(['/absensi/absen-import#ai-tab1']);
 		$options = ['id'=>'actual-id-refresh',
 				  'data-pjax' => true,
@@ -91,7 +112,7 @@ $this->registerCss("
 				  <b class="fa fa-history fa-stack-1x" style="color:#000000"></b>
 				</span>
 		';
-		$label = $icon;
+		$label = $icon.' '.$title ;
 		return $content = Html::a($label,$url,$options);
 	}
 	
@@ -101,11 +122,11 @@ $this->registerCss("
 	function tombolCreateTmp(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){				
-				$title1 = Yii::t('app','');
+				$title= Yii::t('app','Add');
 				$url = Url::toRoute(['/absensi/absen-import/create-tmp']);
 				$options1 = ['value'=>$url,
 							'id'=>'import-button-create',
-							'data-pjax' => true,
+							'data-pjax' => false,
 							'class'=>"btn btn-success btn-xs",
 							'title'=>'Tambah Data Secara Manual'
 				];
@@ -114,7 +135,7 @@ $this->registerCss("
 						  <b class="fa fa-plus fa-stack-1x" style="color:#000000"></b>
 						</span>
 				';
-				$label1 = $icon1;
+				$label1 = $icon1.' '.$title ;
 				$content = Html::button($label1,$options1);
 				return $content;
 			// }
@@ -127,7 +148,7 @@ $this->registerCss("
 	function tombolCreateAct(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){				
-				$title1 = Yii::t('app','');
+				$title1 = Yii::t('app','Add');
 				$url = Url::toRoute(['/absensi/absen-import/create-act']);
 				$options1 = ['value'=>$url,
 							'id'=>'import-button-create',
@@ -135,12 +156,12 @@ $this->registerCss("
 							'class'=>"btn btn-success btn-xs",
 							'title'=>'Tambah Data Secara Manual'
 				];
-				$icon1 = '<span class="fa-stack fa-sm text-left">
+				$icon = '<span class="fa-stack fa-sm text-left">
 						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
 						  <b class="fa fa-plus fa-stack-1x" style="color:#000000"></b>
 						</span>
 				';
-				$label1 = $icon1;
+				$label1 = $icon1.' '.$title ;
 				$content = Html::button($label1,$options1);
 				return $content;
 			// }
@@ -153,7 +174,7 @@ $this->registerCss("
 	function tombolExportFormat(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){
-				$title1 = Yii::t('app', '');
+				$title1 = Yii::t('app', 'Download Format');
 				$url = Url::toRoute(['/absensi/absen-import/export']);
 				$options1 = [
 							'id'=>'import-button-export-formula',
@@ -178,7 +199,7 @@ $this->registerCss("
 	function tombolUpload(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){				
-				$title1 = Yii::t('app','');
+				$title1 = Yii::t('app','Upload Absensi');
 				//$url = Url::toRoute(['/absensi/absen-import/upload']);
 				$options1 = [
 							//'value'=>$url,
@@ -194,7 +215,7 @@ $this->registerCss("
 						  <b class="fa fa-upload fa-stack-1x" style="color:#000000"></b>
 						</span>
 				';
-				$label1 = $icon1;
+				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::a($label1,'',$options1);
 				return $content;
 			// }
@@ -207,7 +228,7 @@ $this->registerCss("
 	function tombolSync(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){
-				$title1 = Yii::t('app', '');
+				$title1 = Yii::t('app', 'Save');
 				$url = Url::toRoute(['/absensi/absen-import/sync']);
 				$options1 = [
 							'id'=>'import-button-export-sync',
@@ -217,7 +238,7 @@ $this->registerCss("
 				];
 				$icon1 = '<span class="fa-stack fa-sm text-left">
 						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
-						  <b class="fa fa-database fa-stack-1x" style="color:#000000"></b>
+						  <b class="fa fa-save fa-stack-1x" style="color:#000000"></b>
 						</span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::a($label1,$url,$options1);

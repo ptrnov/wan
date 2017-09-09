@@ -161,7 +161,7 @@ use yii\web\View;
 		],	
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
-			'heading'=>tombolRefresh().' '.tombolCreateTmp().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
+			'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,

@@ -18,6 +18,9 @@ use \moonland\phpexcel\Excel;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\web\Response;
+use yii\web\Request;
+use kartik\form\ActiveForm;
+
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
 use modulprj\absensi\models\AbsenImport;
@@ -25,6 +28,9 @@ use modulprj\absensi\models\AbsenImportSearch;
 use modulprj\absensi\models\AbsenImportFile;
 use modulprj\absensi\models\AbsenImportTmp;
 use modulprj\absensi\models\AbsenImportTmpSearch;
+use modulprj\master\models\Karyawan;
+use modulprj\master\models\Machine;
+use modulprj\master\models\Kar_finger;
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -59,6 +65,7 @@ class AbsenImportController extends Controller
     public function actionIndex()
     {
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		$paramx=Yii::$app->getRequest()->getQueryParam('idx');
 		if ($paramFile){
 			$dataModelImport=self::getArryFile($paramFile)->getModels();
 			if(!$dataModelImport){
@@ -68,11 +75,10 @@ class AbsenImportController extends Controller
 				
 			}
 		}else{
-			//DELETE STOCK GUDANG | SO_TYPE=1
-			$cmd_clear=Yii::$app->db->createCommand("
-					DELETE FROM absen_import_tmp;
-			");
-			$cmd_clear->execute();			
+			if(!$paramx){
+				//DELETE STOCK GUDANG | SO_TYPE=1
+				
+			}	
 		};
 		
         $searchModelTmp = new AbsenImportTmpSearch();
@@ -95,6 +101,15 @@ class AbsenImportController extends Controller
         ]);
     }
 
+	public function actionClearTmp()
+    {
+        $cmd_clear=Yii::$app->db->createCommand("
+				DELETE FROM absen_import_tmp;
+		");
+		$cmd_clear->execute();
+		return $this->redirect(['index']);
+    }
+	
     /**
      * Displays a single AbsenImport model.
      * @param string $id
@@ -129,15 +144,62 @@ class AbsenImportController extends Controller
     public function actionCreateTmp()
     {
         $model = new AbsenImportTmp();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->renderAjax('_form', [
+		$model->scenario='create';
+        
+		if ($model->load(Yii::$app->request->post())) {
+			$hsl = \Yii::$app->request->post();
+				$model->TERMINAL_ID = $hsl['AbsenImportTmp']['TERMINAL_ID'];
+				$model->FINGER_ID = $hsl['AbsenImportTmp']['FINGER_ID'];
+				$model->IN_TGL = date('Y-m-d', strtotime($hsl['AbsenImportTmp']['tmpTglIn']));
+				$model->IN_WAKTU = date('H:i:s', strtotime($hsl['AbsenImportTmp']['tmpTglIn']));
+				$model->OUT_TGL = date('Y-m-d', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
+				$model->OUT_WAKTU = date('H:i:s', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
+				if ($model->save()){
+					 return $this->redirect(['index', 'idx' => $model->ID]);
+				}  
+		}else{
+			return $this->renderAjax('_form', [
                 'model' => $model,
             ]);
-        }
-    }
+		
+		} 
+		
+		/* if (!$model->load(Yii::$app->request->post())) {
+			 return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+		}else{
+			if(Yii::$app->request->isAjax){
+				$model->load(Yii::$app->request->post());
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				$hsl = \Yii::$app->request->post();
+				$model->TERMINAL_ID = $hsl['AbsenImportTmp']['TERMINAL_ID'];
+				$model->FINGER_ID = $hsl['AbsenImportTmp']['FINGER_ID'];
+				$model->IN_TGL = date('Y-m-d', strtotime($hsl['AbsenImportTmp']['tmpTglIn']));
+				$model->IN_WAKTU = date('H:i:s', strtotime($hsl['AbsenImportTmp']['tmpTglIn']));
+				$model->OUT_TGL = date('Y-m-d', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
+				$model->OUT_WAKTU = date('H:i:s', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
+				if ($model->save()){
+					 return $this->redirect(['index', 'idx' => $model->ID]);
+				}  
+			}
+        }; */
+    } 
+	
+	public function actionValid()
+    {
+		$model = new AbsenImportTmp();
+		$model->scenario=AbsenImportTmp::SCENARIO_EXIST;
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+		  Yii::$app->response->format = 'json';
+		  return ActiveForm::validate($model);
+		}
+    } 
+	
+	
+	
     /**
      * Updates an existing AbsenImport model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -519,5 +581,70 @@ class AbsenImportController extends Controller
 		];
 		$excel_file = "ImportFormat";
 		$this->export4excel($excel_content, $excel_file,0);
+	}
+	
+	
+	// DEPDROP : TEMPORARY [tmpCab,tmpNm]
+	public function actionSubcat() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {			
+			$parents = $_POST['depdrop_parents'];
+			//print_r($parents);
+			if ($parents != null) {
+				//$terminal_id = $parents[0]!=''?$parents[0]:'0';
+				$terminal_id = $parents[0];
+				$dataKar=Karyawan::find()->where(['CAB_ID'=>$terminal_id])->all();
+				if($dataKar){
+					foreach ($dataKar as $key => $value) {
+						$out[] = ['id'=>$value['KAR_ID'],'name'=> $value['KAR_NM']];
+					};
+				}else{
+					$out[] = ['id'=>'','name'=> ''];
+				};		
+				echo Json::encode(['output'=>$out, 'selected'=>'']);
+				return;
+			}
+		}
+		echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	
+	// DEPDROP : Terminal_id
+	public function actionSubTerminal() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			
+			$parents = $_POST['depdrop_parents'];
+			//print_r($parents);
+			if ($parents != null) {
+				$terminal_id = $parents[0]!=''?$parents[0]:'0';
+				$modelMachine=Machine::find()->where(['CAB_ID'=>$terminal_id])->one();
+				if($modelMachine){
+					$out[] = ['id'=>$modelMachine->MESIN_SN,'name'=> $modelMachine->MESIN_SN,'options'=> ['style'=>['color'=>'red'],'disabled'=>false]];
+				}
+				echo Json::encode(['output'=>$out, 'selected'=>'']);
+				return;
+			}
+		}
+		echo Json::encode(['output'=>'', 'selected'=>'']);
+	}
+	// DEPDROP : Terminal_id
+	public function actionSubFinger() {
+		$out = [];
+		if (isset($_POST['depdrop_parents'])) {
+			
+			$parents = $_POST['depdrop_parents'];
+			//print_r($parents);
+			if ($parents != null) {
+				$terminal_id = $parents[0]!=''?$parents[0]:'0';
+				$finger_id = $parents[1]!=''?$parents[1]:'0';
+				$modelFinger=Kar_finger::find()->where(['TerminalID'=>$terminal_id,'KAR_ID'=>$finger_id])->one();
+				if($modelFinger){
+					$out[] = ['id'=>$modelFinger->FingerPrintID,'name'=> $modelFinger->FingerPrintID,'options'=> ['style'=>['color'=>'red'],'disabled'=>false]];
+				};				
+				echo Json::encode(['output'=>$out, 'selected'=>'']);
+				return;
+			}
+		}
+		echo Json::encode(['output'=>'', 'selected'=>'']);
 	}
 }

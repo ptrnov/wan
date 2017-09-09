@@ -3,38 +3,20 @@
 namespace modulprj\absensi\models;
 
 use Yii;
+use modulprj\absensi\models\AbsenImportTmp;
+use yii\data\ArrayDataProvider;
 
-/**
- * This is the model class for table "absen_import".
- *
- * @property string $ID
- * @property string $TERMINAL_ID
- * @property string $FINGER_ID
- * @property string $MESIN_NM
- * @property string $KAR_ID
- * @property string $KAR_NM
- * @property string $DEP_ID
- * @property string $DEP_NM
- * @property string $HARI
- * @property string $IN_TGL
- * @property string $IN_WAKTU
- * @property string $OUT_TGL
- * @property string $OUT_WAKTU
- * @property integer $GRP_ID
- * @property string $PAY_DAY
- * @property string $VAL_PAGI
- * @property string $VAL_LEMBUR
- * @property string $PAY_PAGI
- * @property string $PAY_LEMBUR
- * @property string $CREATE_BY
- * @property string $CREATE_AT
- * @property string $UPDATE_BY
- * @property string $UPDATE_AT
- * @property integer $STATUS
- * @property string $DCRP_DETIL
- */
 class AbsenImportTmp extends \yii\db\ActiveRecord
 {
+	const SCENARIO_CREATE = 'create';
+	const SCENARIO_UPDATE = 'update';
+	const SCENARIO_EXIST = 'exist';
+	
+	public $tmpCab;
+	public $tmpNm;
+	public $tmpTglIn;
+	public $tmpTglOut;
+	public $msgStatus;
 	/**
      * @inheritdoc
      */
@@ -49,7 +31,12 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+			
+			[['tmpCab','tmpNm','TERMINAL_ID','FINGER_ID','tmpTglIn','tmpTglOut'], 'required','on'=>self::SCENARIO_CREATE],
+			[['FINGER_ID'], 'findcheck1','on'=>self::SCENARIO_EXIST],
+			[['tmpTglIn','tmpTglOut'], 'findcheck2','on'=>self::SCENARIO_EXIST],			
             [['IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
+            [['tmpNm','tmpTglOut','tmpTglIn'], 'safe'],
             [['GRP_ID', 'STATUS'], 'integer'],
             [['PAY_DAY', 'VAL_PAGI', 'VAL_LEMBUR', 'PAY_PAGI', 'PAY_LEMBUR'], 'number'],
             [['DCRP_DETIL'], 'string'],
@@ -62,6 +49,32 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
         ];
     }
 
+	public function findcheck1($model)
+    {        
+		$dataTmpImport= new ArrayDataProvider([
+			'key' => 'ID',
+			'allModels'=>Yii::$app->db->createCommand("
+				SELECT x1.ID FROM absen_import_tmp x1 where 
+				x1.TERMINAL_ID='".$this->TERMINAL_ID."' AND 
+				x1.FINGER_ID='".$this->FINGER_ID."' AND 
+				x1.IN_TGL='".date('Y-m-d', strtotime($this->tmpTglIn))."'
+			")->queryAll()
+		]);
+		$cntTmpImport=$dataTmpImport->getCount();
+			
+		if ($cntTmpImport!=0) {
+			//$this->addError($model, 'Duplicate Input Data, pelase use Update'.$this->tmpTglIn);				
+			$this->addError($model, 'Duplicate Input Data, pelase use Update');				
+		} 
+    }
+	
+	public function findcheck2($model)
+    {        
+		if(date('Y-m-d H:i:s', strtotime($this->tmpTglIn)) >= date('Y-m-d H:i:s', strtotime($this->tmpTglOut))){
+			$this->addError($model, 'Tanggal/Jam Masuk, harus lebih kecil dari Tanggal/Jam Keluar');	
+		}
+    }  
+	
     /**
      * @inheritdoc
      */
@@ -69,7 +82,7 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'TERMINAL_ID' => 'Terminal  ID',
+            'TERMINAL_ID' => 'Terminal Mesin',
             'FINGER_ID' => 'Finger  ID',
             'MESIN_NM' => 'Mesin  Nm',
             'KAR_ID' => 'Kar  ID',
@@ -93,6 +106,8 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
             'UPDATE_AT' => 'Update  At',
             'STATUS' => 'Status',
             'DCRP_DETIL' => 'Dcrp  Detil',
+            'tmpTglOut' => 'Tanggal & Jam Keluar',
+            'tmpTglIn' => 'Tanggal & Jam Masuk',
         ];
     }
 }
