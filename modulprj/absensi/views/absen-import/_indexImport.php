@@ -34,23 +34,11 @@ use yii\web\View;
 			'			
 	;
 	$arySttImport= [
-	  ['STATUS' => 0, 'STT_NM' => 'True'],		  
-	  ['STATUS' => 1, 'STT_NM' => 'False']
+	  ['STATUS' => 0, 'STT_NM' => 'Ready'],		  
+	  ['STATUS' => 100, 'STT_NM' => 'Empty'],
+	  ['STATUS' => 101, 'STT_NM' => 'DateTime'],
+	  ['STATUS' => 102, 'STT_NM' => 'OverWrite']
 	];	
-	//Result Status value.
-	function sttMsgImport($stt){
-		if($stt==0){ //TRIAL
-			 return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-check fa-stack-1x" style="color:#05944d"></i>
-					</span>','',['title'=>'True']);
-		}elseif($stt>=100){
-			return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-close fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'False']);
-		}
-	};	
 	$valSttImport = ArrayHelper::map($arySttImport, 'STATUS', 'STT_NM');
 	
 	
@@ -141,7 +129,16 @@ use yii\web\View;
 		'noWrap'=>false,
 		'format' => 'raw',	
 		'value'=>function($model){
-			return sttMsgImport($model->STATUS);				 
+			if($model->STATUS==0){
+				return 'Ready';
+			}elseif($model->STATUS==100){
+				return 'Empty';
+			}elseif($model->STATUS==101){
+				return 'DateTime';
+			}elseif($model->STATUS==102){
+				return 'Overwrite';
+			}
+			//return sttMsgImport($model->STATUS);				 
 		},
 		//gvContainHeader($align,$width,$bColor)
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
@@ -176,17 +173,31 @@ use yii\web\View;
 		'filterModel' => $searchModelTmp,
 		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],
 		'rowOptions' => function($model, $key, $index, $grid){
+				//==NULL===
 				if ($model->IN_TGL=='' or $model->IN_WAKTU=='' or $model->OUT_TGL=='' or $model->OUT_WAKTU=='' or 
 					$model->TERMINAL_ID=='' or $model->FINGER_ID=='' or $model->KAR_ID=='' or $model->OUT_TGL=='')
 				{					
 					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=100 WHERE ID='.$model->ID)->execute();
 					return ['class' => 'danger'];
 				}elseif(date('Y-m-d h:i:s', strtotime($model->IN_TGL.' '.$model->IN_WAKTU)) >= date('Y-m-d h:i:s', strtotime($model->OUT_TGL.' '.$model->OUT_WAKTU))){
+				//===Datetime1 > Dateime2 ====
 					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=101 WHERE ID='.$model->ID)->execute();
-					return ['class' => 'warning'];
+					return ['class' => 'danger'];
 				}else{
-					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=0 WHERE ID='.$model->ID)->execute();
-					return ['class' => 'success'];
+					$numClients =Yii::$app->db->createCommand("SELECT x1.ID FROM absen_import x1 where x1.TERMINAL_ID='".$model->TERMINAL_ID."' AND 
+												  x1.FINGER_ID='".$model->FINGER_ID."' AND 
+												  x1.IN_TGL='".date('Y-m-d', strtotime($model->IN_TGL.' '.$model->IN_WAKTU))."'
+					")->queryScalar();
+					//===OVERWRITE====
+					if($numClients){
+						Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=102 WHERE ID='.$model->ID)->execute();
+						return ['class' => 'danger'];
+					}else{
+					//===SAVED====
+						Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=0 WHERE ID='.$model->ID)->execute();
+						return ['class' => 'default'];
+					}
+					
 				}
 		},				
 		'columns' =>$attDinamikTmp,	

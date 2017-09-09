@@ -101,6 +101,9 @@ class AbsenImportController extends Controller
         ]);
     }
 
+	/**
+     * TEMPORARY : CLEAR /HAPUS LIST 
+     */
 	public function actionClearTmp()
     {
         $cmd_clear=Yii::$app->db->createCommand("
@@ -108,71 +111,6 @@ class AbsenImportController extends Controller
 		");
 		$cmd_clear->execute();
 		return $this->redirect(['index']);
-    }
-	
-	/**
-     * ACTUAL : VIEW 
-     */
-    public function actionView($id)
-    {
-        return $this->renderAjax('view', [
-            'model' => $this->findModel($id),
-        ]);
-    } 
-	
-	/**
-     * TEMPORARY : IMPORT 
-	 * PR Validation attribute
-     */
-    public function actionViewTmp($id)
-    {
-    	$model=$this->findModelTmp($id);
-		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
-		
-		if (!$model->load(Yii::$app->request->post())) {
-			return $this->renderAjax('_viewTmp', [
-					'model' => $model
-				]); 				
-		}else{		
-			
-			if(Yii::$app->request->isAjax){				
-				$model->load(Yii::$app->request->post());				
-				return Json::encode(\yii\widgets\ActiveForm::validate($model));
-			}else{
-				if ($model->load(Yii::$app->request->post())) {
-					if ($model->save()) {
-						return $this->redirect(['index']);
-					}			
-				}
-			}	
-		}		
-    }
-
-	public function actionViewValid()
-    {
-		$model = new AbsenImportTmp();
-		$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
-        if(Yii::$app->request->isAjax && $model->load($_POST))
-		{
-		  Yii::$app->response->format = 'json';
-		  return ActiveForm::validate($model);
-		}
-    } 
-	
-    /**
-     * ACTUAL : CREATE 
-     */
-    public function actionCreateAct()
-    {
-        $model = new AbsenImport();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
-        } else {
-            return $this->renderAjax('_form', [
-                'model' => $model,
-            ]);
-        }
     }
 	
 	/**
@@ -224,6 +162,9 @@ class AbsenImportController extends Controller
         }; */
     } 
 	
+	/**
+     * TEMPORARY : VALIDATION CREATE
+     */
 	public function actionValid()
     {
 		$model = new AbsenImportTmp();
@@ -233,7 +174,97 @@ class AbsenImportController extends Controller
 		  Yii::$app->response->format = 'json';
 		  return ActiveForm::validate($model);
 		}
+    }
+	
+	/**
+     * TEMPORARY : IMPORT 
+	 * PR Validation attribute -> actionViewValid
+     */
+    public function actionViewTmp($id)
+    {
+    	$model=$this->findModelTmp($id);
+		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_viewTmp', [
+					'model' => $model
+				]); 				
+		}else{		
+			
+			if(Yii::$app->request->isAjax){				
+				$model->load(Yii::$app->request->post());				
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					if ($model->save()) {
+						return $this->redirect(['index']);
+					}			
+				}
+			}	
+		}		
+    }
+	/**
+     * TEMPORARY : IMPORT 
+	 * Next PR
+     */
+	public function actionViewValid()
+    {
+		$model = new AbsenImportTmp();
+		$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+		  Yii::$app->response->format = 'json';
+		  return ActiveForm::validate($model);
+		}
     } 
+	
+	/**
+     * ACTUAL : VIEW 
+     */
+    public function actionSync()
+    {
+		$sql="SELECT sum(STATUS) FROM absen_import_tmp";		
+        $sumStt=Yii::$app->db->createCommand($sql)->queryScalar();
+		if($sumStt<>0){
+			$js='$("#msg-erro-format").modal("show")';
+			$this->getView()->registerJs($js);
+			
+		}else{
+			
+		}
+		
+		//return $this->redirect(['index']);
+    } 
+	
+	/**
+     * ACTUAL : VIEW 
+     */
+    public function actionView($id)
+    {
+        return $this->renderAjax('view', [
+            'model' => $this->findModel($id),
+        ]);
+    } 
+	
+	
+	
+    /**
+     * ACTUAL : CREATE 
+     */
+    public function actionCreateAct()
+    {
+        $model = new AbsenImport();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->ID]);
+        } else {
+            return $this->renderAjax('_form', [
+                'model' => $model,
+            ]);
+        }
+    }
+	
+	 
 	
 	
 	
