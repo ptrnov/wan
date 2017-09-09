@@ -76,7 +76,7 @@ class AbsenImportTmpSearch extends AbsenImport
             'PAY_LEMBUR' => $this->PAY_LEMBUR,
             'CREATE_AT' => $this->CREATE_AT,
             'UPDATE_AT' => $this->UPDATE_AT,
-            'STATUS' => $this->STATUS,
+            // 'STATUS' => $this->STATUS,
         ]);
 
         $query->andFilterWhere(['like', 'TERMINAL_ID', $this->TERMINAL_ID])
@@ -89,6 +89,7 @@ class AbsenImportTmpSearch extends AbsenImport
             ->andFilterWhere(['like', 'HARI', $this->HARI])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
+		    ->andFilterWhere(['>=', 'STATUS', $this->STATUS])
             ->andFilterWhere(['like', 'DCRP_DETIL', $this->DCRP_DETIL]);
 
         return $dataProvider;

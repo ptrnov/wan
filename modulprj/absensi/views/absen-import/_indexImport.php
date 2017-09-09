@@ -33,6 +33,26 @@ use yii\web\View;
 				</span>
 			'			
 	;
+	$arySttImport= [
+	  ['STATUS' => 0, 'STT_NM' => 'True'],		  
+	  ['STATUS' => 1, 'STT_NM' => 'False']
+	];	
+	//Result Status value.
+	function sttMsgImport($stt){
+		if($stt==0){ //TRIAL
+			 return Html::a('<span class="fa-stack fa-xl">
+					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
+					  <i class="fa fa-check fa-stack-1x" style="color:#05944d"></i>
+					</span>','',['title'=>'True']);
+		}elseif($stt>=100){
+			return Html::a('<span class="fa-stack fa-xl">
+					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
+					  <i class="fa fa-close fa-stack-1x" style="color:#ee0b0b"></i>
+					</span>','',['title'=>'False']);
+		}
+	};	
+	$valSttImport = ArrayHelper::map($arySttImport, 'STATUS', 'STT_NM');
+	
 	
 	$attDinamikTmp[] =[			
 			'class'=>'kartik\grid\SerialColumn',
@@ -113,16 +133,16 @@ use yii\web\View;
 			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 		],
 		'filterInputOptions'=>['placeholder'=>'Select'],
-		'filter'=>$valStt,//Yii::$app->gv->gvStatusArray(),
+		'filter'=>$valSttImport,//Yii::$app->gv->gvStatusArray(),
 		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
 		'mergeHeader'=>false,
 		'noWrap'=>false,
 		'format' => 'raw',	
-		// 'value'=>function($model){
-			// return sttMsg($model->STATUS);				 
-		// },
+		'value'=>function($model){
+			return sttMsgImport($model->STATUS);				 
+		},
 		//gvContainHeader($align,$width,$bColor)
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
@@ -134,7 +154,7 @@ use yii\web\View;
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
-			'class'=>'pull-left dropdown',
+			'class'=>'pull-right dropdown',
 			'style'=>'text-align:center;background-color:#E6E6FA'				
 		],
 		'dropdownButton'=>[
@@ -154,8 +174,22 @@ use yii\web\View;
 		'id'=>'tmp-import-absen',
 		'dataProvider' => $dataProviderTmp,
 		'filterModel' => $searchModelTmp,
-		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],				
-		'columns' =>$attDinamikTmp,
+		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],
+		'rowOptions' => function($model, $key, $index, $grid){
+				if ($model->IN_TGL=='' or $model->IN_WAKTU=='' or $model->OUT_TGL=='' or $model->OUT_WAKTU=='' or 
+					$model->TERMINAL_ID=='' or $model->FINGER_ID=='' or $model->KAR_ID=='' or $model->OUT_TGL=='')
+				{					
+					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=100 WHERE ID='.$model->ID)->execute();
+					return ['class' => 'danger'];
+				}elseif(date('Y-m-d h:i:s', strtotime($model->IN_TGL.' '.$model->IN_WAKTU)) >= date('Y-m-d h:i:s', strtotime($model->OUT_TGL.' '.$model->OUT_WAKTU))){
+					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=101 WHERE ID='.$model->ID)->execute();
+					return ['class' => 'warning'];
+				}else{
+					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=0 WHERE ID='.$model->ID)->execute();
+					return ['class' => 'success'];
+				}
+		},				
+		'columns' =>$attDinamikTmp,	
 		'toolbar' => [
 			'{export}',
 		],	

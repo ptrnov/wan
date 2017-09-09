@@ -34,7 +34,8 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
 			
 			[['tmpCab','tmpNm','TERMINAL_ID','FINGER_ID','tmpTglIn','tmpTglOut'], 'required','on'=>self::SCENARIO_CREATE],
 			[['FINGER_ID'], 'findcheck1','on'=>self::SCENARIO_EXIST],
-			[['tmpTglIn','tmpTglOut'], 'findcheck2','on'=>self::SCENARIO_EXIST],			
+			[['tmpTglIn','tmpTglOut'], 'findcheck2','on'=>self::SCENARIO_EXIST],
+			[['IN_TGL','OUT_TGL'], 'findcheck3','on'=>self::SCENARIO_UPDATE],			
             [['IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_AT', 'UPDATE_AT'], 'safe'],
             [['tmpNm','tmpTglOut','tmpTglIn'], 'safe'],
             [['GRP_ID', 'STATUS'], 'integer'],
@@ -72,6 +73,13 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
     {        
 		if(date('Y-m-d H:i:s', strtotime($this->tmpTglIn)) >= date('Y-m-d H:i:s', strtotime($this->tmpTglOut))){
 			$this->addError($model, 'Tanggal/Jam Masuk, harus lebih kecil dari Tanggal/Jam Keluar');	
+		}
+    }  
+	
+	public function findcheck3($model)
+    {        
+		if(date('Y-m-d', strtotime($this->IN_TGL)) >= date('Y-m-d', strtotime($this->OUT_TGL))){
+			$this->addError($model, 'Tanggal Masuk <  Tanggal Keluar');	
 		}
     }  
 	

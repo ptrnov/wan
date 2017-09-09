@@ -277,7 +277,7 @@ $this->registerCss("
 			// if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
 				$title1 = Yii::t('app',' Review');
 				$options1 = [
-					'value'=>url::to(['/absensi/absen-import/view','id'=>$model->ID]),
+					'value'=>url::to(['/absensi/absen-import/view-tmp','id'=>$model->ID]),
 					'id'=>'import-button-review',
 					'class'=>"btn btn-default btn-xs",    
 					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],

@@ -110,20 +110,57 @@ class AbsenImportController extends Controller
 		return $this->redirect(['index']);
     }
 	
-    /**
-     * Displays a single AbsenImport model.
-     * @param string $id
-     * @return mixed
+	/**
+     * ACTUAL : VIEW 
      */
     public function actionView($id)
     {
         return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
+    } 
+	
+	/**
+     * TEMPORARY : IMPORT 
+	 * PR Validation attribute
+     */
+    public function actionViewTmp($id)
+    {
+    	$model=$this->findModelTmp($id);
+		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_viewTmp', [
+					'model' => $model
+				]); 				
+		}else{		
+			
+			if(Yii::$app->request->isAjax){				
+				$model->load(Yii::$app->request->post());				
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					if ($model->save()) {
+						return $this->redirect(['index']);
+					}			
+				}
+			}	
+		}		
     }
 
+	public function actionViewValid()
+    {
+		$model = new AbsenImportTmp();
+		$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+        if(Yii::$app->request->isAjax && $model->load($_POST))
+		{
+		  Yii::$app->response->format = 'json';
+		  return ActiveForm::validate($model);
+		}
+    } 
+	
     /**
-     * CREATE TEMPORARY
+     * ACTUAL : CREATE 
      */
     public function actionCreateAct()
     {
@@ -139,7 +176,7 @@ class AbsenImportController extends Controller
     }
 	
 	/**
-     * CREATE ACTUAL
+     * TEMPORARY : CREATE
      */
     public function actionCreateTmp()
     {
@@ -242,6 +279,15 @@ class AbsenImportController extends Controller
     protected function findModel($id)
     {
         if (($model = AbsenImport::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    } 
+	
+	protected function findModelTmp($id)
+    {
+        if (($model = AbsenImportTmp::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
