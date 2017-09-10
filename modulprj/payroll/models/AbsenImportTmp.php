@@ -1,9 +1,9 @@
 <?php
 
-namespace modulprj\absensi\models;
+namespace modulprj\payroll\models;
 
 use Yii;
-use modulprj\absensi\models\AbsenImportTmp;
+use modulprj\payroll\models\AbsenImportTmp;
 use yii\data\ArrayDataProvider;
 
 class AbsenImportTmp extends \yii\db\ActiveRecord

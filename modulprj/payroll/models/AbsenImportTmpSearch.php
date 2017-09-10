@@ -1,14 +1,14 @@
 <?php
 
-namespace modulprj\absensi\models;
+namespace modulprj\payroll\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use modulprj\absensi\models\AbsenImportTmp;
+use modulprj\payroll\models\AbsenImportTmp;
 
 /**
- * AbsenImportSearch represents the model behind the search form about `modulprj\absensi\models\AbsenImport`.
+ * AbsenImportSearch represents the model behind the search form about `modulprj\payroll\models\AbsenImport`.
  */
 class AbsenImportTmpSearch extends AbsenImport
 {

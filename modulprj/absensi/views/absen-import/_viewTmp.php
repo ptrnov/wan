@@ -16,6 +16,7 @@ use kartik\builder\FormGrid;
 use kartik\markdown\Markdown;
 use kartik\widgets\DepDrop;
 
+date_default_timezone_set('Asia/Jakarta');
             // 'IN_WAKTU',
             // 'OUT_TGL',
             // 'OUT_WAKTU',
@@ -34,31 +35,79 @@ use kartik\widgets\DepDrop;
 		], */
 		[
 			'attribute' =>	'TERMINAL_ID',
+			'options'=>[
+				'readonly'=>true,
+			 ],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
 			'attribute' =>	'MESIN_NM',
+			'options'=>[
+				'readonly'=>true,
+			 ],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
 			'attribute' =>	'KAR_ID',
+			'options'=>[
+				'readonly'=>true,
+			 ],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
 			'attribute' =>	'KAR_NM',
+			'options'=>[
+				'readonly'=>true,
+			 ],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],		
 		[
 			'attribute' =>	'FINGER_ID',
+			'options'=>[
+				'readonly'=>true,
+			 ],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
 			'attribute' =>	'HARI',
+			'options'=>[
+				'readonly'=>true,
+			 ],
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
 			'attribute' =>	'IN_TGL',
-			'format'=>'date',
+			'options'=>['id'=>'absenimporttmp-in_tgl'],
+			'format'=>['date','php:Y-m-d'],
+			'type'=>DetailView::INPUT_DATE,
+			'value' =>$model->IN_TGL,
+			'widgetOptions'=>[
+				'pluginOptions'=>[
+					'format'=>'yyyy-mm-dd',
+					'autoclose' => true,
+                    'todayHighlight' => true,
+				]
+			],
+			'inputWidth'=>'100%',
+		],
+		[
+			'attribute' =>'IN_WAKTU',
+			//'format'=>['datetime','php:h:i:s'], //error time
+			'type'=>DetailView::INPUT_TIME,
+			//'value' =>$model->IN_WAKTU,
+			'widgetOptions'=>[
+				'pluginOptions'=>[
+					//'format'=>'h:i:s',
+					'autoclose' => true,
+				]
+			],
+			'inputWidth'=>'100%',
+			//'labelColOptions' => ['style' => 'text-align:right;width: 30%']
+		],
+		[
+			'attribute' =>	'OUT_TGL',
+			'options'=>['id'=>'absenimporttmp-out_tgl'],
+			'format'=>['date','php:Y-m-d'],
 			'type'=>DetailView::INPUT_DATE,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
@@ -71,14 +120,13 @@ use kartik\widgets\DepDrop;
 			//'labelColOptions' => ['style' => 'text-align:right;width: 30%']
 		],
 		[
-			'attribute' =>	'OUT_TGL',
-			'format'=>'date',
-			'type'=>DetailView::INPUT_DATE,
+			'attribute' =>'OUT_WAKTU',
+			//'format'=>['time','php:h:i:s'], //error time
+			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
-					'format'=>'yyyy-mm-dd',
-					 'autoclose' => true,
-                     'todayHighlight' => true,
+					//'format'=>['time','php:h:i:s'],
+					'autoclose' => true,
 				]
 			],
 			'inputWidth'=>'100%',
@@ -88,9 +136,7 @@ use kartik\widgets\DepDrop;
 			'attribute' =>	'DCRP_DETIL',
 			'type'=>DetailView::INPUT_TEXTAREA,
 			'labelColOptions' => ['style' => 'text-align:right;width: 30%']
-		],
-		
-		
+		],	
 		
 	];
 	
@@ -110,10 +156,21 @@ use kartik\widgets\DepDrop;
 				],
 		'saveOptions'=>[ 
 			'id' =>'saveBtn',
-			'value'=>'/master/employe/view?id='.$model->KAR_ID,
+			'value'=>'/absensi/absen-import/view-tmp?id='.$model->ID,
 			'params' => ['custom_param' => true],
 		],		
 	]);
 ?>	
-	<?=$dtAbsensi?>
+<?php $form = ActiveForm::begin([
+	// 'type'=>ActiveForm::TYPE_VERTICAL,
+	// 'options'=>['enctype'=>'multipart/form-data']
+	'id'=> $model->formName(),			
+	'enableClientValidation'=> true,
+	'enableAjaxValidation'=>true,
+	'method' => 'post',
+	'validationUrl'=>Url::toRoute('/absensi/absen-import/view-valid')
+]);?>
+<?=$dtAbsensi?>		
+<?php ActiveForm::end();?>			
+	
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace modulprj\absensi\controllers;
+namespace modulprj\payroll\controllers;
 
 use Yii;
 use yii\web\Controller;
@@ -23,18 +23,18 @@ use kartik\form\ActiveForm;
 
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
-use modulprj\absensi\models\AbsenImport;
-use modulprj\absensi\models\AbsenImportSearch;
-use modulprj\absensi\models\AbsenImportFile;
-use modulprj\absensi\models\AbsenImportTmp;
-use modulprj\absensi\models\AbsenImportTmpSearch;
+use modulprj\payroll\models\AbsenImport;
+use modulprj\payroll\models\AbsenImportSearch;
+use modulprj\payroll\models\AbsenImportFile;
+use modulprj\payroll\models\AbsenImportTmp;
+use modulprj\payroll\models\AbsenImportTmpSearch;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
-class AbsenImportController extends Controller
+class AbsenDailyController extends Controller
 {
     /**
      * @inheritdoc
@@ -315,7 +315,7 @@ class AbsenImportController extends Controller
     {
         self::findModel($id)->delete();
         //return $this->redirect(['index']);
-		$this->redirect(array('/absensi/absen-import/#ai-tab1'));
+		$this->redirect(array('/payroll/absen-import/#ai-tab1'));
     }
 
     /**
@@ -416,12 +416,12 @@ class AbsenImportController extends Controller
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
 
 			$data = \moonland\phpexcel\Excel::widget([
-				'id'=>'import-absensi',
+				'id'=>'import-payroll',
 				'mode' => 'import',
 				'fileName' => $fileData,
 				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
-				'getOnlySheet' => 'Import-Absensi', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+				'getOnlySheet' => 'Import-payroll', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
 
 			//print_r($data);
@@ -549,7 +549,7 @@ class AbsenImportController extends Controller
 		
 		$excel_content = [
 			 [
-				'sheet_name' => 'Import-Absensi',
+				'sheet_name' => 'Import-payroll',
                 'sheet_title' => [
 					['TERMINAL_ID','FINGER_ID','NAMA','TGL_IN','TGL_OUT','JAM_IN','JAM_OUT']
 				],
@@ -592,16 +592,16 @@ class AbsenImportController extends Controller
                 'ceils' => [
 					["1.Pastikan format sesuai dengan yang sudah di download."],
                     ["2.Validasi format yang akan di upload:"],
-                    ["  A. NAMA SHEET: Import-Absensi"],
+                    ["  A. NAMA SHEET: Import-payroll"],
 					["  B. NAMA HEADER COLUMN : [TERMINAL_ID,FINGER_ID,NAMA,TGL_IN,TGL_OUT,JAM_IN,JAM_OUT]"],
 					["3.Refrensi."],
 					["  [TERMINAL_ID] = Serial Number pada mesin finger setiap cabang"],
 					["  [FINGER_ID] =  Kode Finger yang di dapatkan saat pendaftaran jadi di mesin per-Cabang"],
 					["  [KARYAWAN]  =  Nama dari karyawan yang pernah di daftarkan"],
-					["  [TGL_IN]    = Tanggal pada saat absensi masuk "],
-					["  [TGL_OUT]   = Tanggal pada saat absensi keluar "],
-					["  [TGL_OUT]   = Jam pada saat absensi masuk "],
-					["  [TGL_OUT]   = Jam pada saat absensi keluar "],
+					["  [TGL_IN]    = Tanggal pada saat payroll masuk "],
+					["  [TGL_OUT]   = Tanggal pada saat payroll keluar "],
+					["  [TGL_OUT]   = Jam pada saat payroll masuk "],
+					["  [TGL_OUT]   = Jam pada saat payroll keluar "],
 					["4.Refrensi Kode."],
 					["  [TERMINAL_ID] = Sheet Cabang-Mechine"],
 					["  [FINGER_ID]  = Sheet Data-Karyawan"],					

@@ -1,16 +1,16 @@
 <?php
 
-namespace modulprj\absensi\models;
+namespace modulprj\payroll\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use modulprj\absensi\models\AbsenImportTmp;
+use modulprj\payroll\models\AbsenImport;
 
 /**
- * AbsenImportSearch represents the model behind the search form about `modulprj\absensi\models\AbsenImport`.
+ * AbsenImportSearch represents the model behind the search form about `modulprj\payroll\models\AbsenImport`.
  */
-class AbsenImportTmpSearch extends AbsenImport
+class AbsenImportSearch extends AbsenImport
 {
     /**
      * @inheritdoc
@@ -42,15 +42,12 @@ class AbsenImportTmpSearch extends AbsenImport
      */
     public function search($params)
     {
-        $query = AbsenImportTmp::find();
-		$cnt=AbsenImportTmp::find()->count();
+        $query = AbsenImport::find();
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-			'pagination' => [
-				 'pageSize' => $cnt,
-			]
         ]);
 
         $this->load($params);
@@ -89,7 +86,7 @@ class AbsenImportTmpSearch extends AbsenImport
             ->andFilterWhere(['like', 'HARI', $this->HARI])
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
-		    ->andFilterWhere(['like', 'DCRP_DETIL', $this->DCRP_DETIL]);
+            ->andFilterWhere(['like', 'DCRP_DETIL', $this->DCRP_DETIL]);
 
         return $dataProvider;
     }
