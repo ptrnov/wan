@@ -20,6 +20,7 @@ class Kar_finger extends \yii\db\ActiveRecord
 	public $userNameFinger;
 	public $tmpCab;
 	public $tmpDept;
+	public $karNm;
     /**
      * @inheritdoc
      */

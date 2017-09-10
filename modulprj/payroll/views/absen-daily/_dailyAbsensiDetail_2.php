@@ -11,7 +11,7 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
 
-	$aryFieldLog= [
+	$aryFieldAbsensiDetail= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
@@ -22,8 +22,8 @@ use yii\web\View;
 		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
 		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
 	];	
-	$valFieldsLog = ArrayHelper::map($aryFieldLog, 'ID', 'ATTR'); 
-	$bColor='rgba(104, 49, 54, 1)';
+	$valFieldsAbsenDetail = ArrayHelper::map($aryFieldAbsensiDetail, 'ID', 'ATTR'); 
+	$bColor='rgba(87,114,111, 1)';
 	$pageNm='<span class="fa-stack fa-sm text-left">
 			  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
 			  <b class="fa fa-clock-o fa-stack-2x" style="color:#000000"></b>
@@ -33,8 +33,16 @@ use yii\web\View;
 				</span>
 			'			
 	;
+	$arySttAbsensiDetail= [
+	  ['STATUS' => 0, 'STT_NM' => 'Ready'],		  
+	  ['STATUS' => 100, 'STT_NM' => 'Empty'],
+	  ['STATUS' => 101, 'STT_NM' => 'DateTime'],
+	  ['STATUS' => 102, 'STT_NM' => 'OverWrite']
+	];	
+	$valSttAbsensiDetail = ArrayHelper::map($arySttAbsensiDetail, 'STATUS', 'STT_NM');
 	
-	$attDinamikLog[] =[			
+	
+	$attDinamikAbsensiDetail[] =[			
 			'class'=>'kartik\grid\SerialColumn',
 			'contentOptions'=>['class'=>'kartik-sheet-style'],
 			'width'=>'10px',
@@ -59,8 +67,8 @@ use yii\web\View;
 	];
 
 	/*OTHER ATTRIBUTE*/
-	foreach($valFieldsLog as $key =>$value[]){			
-		$attDinamikLog[]=[		
+	foreach($valFieldsAbsenDetail as $key =>$value[]){			
+		$attDinamikAbsensiDetail[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
 			// 'filterType'=>$gvfilterType,
@@ -106,14 +114,14 @@ use yii\web\View;
 		];	
 	};	
 	
-	$attDinamikLog[]=[
+	$attDinamikAbsensiDetail[]=[
 		'attribute'=>'STATUS',
 		'filterType'=>GridView::FILTER_SELECT2,
 		'filterWidgetOptions'=>[
 			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 		],
 		'filterInputOptions'=>['placeholder'=>'Select'],
-		'filter'=>$valStt,//Yii::$app->gv->gvStatusArray(),
+		'filter'=>$valSttAbsensiDetail,//Yii::$app->gv->gvStatusArray(),
 		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
@@ -121,14 +129,23 @@ use yii\web\View;
 		'noWrap'=>false,
 		'format' => 'raw',	
 		'value'=>function($model){
-			return sttMsg($model->STATUS);				 
+			if($model->STATUS==0){
+				return 'Ready';
+			}elseif($model->STATUS==100){
+				return 'Empty';
+			}elseif($model->STATUS==101){
+				return 'DateTime';
+			}elseif($model->STATUS==102){
+				return 'Overwrite';
+			}
+			//return sttMsgImport($model->STATUS);				 
 		},
 		//gvContainHeader($align,$width,$bColor)
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 	];
 	//ACTION
-	$attDinamikLog[]=[
+	$attDinamikAbsensiDetail[]=[
 		'class' => 'kartik\grid\ActionColumn',
 		'template' => '{review}{delete}',
 		'header'=>'ACTION',
@@ -144,27 +161,56 @@ use yii\web\View;
 		],
 		'buttons' => [
 			'review' =>function ($url, $model){
-			  return  tombolReview($url, $model);
+			 // return  tombolReviewTmp($url, $model);
 			},
 			'delete' =>function ($url, $model){
-			  return  tombolDelete($url, $model);
+			  //return  tombolDeleteTmp($url, $model);
 			},
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','0',''),
 	];
-	$actualImportLog= GridView::widget([
-		'id'=>'import-absen-log',
-		'dataProvider' => $dataProvider,
-		'filterModel' => $searchModel,
-		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],				
-		'columns' =>$attDinamikLog,
+	$gvDailyAbsenDetail= GridView::widget([
+		'id'=>'daily-absen-detail',
+		'dataProvider' => $dataProviderDetail,
+		'filterModel' => $searchModelDetail,
+		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],
+		/* 'rowOptions' => function($model, $key, $index, $grid){
+				//==NULL===
+				if ($model->IN_TGL=='' or $model->IN_WAKTU=='' or $model->OUT_TGL=='' or $model->OUT_WAKTU=='' or 
+					$model->TERMINAL_ID=='' or $model->FINGER_ID=='' or $model->KAR_ID=='' or $model->OUT_TGL=='')
+				{					
+					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=100 WHERE ID='.$model->ID)->execute();
+					return ['class' => 'danger'];
+				}elseif(date('Y-m-d h:i:s', strtotime($model->IN_TGL.' '.$model->IN_WAKTU)) >= date('Y-m-d h:i:s', strtotime($model->OUT_TGL.' '.$model->OUT_WAKTU))){
+				//===Datetime1 > Dateime2 ====
+					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=101 WHERE ID='.$model->ID)->execute();
+					return ['class' => 'danger'];
+				}else{
+					$numClients =Yii::$app->db->createCommand("SELECT x1.ID FROM absen_import x1 where x1.TERMINAL_ID='".$model->TERMINAL_ID."' AND 
+												  x1.FINGER_ID='".$model->FINGER_ID."' AND 
+												  x1.IN_TGL='".date('Y-m-d', strtotime($model->IN_TGL.' '.$model->IN_WAKTU))."'
+					")->queryScalar();
+					//===OVERWRITE====
+					if($numClients){
+						Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=102 WHERE ID='.$model->ID)->execute();
+						return ['class' => 'danger'];
+					}else{
+					//===SAVED====
+						Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=0 WHERE ID='.$model->ID)->execute();
+						return ['class' => 'default'];
+					}
+					
+				}
+		},	 */			
+		'columns' =>$attDinamikAbsensiDetail,	
 		'toolbar' => [
 			'{export}',
 		],	
 		'panel'=>[
-			'heading'=>tombolRefreshLog(),//.' '.tombolCreateAct(),					
-			'type'=>'success',
+			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
+			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
+			'type'=>'info',
 			'after'=>false,
 			'before'=>false,
 			'footer'=>false,
@@ -174,7 +220,7 @@ use yii\web\View;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'import-absen-log',
+				'id'=>'daily-absen-detail',
 			],
 		],
 		'hover'=>true, //cursor select
@@ -189,38 +235,14 @@ use yii\web\View;
 			'showConfirmAlert'=>false,
 			'target'=>GridView::TARGET_BLANK
 		],
+		//'floatHeader'=>false,
+		// 'floatHeaderOptions'=>['scrollingTop'=>'200'] 
+		// 'floatOverflowContainer'=>true,
 		'floatHeader'=>true,
 	]);
 
 ?>
-<?=$actualImportLog?>
+<?=$gvDailyAbsenDetail?>
 
-<?php
-/* $this->registerJs("
 
-$(document).on('ready pjax:success', function () {
-  $('.ajaxDelete').on('click', function (e) {
-    e.preventDefault();
-    var deleteUrl     = $(this).attr('delete-url');
-    var pjaxContainer = $(this).attr('pjax-container');
-    bootbox.confirm('Are you sure you want to change status of this item?',
-            function (result) {
-              if (result) {
-                $.ajax({
-                  url:   deleteUrl,
-                  type:  'post',
-                  error: function (xhr, status, error) {
-                    alert('There was an error with your request.' 
-                          + xhr.responseText);
-                  }
-                }).done(function (data) {
-                  $.pjax.reload({container: '#' + $.trim(pjaxContainer)});
-                });
-              }
-            }
-    );
-  });
-});
 
-"); */
-?>

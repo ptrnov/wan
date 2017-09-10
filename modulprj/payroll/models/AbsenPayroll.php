@@ -33,7 +33,7 @@ use Yii;
  * @property integer $STATUS
  * @property string $DCRP_DETIL
  */
-class AbsenImport extends \yii\db\ActiveRecord
+class AbsenPayroll extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

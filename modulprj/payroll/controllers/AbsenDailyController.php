@@ -23,11 +23,8 @@ use kartik\form\ActiveForm;
 
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
-use modulprj\payroll\models\AbsenImport;
-use modulprj\payroll\models\AbsenImportSearch;
-use modulprj\payroll\models\AbsenImportFile;
-use modulprj\payroll\models\AbsenImportTmp;
-use modulprj\payroll\models\AbsenImportTmpSearch;
+use modulprj\payroll\models\AbsenPayroll;
+use modulprj\payroll\models\AbsenPayrollSearch;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
@@ -81,10 +78,11 @@ class AbsenDailyController extends Controller
 			}	
 		};
 		
-        $searchModelTmp = new AbsenImportTmpSearch();
-        $dataProviderTmp = $searchModelTmp->search(Yii::$app->request->queryParams);
-		$searchModel = new AbsenImportSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModelAbsensi = new AbsenPayrollSearch();
+        $dataProviderAbsensi = $searchModelAbsensi->search(Yii::$app->request->queryParams);
+		
+		$searchModelPayroll = new AbsenPayrollSearch();
+        $dataProviderPayroll = $searchModelPayroll->searchpay(Yii::$app->request->queryParams);
 		
 		//return self::getValidateDate('2017-12-12');
 		//return self::getValidateDate('12-12-2017');
@@ -93,11 +91,10 @@ class AbsenDailyController extends Controller
 		//return checkdate('2017','12', '12');
 		//getValidateTime
         return $this->render('index', [
-			'searchModelTmp' => $searchModelTmp,
-            'dataProviderTmp' => $dataProviderTmp,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,			
-			'dataModelImport'=>$dataModelImport
+			'searchModelAbsensi' => $searchModelAbsensi,
+            'dataProviderAbsensi' => $dataProviderAbsensi,
+            'searchModelPayroll' => $searchModelPayroll,
+            'dataProviderPayroll' => $dataProviderPayroll
         ]);
     }
 
