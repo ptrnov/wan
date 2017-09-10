@@ -15,6 +15,8 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use yii\web\View;
 
+	//Modal Ajax
+	
 	
 	/**
 	 * Import Data

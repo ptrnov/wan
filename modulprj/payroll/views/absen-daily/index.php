@@ -15,7 +15,9 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use yii\web\View;
 
-//print_r($dataModelImport);
+	$this->registerJs($this->render('modal_payroll.js'),View::POS_READY);
+	echo $this->render('modal_payroll'); //echo difinition
+	
 	//CSS
 	$this->registerCss("
 		.kv-grid-table :link {

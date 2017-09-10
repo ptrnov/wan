@@ -10,8 +10,8 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
-use modulprj\payroll\models\AbsenPayrollSearch;
-
+use modulprj\payroll\models\AbsenPayrollSearch;	
+	
 	$aryFieldAbsensi= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
@@ -186,7 +186,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 	//ACTION
 	$attDinamikAbsensi[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{review}{delete}',
+		'template' => '{print}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
@@ -199,8 +199,8 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 			'style'=>'width:100%;'		
 		],
 		'buttons' => [
-			'review' =>function ($url, $model){
-			 // return  tombolReviewTmp($url, $model);
+			'print' =>function ($url, $model){
+			 return  tombolPrint($model);
 			},
 			'delete' =>function ($url, $model){
 			  //return  tombolDeleteTmp($url, $model);

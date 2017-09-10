@@ -20,6 +20,7 @@ use yii\widgets\Pjax;
 use yii\web\Response;
 use yii\web\Request;
 use kartik\form\ActiveForm;
+use kartik\mpdf\Pdf;
 
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
@@ -101,13 +102,66 @@ class AbsenDailyController extends Controller
 	/**
      * TEMPORARY : CLEAR /HAPUS LIST 
      */
-	public function actionClearTmp()
+	public function actionPrint($id)
     {
-        $cmd_clear=Yii::$app->db->createCommand("
-				DELETE FROM absen_import_tmp;
-		");
-		$cmd_clear->execute();
-		return $this->redirect(['index']);
+		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+		
+		//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$id]);
+		$searchModelDetail = new AbsenPayrollSearch(['KAR_ID'=>$id]);
+		$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
+		
+		//$content= $this->renderPartial( '_printPdf',[
+		$content= $this->renderPartial( 'indexExpand',[
+			'searchModelDetail'=>$searchModelDetail,
+			'dataProviderDetail'=>$dataProviderDetail
+		]);
+
+		/*PR TO WAWAN*/
+		/*
+		 * Render partial -> Add Css -> Sendmail
+		 * @author ptrnov [piter@lukison]
+		 * @since 1.2
+		*/
+		// $contentMailAttach= $this->renderPartial('sendmailcontent',[
+			// 'poHeader' => $poHeader,
+			// 'dataProvider' => $dataProvider,
+		// ]);
+
+		// $contentMailAttachBody= $this->renderPartial('postman_body',[
+			// 'poHeader' => $poHeader,
+			// 'dataProvider' => $dataProvider,
+		// ]);
+
+
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT,
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER,
+			//'destination' => Pdf::DEST_FILE ,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@modulprj/web/addasset/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}',
+			 // set mPDF properties on the fly
+			'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
+			 // call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>['Copyright@wanindo '.date("r")],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		return $pdf->render();
+		
     }
 	
 	/**

@@ -17,22 +17,22 @@ use yii\web\View;
 		}
 	");
 	$aryFieldAbsensiDetail= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>11, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>12, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>13, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
-		['ID' =>14, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Pagi','align'=>'center']],
-		['ID' =>15, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'Lembur','align'=>'center']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>11, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>12, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>13, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		['ID' =>14, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		['ID' =>15, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
 		['ID' =>16, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']]
 	];	
 	$valFieldsAbsenDetail = ArrayHelper::map($aryFieldAbsensiDetail, 'ID', 'ATTR'); 
