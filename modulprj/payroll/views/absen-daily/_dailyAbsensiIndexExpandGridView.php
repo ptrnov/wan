@@ -10,6 +10,11 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
+	$colorHeader='rgba(0, 0, 0, 0.15)';
+	$colorHeader1='rgba(0, 0, 0, 0.25)';
+	$colorHeader2='rgba(0, 0, 0, 0.15)';
+	$colorTTL='rgba(0, 0, 0, 0.25)';
+	
 	$modelDetail=$dataProviderDetail->getModels();
 	// foreach($modelDetail[0] as $rows => $val){
 		// $ambilField[]=$rows;
@@ -23,11 +28,11 @@ use yii\web\View;
 		if($splt[0]=='PAGI' OR $splt[0]=='OT'){
 			$nmField1[]=$rows;		//FULL FIELD NAME
 			$nmLabel[]=$splt[0];	//SPLIT LABEL NAME
-			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center']];
+			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center','BCOLOR'=>$colorHeader]];
 			if ($splt[0]=='PAGI'){
 				$ambilFieldTgl[]=Yii::$app->hari->DayofDate($splt[1]);
-				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']];
-				$headerContent2[]=['content'=>Yii::$app->hari->DayofDate($splt[1]),'options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    
+				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader2.';font-family: tahoma ;font-size: 6pt;']];
+				$headerContent2[]=['content'=>Yii::$app->hari->DayofDate($splt[1]),'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader1.';font-family: tahoma ;font-size: 6pt;']];    
 			}
 			$inc=$inc+1;
 		}		
@@ -37,16 +42,16 @@ use yii\web\View;
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
 		if($rows=='TTL_PAGI' OR $rows=='TTL_OT'){
-			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center']];
+			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center','BCOLOR'=>$colorTTL]];
 			if($rows=='TTL_PAGI'){
-				$headerContent2[]=['content'=>'HARI_KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    
+				$headerContent2[]=['content'=>'HARI_KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    
 			}
 			$inc=$inc+1;
 		}
 	};
-	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']];								
-	$headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>1,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    		
-	$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']];	
+	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];								
+	$headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>1,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    		
+	$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center','BCOLOR'=>$colorTTL]];	
 	
 	// foreach($ambilField as $val){
 		// $splt=implode('_',array($val));
@@ -87,7 +92,8 @@ use yii\web\View;
 		// ['ID' =>16, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']]
 	// ];	
 	$valFieldsAbsenDetail = ArrayHelper::map($aryFieldAbsensiDetail, 'ID', 'ATTR'); 
-	$bColor='rgba(87,114,111, 1)';
+	$colorHeader='rgba(0, 0, 0, 0.15)';
+	$colorHeader1='rgba(0, 0, 0, 0.5)';
 	$pageNm='<span class="fa-stack fa-sm text-left">
 			  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
 			  <b class="fa fa-clock-o fa-stack-2x" style="color:#000000"></b>
@@ -124,9 +130,10 @@ use yii\web\View;
 					'width'=>$value[$key]['SIZE'],
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'7pt',
-					'background-color'=>$bColor,
+					'background-color'=>$value[$key]['BCOLOR'],
 				]
 			],  
+			'format'=>['decimal', 2],
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>$value[$key]['align'],
@@ -169,7 +176,7 @@ use yii\web\View;
 		'id'=>'daily-absen-detail',
 		'dataProvider' => $dataProviderDetail,
 		//'filterModel' => $searchModelDetail,
-		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],
+		'filterRowOptions'=>['style'=>'background-color:'.$colorHeader.'; align:center'],
 		'beforeHeader'=>[
 				'0'=>[					
 					'columns'=>$headerContent1,
@@ -204,6 +211,13 @@ use yii\web\View;
 			'{export}',
 		],	
 		'panel'=>false,
+		// 'panel'=>[
+			// 'type'=>'info',
+			// 'heading'=>false,
+			// 'before'=>false,
+			// 'after'=>false,
+			// 'footer'=>false,
+		// ],
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[

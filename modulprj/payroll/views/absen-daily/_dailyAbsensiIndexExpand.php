@@ -21,16 +21,14 @@ use yii\web\View;
 	/**
 	 * Import Data
 	*/
-	$detaiView1=$this->render('_expandDetailView1',[
-		'searchModelDetail'=>$searchModelDetail,
+	$detaiView1=$this->render('_dailyAbsensiIndexExpandDetailView1',[
 		'model'=>$dataProviderDetail->getModels()
 	]);
-	$detaiView2=$this->render('_expandDetailView2',[
-		'searchModelDetail'=>$searchModelDetail,
+	$detaiView2=$this->render('_dailyAbsensiIndexExpandDetailView2',[
 		'model'=>$dataProviderDetail->getModels()
 	]);
 	
-	$dvAbsen=$this->render('_expandGridView',[
+	$dvAbsen=$this->render('_dailyAbsensiIndexExpandGridView',[
 		'searchModelDetail'=>$searchModelDetail,
 		'dataProviderDetail'=>$dataProviderDetail,
 		'modelHeader'=>$model

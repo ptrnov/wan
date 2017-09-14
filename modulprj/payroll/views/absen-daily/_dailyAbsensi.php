@@ -13,17 +13,15 @@ use yii\web\View;
 use modulprj\payroll\models\AbsenPayrollSearch;	
 	
 	$aryFieldAbsensi= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'left']],
-		//['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
-		//['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
-		//['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
-		//['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
-		//['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
-		//['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
-		//['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw']],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '50px','label'=>'UPAH_PERHARI','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2]]]
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -78,7 +76,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 			},
 			'detail'=>function ($model, $key, $index, $column){
 				//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14','KAR_ID'=>$model['KAR_ID']];
 				$searchModelDetail = new AbsenPayrollSearch($closingParam);
 				$dataProviderDetail = $searchModelDetail->searchHeader(Yii::$app->request->queryParams);
 				//$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
@@ -86,7 +84,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					// 'searchModelDetail'=>$searchModelDetail,
 					// 'dataProviderDetail'=>$dataProviderDetail
 				// ]);
-				return Yii::$app->controller->renderPartial('indexExpand',[
+				return Yii::$app->controller->renderPartial('_dailyAbsensiIndexExpand',[
 					'searchModelDetail'=>$searchModelDetail,
 					'dataProviderDetail'=>$dataProviderDetail,
 					'model'=>$model
@@ -112,7 +110,12 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 	];
 	
 	/*OTHER ATTRIBUTE*/
-	foreach($valFieldsAbsen as $key =>$value[]){			
+	foreach($valFieldsAbsen as $key =>$value[]){	
+		// if($key=='SUB_PAY_PAGI'){
+			// $format='raw';//['decimal', 2];
+		// }else{
+			// $format='raw';
+		// }
 		$attDinamikAbsensi[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
@@ -133,6 +136,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					'background-color'=>$bColor,
 				]
 			],  
+			'format'=>$value[$key]['format'],
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>$value[$key]['align'],
