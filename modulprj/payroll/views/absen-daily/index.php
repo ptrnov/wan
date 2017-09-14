@@ -15,7 +15,9 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use yii\web\View;
 
-//print_r($dataModelImport);
+	$this->registerJs($this->render('modal_payroll.js'),View::POS_READY);
+	echo $this->render('modal_payroll'); //echo difinition
+	
 	//CSS
 	$this->registerCss("
 		.kv-grid-table :link {
@@ -45,8 +47,8 @@ use yii\web\View;
 	");
 	
 	//Modal Ajax
-	$this->registerJs($this->render('modal_import.js'),View::POS_READY);
-	echo $this->render('modal_import'); //echo difinition
+	// $this->registerJs($this->render('modal_payroll.js'),View::POS_READY);
+	// echo $this->render('modal_payroll'); //echo difinition
 	 //Difinition Status.
 	$aryStt= [
 	  ['STATUS' => 0, 'STT_NM' => 'Proccess'],		  
@@ -72,14 +74,14 @@ use yii\web\View;
 	/**
 	 * Import Data
 	*/
-	$_indexImport=$this->render('_indexImport',[
-		'searchModelTmp' => $searchModelTmp,
-		'dataProviderTmp' => $dataProviderTmp			
+	$absensi_daily=$this->render('_dailyAbsensi',[
+		'searchModelAbsensi' => $searchModelAbsensi,
+		'dataProviderAbsensi' => $dataProviderAbsensi			
 	]);
 	
-	$_indexAbsensi=$this->render('_indexLogAbsensi',[
-		'searchModel' => $searchModel,
-		'dataProvider' => $dataProvider,		
+	$absensiPayroll=$this->render('_absensiPayroll',[
+		'searchModelPayroll' => $searchModelPayroll,
+		'dataProviderPayroll' => $dataProviderPayroll	
 	]);
 	
 	if($tab==0){
@@ -91,17 +93,17 @@ use yii\web\View;
 	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-sign-in fa-2x"></i> Daily Absensi Import','content'=>$_indexImport,
+			'label'=>'<i class="fa fa-files-o fa-2x"></i> Rekap Absensi','content'=>$absensi_daily,
 			//'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-clock-o fa-2x"></i> List Absensi Log','content'=>$_indexAbsensi,
+			'label'=>'<i class="fa fa-money fa-2x"></i> List Payment Payroll','content'=>$absensiPayroll,
 			//'active'=>$tab1,
-		]	
+		]
 	];
 
-	$tabImportAbsensi= TabsX::widget([
-		'id'=>'ai',
+	$tabPayroll= TabsX::widget([
+		'id'=>'pr',
 		'items'=>$items,
 		'position'=>TabsX::POS_ABOVE,
 		'bordered'=>true,
@@ -123,7 +125,7 @@ use yii\web\View;
 <div class="container-fluid" style="font-family: verdana, arial, sans-serif ;font-size: 8pt">
 	<div class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 9pt;">
 		<div class="row">		
-		<?=$tabImportAbsensi?>
+		<?=$tabPayroll?>
 		</div>
 	</div>
 </div>

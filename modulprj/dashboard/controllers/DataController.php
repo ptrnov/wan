@@ -56,7 +56,7 @@ class DataController extends Controller
        $data1='
 			{
 				"chart": {
-					"caption": " TRANSAKSI TOKO",
+					"caption": " COST OF PAYROLL",
 					"subCaption": "3 Days",
 					"captionFontSize": "12",
 					"subcaptionFontSize": "10",
@@ -77,8 +77,8 @@ class DataController extends Controller
 					"vDivLineDashed": "0",
 					"numVDivLines": "6",
 					"vDivLineThickness": "1",
-					"xAxisName": "Hour",
-					"yAxisName": "Total Transaction",
+					"xAxisName": "Hour/Day",
+					"yAxisName": "Total Cost",
 					"anchorradius": "3",
 					"plotHighlightEffect": "fadeout|color=#f6f5fd, alpha=60",
 					"showValues": "0",
@@ -145,11 +145,11 @@ class DataController extends Controller
 				],
 				"dataset": [
 					{
-						"seriesname": "TOKO A",
+						"seriesname": "JUMAT",
 						"data": null
 					},
 					{
-						"seriesname": "TOKO B",
+						"seriesname": "SABTU",
 						"data": [
 							{
 								"label": "10",
@@ -214,7 +214,7 @@ class DataController extends Controller
 						]
 					},
 					{
-						"seriesname": "TOKO C",
+						"seriesname": "MINGGU",
 						"data": [
 							{
 								"label": "10",
@@ -274,6 +274,266 @@ class DataController extends Controller
 							{
 								"label": "21",
 								"value": "27",
+								"anchorBgColor": "#00fd83"
+							}
+						]
+					},
+					{
+						"seriesname": "SENEN",
+						"data": [
+							{
+								"label": "10",
+								"value": "15",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "11",
+								"value": "59",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "12",
+								"value": "120",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "13",
+								"value": "182",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "14",
+								"value": "179",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "15",
+								"value": "54",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "16",
+								"value": "55",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "17",
+								"value": "111",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "18",
+								"value": "168",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "19",
+								"value": "139",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "20",
+								"value": "120",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "21",
+								"value": "27",
+								"anchorBgColor": "#00fd83"
+							}
+						]
+					},
+					{
+						"seriesname": "SELASA",
+						"data": [
+							{
+								"label": "10",
+								"value": "155",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "11",
+								"value": "59",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "12",
+								"value": "110",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "13",
+								"value": "182",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "14",
+								"value": "279",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "15",
+								"value": "54",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "16",
+								"value": "155",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "17",
+								"value": "111",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "18",
+								"value": "268",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "19",
+								"value": "239",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "20",
+								"value": "120",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "21",
+								"value": "227",
+								"anchorBgColor": "#00fd83"
+							}
+						]
+					},
+					{
+						"seriesname": "RABU",
+						"data": [
+							{
+								"label": "10",
+								"value": "25",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "11",
+								"value": "459",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "12",
+								"value": "310",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "13",
+								"value": "122",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "14",
+								"value": "119",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "15",
+								"value": "254",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "16",
+								"value": "135",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "17",
+								"value": "211",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "18",
+								"value": "148",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "19",
+								"value": "239",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "20",
+								"value": "110",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "21",
+								"value": "237",
+								"anchorBgColor": "#00fd83"
+							}
+						]
+					},
+					{
+						"seriesname": "KAMIS",
+						"data": [
+							{
+								"label": "10",
+								"value": "25",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "11",
+								"value": "219",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "12",
+								"value": "444",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "13",
+								"value": "132",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "14",
+								"value": "239",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "15",
+								"value": "321",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "16",
+								"value": "135",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "17",
+								"value": "234",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "18",
+								"value": "48",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "19",
+								"value": "123",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "20",
+								"value": "220",
+								"anchorBgColor": "#00fd83"
+							},
+							{
+								"label": "21",
+								"value": "137",
 								"anchorBgColor": "#00fd83"
 							}
 						]

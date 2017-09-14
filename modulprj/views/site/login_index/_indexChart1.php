@@ -123,7 +123,7 @@ $this->registerJs("
 							<dl>
 								
 								<dt class="count-grand-total-hari" style="font-size:20px;color:#7e7e7e"><?=$totalGrandHari?></dt>
-								<dd style="font-size:11px;color:#7e7e7e">SALES HARIAN (IDR)</dd>
+								<dd style="font-size:11px;color:#7e7e7e">DAILY PAYMENT (IDR)</dd>
 								
 							</dl>							
 						</div>
@@ -143,7 +143,7 @@ $this->registerJs("
 						<div class="col-lg-9 text-left .small">
 							<dl>
 								<dt class="count-trans-total-hari" style="font-size:20px;color:#7e7e7e"><?=$totalTransHari;?></dt>
-								<dd style="font-size:11px;color:#7e7e7e">JUMLAH TRANSAKSI</dd>
+								<dd style="font-size:11px;color:#7e7e7e">ABSENSI</dd>
 							</dl>
 							
 						</div>
@@ -162,8 +162,8 @@ $this->registerJs("
 						</div>						
 						<div class="col-lg-9 text-left .small">
 							<dl>
-								<dt style="font-size:20px;color:#7e7e7e">0 of <?=number_format($totalMember)?></dt>
-								<dd style="font-size:11px;color:#7e7e7e">JUMLAH TOKO</dd>
+								<dt style="font-size:20px;color:#7e7e7e">10 of <?=number_format($totalMember)?></dt>
+								<dd style="font-size:11px;color:#7e7e7e">JUMLAH KARYAWAN</dd>
 							</dl>
 							
 						</div>
@@ -206,7 +206,7 @@ $this->registerJs("
 						<div class="col-lg-9 text-left .small">
 							<dl>
 								<dt style="font-size:20px;color:#7e7e7e">500.000</dt>
-								<dd style="font-size:11px;color:#7e7e7e">RATA-RATA SALES MINGGUAN (IDR)</dd>
+								<dd style="font-size:11px;color:#7e7e7e">Average Payrol of Week (IDR)</dd>
 							</dl>
 							
 						</div>
