@@ -106,15 +106,16 @@ class AbsenDailyController extends Controller
 	/**
      * TEMPORARY : PRINT PER KARYAWAN
      */
-	public function actionPrintOne($id)
+	public function actionPrint($id)
     {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 		//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$id]);
-		$searchModelDetail = new AbsenPayrollSearch(['KAR_ID'=>$id]);
-		$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
+		$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14','KAR_ID'=>$id];
+		$searchModelDetail = new AbsenPayrollSearch($closingParam);
+		$dataProviderDetail=$searchModelDetail->searchHeader(Yii::$app->request->queryParams);
 		$content= $this->renderPartial( '_printPdf',[
-			'searchModelDetail'=>$searchModelDetail,
-			'dataProviderDetail'=>$dataProviderDetail
+			'dataProviderDetail'=>$dataProviderDetail,
+			'model'=>$dataProviderDetail->getModels()
 		]);
 		
 		$pdf = new Pdf([
@@ -136,12 +137,12 @@ class AbsenDailyController extends Controller
 			// any css to be embedded if required
 			'cssInline' => '.kv-heading-1{font-size:12px}',
 			 // set mPDF properties on the fly
-			'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
+			//'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
 			 // call mPDF methods on the fly
-			'methods' => [
-				'SetHeader'=>['Copyright@wanindo '.date("r")],
-				'SetFooter'=>['{PAGENO}'],
-			]
+			// 'methods' => [
+				// 'SetHeader'=>['Copyright@wanindo '.date("r")],
+				// 'SetFooter'=>['{PAGENO}'],
+			// ]
 		]);
 		
 		return $pdf->render();
