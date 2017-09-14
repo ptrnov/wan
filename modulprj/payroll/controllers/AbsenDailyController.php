@@ -21,6 +21,7 @@ use yii\web\Response;
 use yii\web\Request;
 use kartik\form\ActiveForm;
 use kartik\mpdf\Pdf;
+use yii\base\DynamicModel;
 
 use ptrnov\postman4excel\Postman4ExcelBehavior;
 
@@ -29,6 +30,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
+use modulprj\master\models\TimetableGroup;
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -78,9 +80,11 @@ class AbsenDailyController extends Controller
 				
 			}	
 		};
-		
-        $searchModelAbsensi = new AbsenPayrollSearch();
-        $dataProviderAbsensi = $searchModelAbsensi->search(Yii::$app->request->queryParams);
+		//$param=['AbsenPayrollSearch'=>[['tglStart'=>'2017-09-07','tglEnd'=>'2017-09-14']]];
+		$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+        $searchModelAbsensi = new AbsenPayrollSearch($closingParam);
+        $dataProviderAbsensi = $searchModelAbsensi->searchHeader(Yii::$app->request->queryParams);
+        //$dataProviderAbsensi = $searchModelAbsensi->searchHeader($param);
 		
 		$searchModelPayroll = new AbsenPayrollSearch();
         $dataProviderPayroll = $searchModelPayroll->searchpay(Yii::$app->request->queryParams);
@@ -100,39 +104,19 @@ class AbsenDailyController extends Controller
     }
 
 	/**
-     * TEMPORARY : CLEAR /HAPUS LIST 
+     * TEMPORARY : PRINT PER KARYAWAN
      */
-	public function actionPrint($id)
+	public function actionPrintOne($id)
     {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-		
 		//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$id]);
 		$searchModelDetail = new AbsenPayrollSearch(['KAR_ID'=>$id]);
 		$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
-		
-		//$content= $this->renderPartial( '_printPdf',[
-		$content= $this->renderPartial( 'indexExpand',[
+		$content= $this->renderPartial( '_printPdf',[
 			'searchModelDetail'=>$searchModelDetail,
 			'dataProviderDetail'=>$dataProviderDetail
 		]);
-
-		/*PR TO WAWAN*/
-		/*
-		 * Render partial -> Add Css -> Sendmail
-		 * @author ptrnov [piter@lukison]
-		 * @since 1.2
-		*/
-		// $contentMailAttach= $this->renderPartial('sendmailcontent',[
-			// 'poHeader' => $poHeader,
-			// 'dataProvider' => $dataProvider,
-		// ]);
-
-		// $contentMailAttachBody= $this->renderPartial('postman_body',[
-			// 'poHeader' => $poHeader,
-			// 'dataProvider' => $dataProvider,
-		// ]);
-
-
+		
 		$pdf = new Pdf([
 			// set to use core fonts only
 			'mode' => Pdf::MODE_CORE,
@@ -161,6 +145,74 @@ class AbsenDailyController extends Controller
 		]);
 		
 		return $pdf->render();
+		
+    }
+	
+	/**
+     * TEMPORARY : TEMPORARY : PRINT ALL KARYAWAN
+     */
+	public function actionPrintAll()
+    {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+		// $model = new \yii\base\DynamicModel([
+			// 'GRP_ID'
+		// ]);
+		
+		// $model->addRule(['name','email'], 'required')
+        // ->addRule(['email'], 'email')
+        // ->addRule('address', 'string',['max'=>32]);
+		//$model = TimetableGroup::find()->all();
+		$model = new TimetableGroup;//::find();//->all();
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_fromPrintAll', [
+					'model' => $model
+				]); 				
+		}else{				
+			// if(Yii::$app->request->isAjax){				
+				// $model->load(Yii::$app->request->post());				
+				// return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			// }else{
+				// if ($model->load(Yii::$app->request->post())) {
+					
+					//$grp =STATUS KARYAWAN (1=STAFF;2=HARIAN;3=SHIFT;4=DRIVER);
+					//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
+					// $searchModelDetail = new AbsenPayrollSearch();
+					// $dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
+					// $dataProviderHeader=$searchModelDetail->search(Yii::$app->request->queryParams);
+					$content= $this->renderPartial('_printPdfAll');
+					
+					$pdf = new Pdf([
+						// set to use core fonts only
+						'mode' => Pdf::MODE_CORE,
+						// A4 paper format
+						'format' => Pdf::FORMAT_A4,
+						// portrait orientation
+						'orientation' => Pdf::ORIENT_PORTRAIT,
+						// stream to browser inline
+						'destination' => Pdf::DEST_BROWSER,
+						//'destination' => Pdf::DEST_FILE ,
+						// your html content input
+						'content' => $content,
+						// format content from your own css file if needed or use the
+						// enhanced bootstrap css built by Krajee for mPDF formatting
+						//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+						'cssFile' => '@modulprj/web/addasset/pdf-asset/kv-mpdf-bootstrap.min.css',
+						// any css to be embedded if required
+						'cssInline' => '.kv-heading-1{font-size:12px}',
+						 // set mPDF properties on the fly
+						//'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
+						 // call mPDF methods on the fly
+						// 'methods' => [
+							// 'SetHeader'=>['Copyright@wanindo '.date("r")],
+							// 'SetFooter'=>['{PAGENO}'],
+						// ]
+					]);					
+					return $pdf->render();					
+				// }
+			// }	
+		}		
+		
+		
 		
     }
 	

@@ -15,13 +15,15 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 	$aryFieldAbsensi= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'left']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'left']],
+		//['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
+		//['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
+		//['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
+		//['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
+		//['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
+		//['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
+		//['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -75,15 +77,19 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 				return GridView::ROW_COLLAPSED;
 			},
 			'detail'=>function ($model, $key, $index, $column){
-				$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-				$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
+				//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
+				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+				$searchModelDetail = new AbsenPayrollSearch($closingParam);
+				$dataProviderDetail = $searchModelDetail->searchHeader(Yii::$app->request->queryParams);
+				//$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
 				// return Yii::$app->controller->renderPartial('_dailyAbsensiDetail',[
 					// 'searchModelDetail'=>$searchModelDetail,
 					// 'dataProviderDetail'=>$dataProviderDetail
 				// ]);
 				return Yii::$app->controller->renderPartial('indexExpand',[
 					'searchModelDetail'=>$searchModelDetail,
-					'dataProviderDetail'=>$dataProviderDetail
+					'dataProviderDetail'=>$dataProviderDetail,
+					'model'=>$model
 				]);
 			},
 			'headerOptions'=>[
@@ -249,6 +255,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
+			'heading'=>tombolPrintAll(),
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,

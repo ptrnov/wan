@@ -10,31 +10,82 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
+	$modelDetail=$dataProviderDetail->getModels();
+	// foreach($modelDetail[0] as $rows => $val){
+		// $ambilField[]=$rows;
+		// $ambilValue[]=$val;
+	// };
+	$inc=0;
+	foreach($modelDetail[0] as $rows => $val){
+		//unset($splt);
+		//$ambilField[]=$rows; 		
+		$splt=explode('_',$rows);	
+		if($splt[0]=='PAGI' OR $splt[0]=='OT'){
+			$nmField1[]=$rows;		//FULL FIELD NAME
+			$nmLabel[]=$splt[0];	//SPLIT LABEL NAME
+			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center']];
+			if ($splt[0]=='PAGI'){
+				$ambilFieldTgl[]=Yii::$app->hari->DayofDate($splt[1]);
+				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']];
+				$headerContent2[]=['content'=>Yii::$app->hari->DayofDate($splt[1]),'options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    
+			}
+			$inc=$inc+1;
+		}		
+	};
+	foreach($modelDetail[0] as $rows => $val){
+		//unset($splt);
+		//$ambilField[]=$rows; 		
+		$splt=explode('_',$rows);	
+		if($rows=='TTL_PAGI' OR $rows=='TTL_OT'){
+			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center']];
+			if($rows=='TTL_PAGI'){
+				$headerContent2[]=['content'=>'HARI_KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    
+			}
+			$inc=$inc+1;
+		}
+	};
+	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']];								
+	$headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>1,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    		
+	$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']];	
+	
+	// foreach($ambilField as $val){
+		// $splt=implode('_',array($val));
+		// if($split[0]='OT'){
+			// $ambilField1=$splt[1];
+		// }
+	// };
+	
+	// print_r($aryFieldAbsensiDetail);
+	//print_r($ambilField1);
+	//print_r($ambilFieldTgl);
+	//print_r($ambilValue);
+	// die();
+
 	$this->registerCss("
 		#daily-absen-detail
 		.kv-grid-container{
 				min-height:10px			
 		}
 	");
-	$aryFieldAbsensiDetail= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>1, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>11, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>12, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>13, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>14, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
-		['ID' =>15, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
-		['ID' =>16, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']]
-	];	
+	// $aryFieldAbsensiDetail= [
+		// ['ID' =>0, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>1, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>2, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>3, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>4, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>5, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>6, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>10, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>11, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>12, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>13, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>14, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
+		// ['ID' =>15, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
+		// ['ID' =>16, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']]
+	// ];	
 	$valFieldsAbsenDetail = ArrayHelper::map($aryFieldAbsensiDetail, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
 	$pageNm='<span class="fa-stack fa-sm text-left">
@@ -72,7 +123,7 @@ use yii\web\View;
 					'text-align'=>'center',
 					'width'=>$value[$key]['SIZE'],
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
+					'font-size'=>'7pt',
 					'background-color'=>$bColor,
 				]
 			],  
@@ -81,7 +132,7 @@ use yii\web\View;
 					'text-align'=>$value[$key]['align'],
 					//'width'=>'12px',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'8pt',
+					'font-size'=>'7pt',
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
@@ -90,9 +141,8 @@ use yii\web\View;
 			'pageSummaryOptions' => [
 				'style'=>[
 						'text-align'=>'right',		
-						//'width'=>'12px',
 						'font-family'=>'tahoma',
-						'font-size'=>'8pt',	
+						'font-size'=>'7pt',	
 						'text-decoration'=>'underline',
 						'font-weight'=>'bold',
 						'border-left-color'=>'transparant',		
@@ -102,6 +152,18 @@ use yii\web\View;
 		];	
 	};	
 	
+
+	// $date = $modelHeader[0]['TGL_START'];
+	// $end_date =$modelHeader[0]['TGL_END'];
+	// while (strtotime($date) <= strtotime($end_date)) {
+        // $headerContent1[]=['content'=>$date,'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']];
+		// $headerContent2[]=['content'=>Yii::$app->hari->DayofDate($date),'options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];    
+		// $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
+	
+	// }
+		// $headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>4,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']];						
+		// $headerContent2[]=['content'=>'HARI KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];
+		// $headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];					
 	
 	$gvDailyAbsenDetail= GridView::widget([
 		'id'=>'daily-absen-detail',
@@ -110,29 +172,31 @@ use yii\web\View;
 		'filterRowOptions'=>['style'=>'background-color:'.$bColor.'; align:center'],
 		'beforeHeader'=>[
 				'0'=>[					
-					'columns'=>[
-						['content'=>'JUMAT','options'=>['colspan'=>2,'class'=>'text-center danger',]],
-						['content'=>'SABTU','options'=>['colspan'=>2,'class'=>'text-center danger',]],
-						['content'=>'MINGGU','options'=>['colspan'=>2,'class'=>'text-center danger',]],
-						['content'=>'SENEN','options'=>['colspan'=>2,'class'=>'text-center danger',]],
-						['content'=>'SELASA','options'=>['colspan'=>2,'class'=>'text-center danger',]],
-						['content'=>'RABU','options'=>['colspan'=>2,'class'=>'text-center danger',]],
-						['content'=>'KAMIS','options'=>['colspan'=>2,'class'=>'text-center danger',]],						
-						['content'=>'KETERANGAN','options'=>['colspan'=>4,'class'=>'text-center danger',]],						
-					],					
+					'columns'=>$headerContent1,
+					// [
+						// ['content'=>$modelHeader['TGL_JUMAT'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>$modelHeader['TGL_SABTU'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>$modelHeader['TGL_MINGGU'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>$modelHeader['TGL_SENEN'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>$modelHeader['TGL_SELASA'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>$modelHeader['TGL_RABU'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>$modelHeader['TGL_KAMIS'],'options'=>['colspan'=>2,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],						
+						// ['content'=>'KETERANGAN','options'=>['colspan'=>4,'class'=>'text-center danger','style'=>'font-family: tahoma ;font-size: 6pt;']],						
+					// ],					
 				],				
 				'1'=>[					
-					'columns'=>[
-						['content'=>'JUMAT','options'=>['colspan'=>2,'class'=>'text-center warning',]],
-						['content'=>'SABTU','options'=>['colspan'=>2,'class'=>'text-center warning',]],
-						['content'=>'MINGGU','options'=>['colspan'=>2,'class'=>'text-center warning',]],
-						['content'=>'SENEN','options'=>['colspan'=>2,'class'=>'text-center warning',]],
-						['content'=>'SELASA','options'=>['colspan'=>2,'class'=>'text-center warning',]],
-						['content'=>'RABU','options'=>['colspan'=>2,'class'=>'text-center warning',]],
-						['content'=>'KAMIS','options'=>['colspan'=>2,'class'=>'text-center warning',]],						
-						['content'=>'HARI KERJA','options'=>['colspan'=>2,'class'=>'text-center warning',]],						
-						['content'=>'UPAH','options'=>['colspan'=>2,'class'=>'text-center warning',]],						
-					],				
+					'columns'=>$headerContent2,
+					// [
+						// ['content'=>'JUMAT','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>'SABTU','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>'MINGGU','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>'SENEN','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>'SELASA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>'RABU','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],
+						// ['content'=>'KAMIS','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],						
+						// ['content'=>'HARI KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],						
+						// ['content'=>'UPAH','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']],						
+					// ],				
 				]
 			],		
 		'columns' =>$attDinamikAbsensiDetail,	
@@ -161,7 +225,6 @@ use yii\web\View;
 		],
 		'summary'=>false,
 	]);
-
 ?>
 <?=$gvDailyAbsenDetail?>
 

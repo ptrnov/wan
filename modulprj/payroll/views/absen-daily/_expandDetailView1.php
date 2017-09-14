@@ -2,7 +2,7 @@
 use kartik\helpers\Html;
 ?>
 
-<div class="col-md-4">
+<div class="col-md-4" style="font-family: tahoma ;font-size: 6pt;">
 	<dl>			
 		<dt style="width:100px; float:left;">NAMA</dt>
 		<dd>: <?=$model[0]->KAR_NM ?></dd>

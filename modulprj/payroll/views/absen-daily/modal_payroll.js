@@ -20,6 +20,18 @@ $(document).on('click','#import-button-create', function(ehead){
 });
 
 /*
+ * PRINT ALL
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
+$(document).on('click','#payroll-printall', function(ehead){ 			  
+	$('#payroll-printall-view').modal('show')
+	.find('#payroll-printall-content-view').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	//.load(ehead.target.value);
+	.load($(this).attr('value'));
+});
+
+/*
  * Import-upload.
 */
 /* $.fn.modal.Constructor.prototype.enforceFocus = function(){};
