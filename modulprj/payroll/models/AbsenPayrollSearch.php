@@ -52,7 +52,10 @@ class AbsenPayrollSearch extends AbsenPayroll
 		//$sql="call NEW_RPT_FROMAT('".$this->tglStart."','".$this->tglEnd."')";
 		$qrySql= Yii::$app->db->createCommand($sql)->queryAll(); 		
 		$dataProvider= new ArrayDataProvider([
-			'allModels'=>$qrySql,			
+			'allModels'=>$qrySql,	
+			'pagination' => [
+				'pageSize' =>20,
+			],			
 		]);
 		
 		if (!($this->load($params) && $this->validate())) {

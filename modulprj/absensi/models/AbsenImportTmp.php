@@ -55,7 +55,7 @@ class AbsenImportTmp extends \yii\db\ActiveRecord
 		$dataTmpImport= new ArrayDataProvider([
 			'key' => 'ID',
 			'allModels'=>Yii::$app->db->createCommand("
-				SELECT x1.ID FROM absen_import_tmp x1 where 
+				SELECT x1.ID FROM absen_import x1 where 
 				x1.TERMINAL_ID='".$this->TERMINAL_ID."' AND 
 				x1.FINGER_ID='".$this->FINGER_ID."' AND 
 				x1.IN_TGL='".date('Y-m-d', strtotime($this->tmpTglIn))."'

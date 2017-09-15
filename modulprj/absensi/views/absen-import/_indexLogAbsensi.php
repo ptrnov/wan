@@ -34,6 +34,26 @@ use yii\web\View;
 			'			
 	;
 	
+	$arySttLog= [
+	  ['STATUS' => 0, 'STT_NM' => 'Proccess'],		  
+	  ['STATUS' => 1, 'STT_NM' => 'Lock']
+	];	
+	//Result Status value.
+	function sttMsgLog($stt){
+		if($stt==0){ //TRIAL
+			 return Html::a('<span class="fa-stack fa-xl">
+					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
+					  <i class="fa fa-check fa-stack-1x" style="color:#05944d"></i>
+					</span>','',['title'=>'Active']);
+		}elseif($stt==1){
+			return Html::a('<span class="fa-stack fa-xl">
+					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
+					  <i class="fa fa-lock fa-stack-1x" style="color:#ee0b0b"></i>
+					</span>','',['title'=>'Posting']);
+		}
+	};	
+	$valSttLog = ArrayHelper::map($arySttLog, 'STATUS', 'STT_NM');
+	
 	$attDinamikLog[] =[			
 			'class'=>'kartik\grid\SerialColumn',
 			'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -113,7 +133,7 @@ use yii\web\View;
 			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 		],
 		'filterInputOptions'=>['placeholder'=>'Select'],
-		'filter'=>$valStt,//Yii::$app->gv->gvStatusArray(),
+		'filter'=>$valSttLog,
 		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
@@ -121,7 +141,7 @@ use yii\web\View;
 		'noWrap'=>false,
 		'format' => 'raw',	
 		'value'=>function($model){
-			return sttMsg($model->STATUS);				 
+			return sttMsgLog($model->STATUS);				 
 		},
 		//gvContainHeader($align,$width,$bColor)
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),

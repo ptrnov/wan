@@ -2,7 +2,7 @@
 use kartik\helpers\Html;
 $imgStr=Yii::$app->arrayBantuan->gambar1();
 //print_r($imgStr);
-
+$path=Yii::$app->params['uploadPath'] = realpath(Yii::$app->basePath) . '/web/uploads/';
 ?>
 
 <div class="col-md-12" style="font-family: tahoma ;font-size: 6pt;">
@@ -32,6 +32,7 @@ $imgStr=Yii::$app->arrayBantuan->gambar1();
 				<tr>
 					<th style="text-align:left;padding-left:300px;width:50px;text-align:right;font-weight: normal;">
 						<?=Html::img($imgStr,['width'=>'140','height'=>'60']);?>
+						<?php //echo Html::img($path.'/slip-logo2.jpg',  ['class' => 'pnjg', 'style'=>'width:140px;height:60px']); ?>
 					</th>
 				</tr>			
 			</table>

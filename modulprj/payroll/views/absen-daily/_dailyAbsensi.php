@@ -21,17 +21,17 @@ use modulprj\absensi\models\AbsenImportPeriode;
 	';
 	
 	$aryFieldAbsensi= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '50px','label'=>'UPAH_PERHARI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD_START','align'=>'center','format'=>'raw']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD_END','align'=>'center','format'=>'raw']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2]]]
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw','mergeHeader'=>false]],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw','mergeHeader'=>false]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '50px','label'=>'UPAH_PERHARI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>false]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD_START','align'=>'center','format'=>'raw','mergeHeader'=>true]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD_END','align'=>'center','format'=>'raw','mergeHeader'=>true]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]]
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -45,10 +45,8 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			'			
 	;
 	$arySttAbsensi= [
-	  ['STATUS' => 0, 'STT_NM' => 'Ready'],		  
-	  ['STATUS' => 100, 'STT_NM' => 'Empty'],
-	  ['STATUS' => 101, 'STT_NM' => 'DateTime'],
-	  ['STATUS' => 102, 'STT_NM' => 'OverWrite']
+	  ['STATUS' => 1, 'STT_NM' => 'Ready'],		  
+	  ['STATUS' => 2, 'STT_NM' => 'Paid']
 	];	
 	$valSttAbsensi = ArrayHelper::map($arySttAbsensi, 'STATUS', 'STT_NM');
 	
@@ -65,6 +63,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],
 			'contentOptions'=>[
@@ -73,6 +72,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					'width'=>'10px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
+					'color'=>'red',
 				]
 			],					
 	];
@@ -86,7 +86,9 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			},
 			'detail'=>function ($model, $key, $index, $column){
 				//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+				$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+				$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+				//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 				$searchModelDetail = new AbsenPayrollSearch($closingParam);
 				$dataProviderDetail = $searchModelDetail->searchHeader(['AbsenPayrollSearch'=>['KAR_ID'=>$model['KAR_ID']]]);
 				//$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
@@ -107,6 +109,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],
 			'contentOptions'=>[
@@ -135,7 +138,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			//'filterInputOptions'=>$filterInputOpt,				
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
-			//'mergeHeader'=>true,
+			'mergeHeader'=>$value[$key]['mergeHeader'],
 			'noWrap'=>true,			
 			'headerOptions'=>[		
 					'style'=>[									
@@ -144,6 +147,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],  
 			'format'=>$value[$key]['format'],
@@ -153,6 +157,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					//'width'=>'12px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
+					
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
@@ -175,32 +180,30 @@ use modulprj\absensi\models\AbsenImportPeriode;
 	
 	$attDinamikAbsensi[]=[
 		'attribute'=>'STATUS',
-		'filterType'=>GridView::FILTER_SELECT2,
+		'label'=>'STATUS',
+		/* 'filterType'=>GridView::FILTER_SELECT2,
 		'filterWidgetOptions'=>[
 			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 		],
 		'filterInputOptions'=>['placeholder'=>'Select'],
 		'filter'=>$valSttAbsensi,//Yii::$app->gv->gvStatusArray(),
-		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
+		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor), */
+		'filter'=>false,
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
-		'mergeHeader'=>false,
+		'mergeHeader'=>true,
 		'noWrap'=>false,
 		'format' => 'raw',	
 		'value'=>function($model){
-			if($model->STATUS==0){
+			if($model['STATUS']==1){
 				return 'Ready';
-			}elseif($model->STATUS==100){
-				return 'Empty';
-			}elseif($model->STATUS==101){
-				return 'DateTime';
-			}elseif($model->STATUS==102){
-				return 'Overwrite';
-			}
+			}elseif($model->STATUS==2){
+				return 'Paid';
+			};
 			//return sttMsgImport($model->STATUS);				 
 		},
 		//gvContainHeader($align,$width,$bColor)
-		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
+		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor,'white'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 	];
 	//ACTION
@@ -273,7 +276,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,
-			'footer'=>false,
+			'footer'=>true,
 			
 		],
 		'pjax'=>true,

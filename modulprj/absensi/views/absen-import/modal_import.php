@@ -231,19 +231,25 @@ $this->registerCss("
 			// if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app', 'Save');
 				$url = Url::toRoute(['/absensi/absen-import/sync']);
-				$options1 = [
-							'data-toggle'=>"modal",
-							'data-target'=>"#sync_save",
-							'data-pjax' => true,
+				$options1 = ['value'=>$url,
+							'id'=>'import-button-save-db',
+							'data-pjax' => false,
 							'class'=>"btn btn-primary btn-xs",
-							'title'=>'Save to Database'							
+							'title'=>'Save to Database'
 				];
+				// $options1 = [
+							// 'data-toggle'=>"modal",
+							// 'data-target'=>"#sync_save",
+							// 'data-pjax' => true,
+							// 'class'=>"btn btn-primary btn-xs",
+							// 'title'=>'Save to Database'							
+				// ]; 
 				$icon1 = '<span class="fa-stack fa-sm text-left">
 						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
 						  <b class="fa fa-save fa-stack-1x" style="color:#000000"></b>
 						</span>';
 				$label1 = $icon1 . ' ' . $title1;
-				$content = Html::a($label1,$url,$options1);
+				$content = Html::button($label1,$options1);
 				return $content;
 			// }
 		// }
@@ -514,7 +520,8 @@ $this->registerCss("
 	 * UPLOAD.
 	*/
 	Modal::begin([
-		'id' => 'sync_save',
+		//'id' => 'sync_save',
+		'id' => 'import-modal-save-db',
 		'header' => '
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:red"></i>
@@ -533,7 +540,8 @@ $this->registerCss("
 			'keyboard' => TRUE,	// Kyboard 
 		]
 	]);
-		$form = ActiveForm::begin([
+		echo "<div id='import-modal-content-save-db'></div>";
+		/* $form = ActiveForm::begin([
 			'method' => 'post',
 			'action' => ['/absensi/absen-import/sync'],
 		]);		
@@ -548,7 +556,9 @@ $this->registerCss("
 				echo 'Data Import belum benar,Pastikan data sudah benar !';
 				echo '</div>';
 			}			
-		ActiveForm::end();
+		ActiveForm::end(); */
 	Modal::end();
+	
+	
 	
 ?>

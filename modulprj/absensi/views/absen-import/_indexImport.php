@@ -182,11 +182,13 @@ use yii\web\View;
 				{					
 					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=100 WHERE ID='.$model->ID)->execute();
 					return ['class' => 'danger'];
-				}elseif(date('Y-m-d h:i:s', strtotime($model->IN_TGL.' '.$model->IN_WAKTU)) >= date('Y-m-d h:i:s', strtotime($model->OUT_TGL.' '.$model->OUT_WAKTU))){
+				}
+				/* elseif(date('Y-m-d h:i:s', strtotime((string)$model->IN_TGL.' '.(string)$model->IN_WAKTU)) > date('Y-m-d h:i:s', strtotime((string)$model->OUT_TGL.' '.(string)$model->OUT_WAKTU))){
 				//===Datetime1 > Dateime2 ====
 					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=101 WHERE ID='.$model->ID)->execute();
 					return ['class' => 'danger'];
-				}else{
+				} */
+				else{
 					$numClients =Yii::$app->db->createCommand("SELECT x1.ID FROM absen_import x1 where x1.TERMINAL_ID='".$model->TERMINAL_ID."' AND 
 												  x1.FINGER_ID='".$model->FINGER_ID."' AND 
 												  x1.IN_TGL='".date('Y-m-d', strtotime($model->IN_TGL.' '.$model->IN_WAKTU))."'

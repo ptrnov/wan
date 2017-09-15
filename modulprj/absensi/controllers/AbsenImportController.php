@@ -130,7 +130,8 @@ class AbsenImportController extends Controller
 				$model->OUT_TGL = date('Y-m-d', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
 				$model->OUT_WAKTU = date('H:i:s', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
 				if ($model->save()){
-					 return $this->redirect(['index', 'idx' => $model->ID]);
+					 //return $this->redirect(['index', 'idx' => $model->ID]);
+					 return $this->redirect(['index']);
 				}  
 		}else{
 			return $this->renderAjax('_form', [
@@ -223,13 +224,47 @@ class AbsenImportController extends Controller
      */
     public function actionSync()
     {
-		$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
-			  SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
-			  FROM absen_import_tmp
-		";
-		Yii::$app->db->CreateCommand($sql)->execute();
-		Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
-		return $this->redirect(['index','#ai-tab1']);
+		$sql="SELECT sum(STATUS) FROM absen_import_tmp";		
+		$sumStt=Yii::$app->db->createCommand($sql)->queryScalar();
+		
+		$model = new \yii\base\DynamicModel([
+			'validationSave'
+		]);			
+		$model->addRule(['validationSave'], 'required');		
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_msgSaveDb', [
+					'model' => $model,
+					'sumStt'=>$sumStt
+				]); 				
+		}else{
+			$hsl = \Yii::$app->request->post();
+			$textValidate = $hsl['DynamicModel']['validationSave'];			
+			// print_r($kdPo);
+			// die();
+			if($textValidate=="setuju"){
+				$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
+				SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
+				FROM absen_import_tmp
+				";
+				Yii::$app->db->CreateCommand($sql)->execute();
+				Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
+				return $this->redirect(['index','#ai-tab1']);
+			}else{
+				return $this->redirect(['index']);
+			}
+		}
+			
+	
+		
+		
+		// $sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
+			  // SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
+			  // FROM absen_import_tmp
+		// ";
+		// Yii::$app->db->CreateCommand($sql)->execute();
+		// Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
+		// return $this->redirect(['index','#ai-tab1']);
     } 
 	
 	/**
@@ -370,11 +405,11 @@ class AbsenImportController extends Controller
 								$modelTmp = new AbsenImportTmp();
 								//$modelTmp->ID=null;
 								//$modelTmp->isNewRecord = true;							
-								$modelTmp->TERMINAL_ID=(string)$value['TERMINAL_ID'];
-								$modelTmp->FINGER_ID=(string)$value['FINGER_ID'];
-								$modelTmp->IN_TGL=$value['TGL_IN'];
+								$modelTmp->TERMINAL_ID=str_replace("'","",(string)$value['TERMINAL_ID']);
+								$modelTmp->FINGER_ID=str_replace("'","",(string)$value['FINGER_ID']);
+								$modelTmp->IN_TGL=date('Y-m-d', strtotime($value['TGL_IN']));
 								$modelTmp->IN_WAKTU=$value['JAM_IN'];
-								$modelTmp->OUT_TGL=$value['TGL_OUT'];
+								$modelTmp->OUT_TGL=date('Y-m-d', strtotime($value['TGL_OUT']));
 								$modelTmp->OUT_WAKTU=$value['JAM_OUT'];
 								$modelTmp->save();
 								//unset($modelTmp);
