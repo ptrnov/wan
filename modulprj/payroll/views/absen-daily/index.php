@@ -93,11 +93,11 @@ use yii\web\View;
 	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-files-o fa-2x"></i> Rekap Absensi','content'=>$absensi_daily,
+			'label'=>'<i class="fa fa-files-o fa-2x"></i> Rekap Absensi Payment','content'=>$absensi_daily,
 			//'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-money fa-2x"></i> List Payment Payroll','content'=>$absensiPayroll,
+			'label'=>'<i class="fa fa-money fa-2x"></i> List Payment Paid','content'=>$absensiPayroll,
 			//'active'=>$tab1,
 		]
 	];

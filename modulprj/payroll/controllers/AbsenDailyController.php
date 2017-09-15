@@ -222,6 +222,62 @@ class AbsenDailyController extends Controller
 		
     }
 	
+	/**====================================
+     * EXPORT EXCEL REPORT
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionExportExcel(){
+		//DATA IMPORT
+		$aryImport=[
+			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
+			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
+		];		
+		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
+        $excel_titleImport = $excel_dataImport['excel_title'];
+        $excel_ceilsImport = $excel_dataImport['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'Import-Absensi',
+                'sheet_title' => [
+					['TERMINAL_ID','FINGER_ID','NAMA','TGL_IN','TGL_OUT','JAM_IN','JAM_OUT']
+				],
+			    'ceils' => $excel_ceilsImport,
+                'freezePane' => 'A2',
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+                'headerStyle'=>[					
+					[
+						'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'KARYAWAN' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'TGL_IN' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'TGL_OUT' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'JAM_IN' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'JAM_OUT' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+					]						
+				],
+				'contentStyle'=>[
+					[						
+						'TERMINAL_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'FINGER_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KARYAWAN' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TGL_IN' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'TGL_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'JAM_IN' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'JAM_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+					]
+				],
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+			]
+		];
+		$excel_file = "PayrollData";
+		$this->export4excel($excel_content, $excel_file,0);
+	}
+	
+	
 	/**
      * TEMPORARY : CREATE
      */

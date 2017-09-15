@@ -84,6 +84,27 @@ $this->registerCss("
 		//return '<li>'.$content.'</li>';
 	}
 	
+	/*
+	 * LINK BUTTON : Button - EXPORT EXCEL.
+	*/
+	function tombolExportExcel(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', ' Export Excel');
+				$url = Url::toRoute(['/payroll/absen-daily/export-excel']);
+				$options1 = [
+							'id'=>'export-excel-',
+							'data-pjax' => true,
+							'class'=>"btn btn-info btn-sm"  
+				];
+				$icon1 = '<span class="fa fa-clone fa-lg"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,$url,$options1);
+				return $content;
+			// }
+		// }
+	}		
+	
 	
 	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
 	

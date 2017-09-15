@@ -15,6 +15,7 @@ use yii\web\View;
 		'dataProviderDetail'=>$dataProviderDetail,
 		'model'=>$model
 	]);
+	$imgStr=Yii::$app->arrayBantuan->gambar1();
 ?>
 
 <div class="container-fluid" style="padding-top:10px;background-color:white;font-family: verdana, arial, sans-serif ;font-size: 7pt">
@@ -23,13 +24,22 @@ use yii\web\View;
 	</div>
 	<div class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 6pt;">	
 		<div class="row">
-			<dl>			
+			<dl style="width:300px; padding-top:20px;float:left;">			
 				<dt style="width:100px;float:left;">NAMA</dt>
 				<dd>: <?=$model[0]['KAR_NM'] ?></dd>
 				<dt style="width:100px; float:left;">Divisi</dt>
 				<dd>: <?=$model[0]['DEP_NM'] ?></dd>
 				<dt style="width:100px; float:left;">PERIODE</dt>
 				<dd>: <?=$model[0]['TGL_STARTING'] ?>  s/d  <?=$model[0]['TGL_CLOSING'] ?></dd>
+			</dl>
+			<dl style="float:right;">
+				<table style="width:300px">			
+					<tr>
+						<th style="text-align:left;padding-left:300px;width:50px;text-align:right;font-weight: normal;">
+							<?=Html::img($imgStr,['width'=>'140','height'=>'60']);?>
+						</th>
+					</tr>			
+				</table>
 			</dl>
 		</div>
 	</div>

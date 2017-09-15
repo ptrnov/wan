@@ -11,17 +11,27 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
 use modulprj\payroll\models\AbsenPayrollSearch;	
+use modulprj\absensi\models\AbsenImportPeriode;
+
+	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
+	$perode='<span class="fa-stack fa-xs text-right">				  
+				<i class="fa fa-mail-forward fa-1x"></i>
+			 </span> '.$perodeVal.'			
+	';
 	
 	$aryFieldAbsensi= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw']],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw']],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '50px','label'=>'UPAH_PERHARI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2]]]
+		['ID' =>3, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD_START','align'=>'center','format'=>'raw']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD_END','align'=>'center','format'=>'raw']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2]]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2]]]
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -259,7 +269,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
-			'heading'=>tombolPrintAll(),
+			'heading'=>tombolPrintAll(). ' ' .$perode,
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,

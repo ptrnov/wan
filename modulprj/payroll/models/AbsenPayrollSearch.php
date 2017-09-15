@@ -64,7 +64,9 @@ class AbsenPayrollSearch extends AbsenPayroll
 		
 		$filter = new Filter();
  		$this->addCondition($filter, 'KAR_ID', true);
- 		//$this->addCondition($filter, 'EMP_NM', true);	
+ 		$this->addCondition($filter, 'KAR_NM', true);	
+ 		$this->addCondition($filter, 'DEP_NM', true);	
+ 		$this->addCondition($filter, 'STATUS', true);	
  		$dataProvider->allModels = $filter->filter($qrySql);
 		
         return $dataProvider;

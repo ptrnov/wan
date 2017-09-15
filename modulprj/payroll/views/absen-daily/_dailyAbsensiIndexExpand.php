@@ -44,7 +44,7 @@ use yii\web\View;
 			<?=$detaiView1?>
 		</div>
 	</div>
-	<div class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 6pt;">
+	<div class="col-xs-12 col-sm-12 col-lg-12" style="padding-top:-15px;font-family: tahoma ;font-size: 6pt;">
 		<?=$dvAbsen?>
 		<?=$detaiView2?>
 	</div>
