@@ -76,9 +76,9 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 			},
 			'detail'=>function ($model, $key, $index, $column){
 				//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14','KAR_ID'=>$model['KAR_ID']];
+				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 				$searchModelDetail = new AbsenPayrollSearch($closingParam);
-				$dataProviderDetail = $searchModelDetail->searchHeader(Yii::$app->request->queryParams);
+				$dataProviderDetail = $searchModelDetail->searchHeader(['AbsenPayrollSearch'=>['KAR_ID'=>$model['KAR_ID']]]);
 				//$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
 				// return Yii::$app->controller->renderPartial('_dailyAbsensiDetail',[
 					// 'searchModelDetail'=>$searchModelDetail,

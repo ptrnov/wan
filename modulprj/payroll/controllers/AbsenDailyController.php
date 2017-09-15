@@ -24,7 +24,7 @@ use kartik\mpdf\Pdf;
 use yii\base\DynamicModel;
 
 use ptrnov\postman4excel\Postman4ExcelBehavior;
-
+use modulprj\absensi\models\AbsenImportPeriode;
 use modulprj\payroll\models\AbsenPayroll;
 use modulprj\payroll\models\AbsenPayrollSearch;
 use modulprj\master\models\Karyawan;
@@ -80,8 +80,9 @@ class AbsenDailyController extends Controller
 				
 			}	
 		};
-		//$param=['AbsenPayrollSearch'=>[['tglStart'=>'2017-09-07','tglEnd'=>'2017-09-14']]];
-		$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
         $searchModelAbsensi = new AbsenPayrollSearch($closingParam);
         $dataProviderAbsensi = $searchModelAbsensi->searchHeader(Yii::$app->request->queryParams);
         //$dataProviderAbsensi = $searchModelAbsensi->searchHeader($param);
@@ -109,10 +110,11 @@ class AbsenDailyController extends Controller
 	public function actionPrint($id)
     {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-		//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$id]);
-		$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14','KAR_ID'=>$id];
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 		$searchModelDetail = new AbsenPayrollSearch($closingParam);
-		$dataProviderDetail=$searchModelDetail->searchHeader(Yii::$app->request->queryParams);
+		$dataProviderDetail=$searchModelDetail->searchHeader(['AbsenPayrollSearch'=>['KAR_ID'=>$id]]);
 		$content= $this->renderPartial( '_printPdf',[
 			'dataProviderDetail'=>$dataProviderDetail,
 			'model'=>$dataProviderDetail->getModels()
@@ -174,14 +176,17 @@ class AbsenDailyController extends Controller
 				// return Json::encode(\yii\widgets\ActiveForm::validate($model));
 			// }else{
 				// if ($model->load(Yii::$app->request->post())) {
-					
-					//$grp =STATUS KARYAWAN (1=STAFF;2=HARIAN;3=SHIFT;4=DRIVER);
-					//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-					// $searchModelDetail = new AbsenPayrollSearch();
-					// $dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
-					// $dataProviderHeader=$searchModelDetail->search(Yii::$app->request->queryParams);
-					$content= $this->renderPartial('_printPdfAll');
-					
+					$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+					$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+					//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+					$searchModelDetail = new AbsenPayrollSearch($closingParam);
+					$dataProviderDetail=$searchModelDetail->searchHeader(Yii::$app->request->queryParams);
+					$content= $this->renderPartial( '_printPdfAll',[
+						'dataProviderDetail'=>$dataProviderDetail,
+						'searchModelDetail'=>$searchModelDetail,
+						'model'=>$dataProviderDetail->getModels()
+					]);
+							
 					$pdf = new Pdf([
 						// set to use core fonts only
 						'mode' => Pdf::MODE_CORE,

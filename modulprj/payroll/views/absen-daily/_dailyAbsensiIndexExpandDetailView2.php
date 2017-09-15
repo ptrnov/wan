@@ -76,6 +76,12 @@ use kartik\helpers\Html;
 				
 			</dl>
 		</div>
+		<div class="col-md-3" style="padding-left:150px;float:left">
+			<dl>			
+				<dt style="text-align:center">Menerima</dt>				
+				
+			</dl>
+		</div>
 	</div>
 </div>
 

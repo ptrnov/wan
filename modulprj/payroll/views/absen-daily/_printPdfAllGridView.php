@@ -10,6 +10,9 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
+	$idHeader=$idgrid.'h';
+	$idHeader1=$idgrid.'h1';
+	$idHeader2=$idgrid.'h2';
 	$colorHeader='rgba(230, 230, 230, 1)';
 	$colorHeader1='rgba(140, 140, 140, 1)';
 	$colorHeader2='rgba(230, 230, 230, 1)';
@@ -49,7 +52,7 @@ use yii\web\View;
 			$inc=$inc+1;
 		}
 	};
-	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;height:5px']];								
+	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;height:5px']];								
 	$headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>1,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    		
 	$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center','BCOLOR'=>$colorTTL]];	
 	
@@ -174,7 +177,7 @@ use yii\web\View;
 		// $headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];					
 	
 	$gvDailyAbsenDetail= GridView::widget([
-		'id'=>'daily-absen-detail',
+		'id'=>$idgrid,
 		'dataProvider' => $dataProviderDetail,
 		//'filterModel' => $searchModelDetail,
 		'filterRowOptions'=>['style'=>'background-color:'.$colorHeader.'; align:center'],
@@ -223,7 +226,7 @@ use yii\web\View;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'daily-absen-detail',
+				'id'=>$idgrid,
 			],
 		],
 		'hover'=>true, //cursor select

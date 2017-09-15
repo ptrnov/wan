@@ -10,10 +10,10 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
-	$colorHeader='rgba(0, 0, 0, 0.15)';
-	$colorHeader1='rgba(0, 0, 0, 0.25)';
-	$colorHeader2='rgba(0, 0, 0, 0.15)';
-	$colorTTL='rgba(0, 0, 0, 0.25)';
+	$colorHeader='rgba(230, 230, 230, 1)';
+	$colorHeader1='rgba(140, 140, 140, 1)';
+	$colorHeader2='rgba(230, 230, 230, 1)';
+	$colorTTL='rgba(140, 140, 140, 1)';
 	
 	$modelDetail=$dataProviderDetail->getModels();
 	// foreach($modelDetail[0] as $rows => $val){

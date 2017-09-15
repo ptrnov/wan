@@ -19,7 +19,7 @@ class AbsenPayrollSearch extends AbsenPayroll
 {
 	public $tglStart;
 	public $tglEnd;
-    /**
+	 /**
      * @inheritdoc
      */
     public function rules()
@@ -54,6 +54,10 @@ class AbsenPayrollSearch extends AbsenPayroll
 		$dataProvider= new ArrayDataProvider([
 			'allModels'=>$qrySql,			
 		]);
+		
+		if (!($this->load($params) && $this->validate())) {
+ 			return $dataProvider;
+ 		}
 		
 		// print_r($dataProvider);
 		// die(); 
