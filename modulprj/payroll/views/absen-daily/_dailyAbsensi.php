@@ -86,7 +86,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			},
 			'detail'=>function ($model, $key, $index, $column){
 				//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-				$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+				$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
 				$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
 				//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 				$searchModelDetail = new AbsenPayrollSearch($closingParam);
@@ -272,7 +272,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
-			'heading'=>tombolPrintAll(). ' ' .$perode,
+			'heading'=>tombolPrintAll().' '.tombolCreatePeriode().' '.$perode,
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,

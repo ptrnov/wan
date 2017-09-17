@@ -10,7 +10,16 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
-
+use yii\base\DynamicModel;
+use modulprj\absensi\models\AbsenImportPeriode;
+	
+	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
+	$perode='<span class="fa-stack fa-xs text-right">				  
+				<i class="fa fa-mail-forward fa-1x"></i>
+			 </span> '.$perodeVal.'			
+	';
+				
 	$aryFieldLog= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
@@ -33,26 +42,6 @@ use yii\web\View;
 				</span>
 			'			
 	;
-	
-	$arySttLog= [
-	  ['STATUS' => 0, 'STT_NM' => 'Proccess'],		  
-	  ['STATUS' => 1, 'STT_NM' => 'Lock']
-	];	
-	//Result Status value.
-	function sttMsgLog($stt){
-		if($stt==0){ //TRIAL
-			 return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-check fa-stack-1x" style="color:#05944d"></i>
-					</span>','',['title'=>'Active']);
-		}elseif($stt==1){
-			return Html::a('<span class="fa-stack fa-xl">
-					  <i class="fa fa-circle-thin fa-stack-2x"  style="color:#25ca4f"></i>
-					  <i class="fa fa-lock fa-stack-1x" style="color:#ee0b0b"></i>
-					</span>','',['title'=>'Posting']);
-		}
-	};	
-	$valSttLog = ArrayHelper::map($arySttLog, 'STATUS', 'STT_NM');
 	
 	$attDinamikLog[] =[			
 			'class'=>'kartik\grid\SerialColumn',
@@ -77,7 +66,6 @@ use yii\web\View;
 				]
 			],					
 	];
-
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsLog as $key =>$value[]){			
 		$attDinamikLog[]=[		
@@ -133,7 +121,7 @@ use yii\web\View;
 			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
 		],
 		'filterInputOptions'=>['placeholder'=>'Select'],
-		'filter'=>$valSttLog,
+		'filter'=>$valStt,//Yii::$app->gv->gvStatusArray(),
 		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
@@ -141,7 +129,7 @@ use yii\web\View;
 		'noWrap'=>false,
 		'format' => 'raw',	
 		'value'=>function($model){
-			return sttMsgLog($model->STATUS);				 
+			return sttMsg($model->STATUS);				 
 		},
 		//gvContainHeader($align,$width,$bColor)
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
@@ -183,7 +171,7 @@ use yii\web\View;
 			'{export}',
 		],	
 		'panel'=>[
-			'heading'=>tombolRefreshLog(),//.' '.tombolCreateAct(),					
+			'heading'=>tombolRefreshLog().' '.tombolCreatePeriode().' '.$perode,		
 			'type'=>'success',
 			'after'=>false,
 			'before'=>false,
@@ -211,13 +199,11 @@ use yii\web\View;
 		],
 		'floatHeader'=>true,
 	]);
-
 ?>
 <?=$actualImportLog?>
 
 <?php
 /* $this->registerJs("
-
 $(document).on('ready pjax:success', function () {
   $('.ajaxDelete').on('click', function (e) {
     e.preventDefault();
@@ -241,6 +227,5 @@ $(document).on('ready pjax:success', function () {
     );
   });
 });
-
 "); */
 ?>

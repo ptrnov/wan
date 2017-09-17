@@ -32,6 +32,17 @@ $(document).on('click','#payroll-printall', function(ehead){
 });
 
 /*
+ * SAVE PERIODE.
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
+$(document).on('click','#payroll-button-periode', function(ehead){ 			  
+	$('#payroll-modal-periode').modal('show')
+	.find('#payroll-modal-content-periode').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	//.load(ehead.target.value);
+	.load($(this).attr('value'));
+});
+/*
  * Import-upload.
 */
 /* $.fn.modal.Constructor.prototype.enforceFocus = function(){};

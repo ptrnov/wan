@@ -103,8 +103,33 @@ $this->registerCss("
 				return $content;
 			// }
 		// }
-	}		
+	}	
 	
+	/*
+	 * PAYROLL: PERIODE
+	*/
+	function tombolCreatePeriode(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){				
+				$title= Yii::t('app','Set Periode');
+				$url = Url::toRoute(['/payroll/absen-daily/create-periode']);
+				$options1 = ['value'=>$url,
+							'id'=>'payroll-button-periode',
+							'data-pjax' => false,
+							'class'=>"btn btn-success btn-xs",
+							'title'=>'Setting Periode Aktif'
+				];
+				$icon1 = '<span class="fa-stack fa-sm text-left">
+						  <b class="fa fa-circle fa-stack-2x" style="color:#ffffff"></b>
+						  <b class="fa fa-calendar fa-stack-1x" style="color:#000000"></b>
+						</span>
+				';
+				$label1 = $icon1.' '.$title ;
+				$content = Html::button($label1,$options1);
+				return $content;
+			// }
+		// }
+	}
 	
 	$modalHeaderColor='#fbfbfb';//' rgba(74, 206, 231, 1)';
 	
@@ -132,6 +157,33 @@ $this->registerCss("
 		]
 	]);
 	echo "<div id='payroll-printall-content-view'></div>";
+	Modal::end();
+	
+	/*
+	 * PERIODE.
+	*/
+	Modal::begin([
+		//'id' => 'sync_save',
+		'id' => 'payroll-modal-periode',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:red"></i>
+				<i class="fa fa-calendar fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> SET PERIODE ACTIVE</b>
+		',	
+		'size' => 'modal-sm',
+		//'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+			//'toggleButton' => ['label' => 'click me'],
+		],
+		//'clientOptions' => ['backdrop' => 'static', 'keyboard' => TRUE]
+		'clientOptions' => [
+			'backdrop' => FALSE, //Static=disable, false=enable
+			'keyboard' => TRUE,	// Kyboard 
+		]
+	]);
+		echo "<div id='payroll-modal-content-periode'></div>";
 	Modal::end();
 	
 ?>

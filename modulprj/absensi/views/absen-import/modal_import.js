@@ -30,6 +30,17 @@ $(document).on('click','#import-button-save-db', function(ehead){
 	//.load(ehead.target.value);
 	.load($(this).attr('value'));
 });
+/*
+ * SAVE PERIODE.
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
+$(document).on('click','#import-button-periode', function(ehead){ 			  
+	$('#import-modal-periode').modal('show')
+	.find('#import-modal-content-periode').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	//.load(ehead.target.value);
+	.load($(this).attr('value'));
+});
 
 /*
  * Import-upload.

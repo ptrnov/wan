@@ -31,6 +31,8 @@ use modulprj\absensi\models\AbsenImportTmpSearch;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
+use modulprj\absensi\models\AbsenImportPeriode;
+
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -112,6 +114,32 @@ class AbsenImportController extends Controller
 		$cmd_clear->execute();
 		return $this->redirect(['index']);
     }
+	/**
+     * TEMPORARY : CREATE
+     */
+    public function actionCreatePeriode()
+    {
+        $modelPeriode = new AbsenImportPeriode();
+		//$model->scenario='create';
+        $modelPeriode = AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		if ($modelPeriode->load(Yii::$app->request->post())) {
+			$hsl = \Yii::$app->request->post();
+				$modelPeriode->TGL_START = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_START']));
+				$modelPeriode->TGL_END = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_END']));
+				$modelPeriode->TIPE =0;
+				$modelPeriode->AKTIF =1; 
+				if ($modelPeriode->save()){
+					//return $this->redirect(['index','#ai-tab1']);
+				    return $this->redirect(['/absensi/absen-import#ai-tab1']);
+				}  
+		}else{
+			return $this->renderAjax('_formPeriode', [
+                'modelPeriode' => $modelPeriode,
+            ]);
+		
+		} 
+    } 
+	
 	
 	/**
      * TEMPORARY : CREATE

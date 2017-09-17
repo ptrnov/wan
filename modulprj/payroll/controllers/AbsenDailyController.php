@@ -80,7 +80,7 @@ class AbsenDailyController extends Controller
 				
 			}	
 		};
-		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
 		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
 		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
         $searchModelAbsensi = new AbsenPayrollSearch($closingParam);
@@ -110,7 +110,7 @@ class AbsenDailyController extends Controller
 	public function actionPrint($id)
     {
 		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
 		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
 		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 		$searchModelDetail = new AbsenPayrollSearch($closingParam);
@@ -176,7 +176,7 @@ class AbsenDailyController extends Controller
 				// return Json::encode(\yii\widgets\ActiveForm::validate($model));
 			// }else{
 				// if ($model->load(Yii::$app->request->post())) {
-					$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+					$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
 					$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
 					//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 					$searchModelDetail = new AbsenPayrollSearch($closingParam);
@@ -325,6 +325,32 @@ class AbsenDailyController extends Controller
 				}  
 			}
         }; */
+    } 
+	
+	/**
+     * PAYROLL : SET PERIODE
+     */
+    public function actionCreatePeriode()
+    {
+        $modelPeriode = new AbsenImportPeriode();
+		//$model->scenario='create';
+        $modelPeriode = AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
+		if ($modelPeriode->load(Yii::$app->request->post())) {
+			$hsl = \Yii::$app->request->post();
+				$modelPeriode->TGL_START = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_START']));
+				$modelPeriode->TGL_END = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_END']));
+				$modelPeriode->TIPE =1;
+				$modelPeriode->AKTIF =1; 
+				if ($modelPeriode->save()){
+					//return $this->redirect(['index','#ai-tab1']);
+				    return $this->redirect(['/payroll/absen-daily#ai-tab1']);
+				}  
+		}else{
+			return $this->renderAjax('_formPeriode', [
+                'modelPeriode' => $modelPeriode,
+            ]);
+		
+		} 
     } 
 	
 	/**
