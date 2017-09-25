@@ -14,44 +14,53 @@ use yii\web\View;
 	$colorHeader1='rgba(140, 140, 140, 1)';
 	$colorHeader2='rgba(230, 230, 230, 1)';
 	$colorTTL='rgba(140, 140, 140, 1)';
+	$this->registerCss("
+		#daily-payroll-detail
+		.kv-grid-container{
+				min-height:10px			
+		}
+	");
 	
-	$modelDetail=$dataProviderDetail->getModels();
+	$modelDetailPaid=$dataProviderDetailPaid->getModels();
 	// foreach($modelDetail[0] as $rows => $val){
 		// $ambilField[]=$rows;
 		// $ambilValue[]=$val;
 	// };
+	// print_r($modelDetail[0]);
+	// die();
+	
 	$inc=0;
-	foreach($modelDetail[0] as $rows => $val){
+	foreach($modelDetailPaid[0] as $rows => $val){
 		//unset($splt);
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
 		if($splt[0]=='PAGI' OR $splt[0]=='LBR'){
 			$nmField1[]=$rows;		//FULL FIELD NAME
 			$nmLabel[]=$splt[0];	//SPLIT LABEL NAME
-			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center','BCOLOR'=>$colorHeader]];
+			$aryFieldPaidDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center','BCOLOR'=>$colorHeader]];
 			if ($splt[0]=='PAGI'){
 				$ambilFieldTgl[]=Yii::$app->hari->DayofDate($splt[1]);
-				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader2.';font-family: tahoma ;font-size: 6pt;height:5px']];
+				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader2.';font-family: tahoma ;font-size: 6pt;']];
 				$headerContent2[]=['content'=>Yii::$app->hari->DayofDate($splt[1]),'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader1.';font-family: tahoma ;font-size: 6pt;']];    
 			}
 			$inc=$inc+1;
 		}		
 	};
-	foreach($modelDetail[0] as $rows => $val){
+	foreach($modelDetailPaid[0] as $rows => $val){
 		//unset($splt);
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
 		if($rows=='TTL_PAGI' OR $rows=='TTL_LBR'){
-			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center','BCOLOR'=>$colorTTL]];
+			$aryFieldPaidDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center','BCOLOR'=>$colorTTL]];
 			if($rows=='TTL_PAGI'){
 				$headerContent2[]=['content'=>'HARI_KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    
 			}
 			$inc=$inc+1;
 		}
 	};
-	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;height:5px']];								
+	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];								
 	$headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>1,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    		
-	$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center','BCOLOR'=>$colorTTL]];	
+	$aryFieldPaidDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center','BCOLOR'=>$colorTTL]];	
 	
 	// foreach($ambilField as $val){
 		// $splt=implode('_',array($val));
@@ -60,19 +69,14 @@ use yii\web\View;
 		// }
 	// };
 	
-	// print_r($aryFieldAbsensiDetail);
+	// print_r($aryFieldPaidDetail);
 	//print_r($ambilField1);
 	//print_r($ambilFieldTgl);
 	//print_r($ambilValue);
 	// die();
 
-	$this->registerCss("
-		#daily-absen-detail
-		.kv-grid-container{
-				min-height:10px			
-		}
-	");
-	// $aryFieldAbsensiDetail= [
+	
+	// $aryFieldPaidDetail= [
 		// ['ID' =>0, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
 		// ['ID' =>1, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
 		// ['ID' =>2, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'PAGI','align'=>'center']],
@@ -91,7 +95,7 @@ use yii\web\View;
 		// ['ID' =>15, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '6px','label'=>'OT','align'=>'center']],
 		// ['ID' =>16, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center']]
 	// ];	
-	$valFieldsAbsenDetail = ArrayHelper::map($aryFieldAbsensiDetail, 'ID', 'ATTR'); 
+	$valFieldsPaidDetail = ArrayHelper::map($aryFieldPaidDetail, 'ID', 'ATTR'); 
 	$colorHeader='rgba(0, 0, 0, 0.15)';
 	$colorHeader1='rgba(0, 0, 0, 0.5)';
 	$pageNm='<span class="fa-stack fa-sm text-left">
@@ -112,8 +116,8 @@ use yii\web\View;
 	$valSttAbsensiDetail = ArrayHelper::map($arySttAbsensiDetail, 'STATUS', 'STT_NM');
 
 	/*OTHER ATTRIBUTE*/
-	foreach($valFieldsAbsenDetail as $key =>$value[]){			
-		$attDinamikAbsensiDetail[]=[		
+	foreach($valFieldsPaidDetail as $key =>$value[]){			
+		$attDinamikPaidDetail[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
 			// 'filterType'=>$gvfilterType,
@@ -123,14 +127,13 @@ use yii\web\View;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>false,			
+			'noWrap'=>true,			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
 					'width'=>$value[$key]['SIZE'],
-					'height'=>'4px	',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'6pt',
+					'font-size'=>'7pt',
 					'background-color'=>$value[$key]['BCOLOR'],
 				]
 			],  
@@ -140,7 +143,7 @@ use yii\web\View;
 					'text-align'=>$value[$key]['align'],
 					//'width'=>'12px',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'6pt',
+					'font-size'=>'7pt',
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
@@ -150,7 +153,7 @@ use yii\web\View;
 				'style'=>[
 						'text-align'=>'right',		
 						'font-family'=>'tahoma',
-						'font-size'=>'6pt',	
+						'font-size'=>'7pt',	
 						'text-decoration'=>'underline',
 						'font-weight'=>'bold',
 						'border-left-color'=>'transparant',		
@@ -173,9 +176,9 @@ use yii\web\View;
 		// $headerContent2[]=['content'=>'HARI KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];
 		// $headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];					
 	
-	$gvDailyAbsenDetail= GridView::widget([
-		'id'=>'daily-absen-detail',
-		'dataProvider' => $dataProviderDetail,
+	$gvDailyPaidDetail= GridView::widget([
+		'id'=>'daily-payroll-detail',
+		'dataProvider' => $dataProviderDetailPaid,
 		//'filterModel' => $searchModelDetail,
 		'filterRowOptions'=>['style'=>'background-color:'.$colorHeader.'; align:center'],
 		'beforeHeader'=>[
@@ -207,7 +210,7 @@ use yii\web\View;
 					// ],				
 				]
 			],		
-		'columns' =>$attDinamikAbsensiDetail,	
+		'columns' =>$attDinamikPaidDetail,	
 		'toolbar' => [
 			'{export}',
 		],	
@@ -223,7 +226,7 @@ use yii\web\View;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'daily-absen-detail',
+				'id'=>'daily-payroll-detail',
 			],
 		],
 		'hover'=>true, //cursor select
@@ -241,6 +244,6 @@ use yii\web\View;
 		'summary'=>false,
 	]);
 ?>
-<?=$gvDailyAbsenDetail?>
+<?=$gvDailyPaidDetail?>
 
 

@@ -80,8 +80,8 @@ use yii\web\View;
 	]);
 	
 	$absensiPayroll=$this->render('_absensiPayroll',[
-		'searchModelPayroll' => $searchModelPayroll,
-		'dataProviderPayroll' => $dataProviderPayroll	
+		 'searchModelPaid' => $searchModelPaid,
+         'dataProviderPaid' => $dataProviderPaid
 	]);
 	
 	if($tab==0){

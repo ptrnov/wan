@@ -42,6 +42,7 @@ $this->registerCss("
 		//'value'=>$url,
 					'id'=>'payroll-print',
 					'data-pjax' => true,
+					'target'=>'_blank',
 					'class'=>"btn btn-default btn-xs",
 					'title'=>'Print Slip gaji',
 					'style'=>['text-align'=>'left','color:red','margin-left'=>'0px','width'=>'100%', 'height'=>'25px','border'=> 'none'],								
@@ -67,7 +68,7 @@ $this->registerCss("
 		$options1 = [
 					'value'=>$url,
 					'id'=>'payroll-printall',
-					'data-pjax' => true,
+					'data-pjax' => true,					
 					'class'=>"btn btn-default btn-xs",
 					'title'=>'Print Slip gaji',
 					//'style'=>['text-align'=>'left','color:red','margin-left'=>'0px','width'=>'100%', 'height'=>'25px','border'=> 'none'],								
@@ -95,11 +96,33 @@ $this->registerCss("
 				$options1 = [
 							'id'=>'export-excel-',
 							'data-pjax' => true,
-							'class'=>"btn btn-info btn-sm"  
+							'class'=>"btn btn-default btn-sm"  
 				];
-				$icon1 = '<span class="fa fa-clone fa-lg"></span>';
+				$icon1 = '<span class="fa fa-file-excel-o fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
 				$content = Html::a($label1,$url,$options1);
+				return $content;
+			// }
+		// }
+	}	
+	
+	/*
+	 * LINK BUTTON : Button - EXPORT EXCEL.
+	*/
+	function tombolCheckUlang(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', ' Re-Check');
+				//$url = Url::toRoute(['/payroll/absen-daily/export-excel']);
+				$options1 = [
+							'id'=>'payroll-check-data',
+							'data-pjax' => true,
+							'data'=>'["oklah","asd"]',
+							'class'=>"btn btn-default btn-sm"  
+				];
+				$icon1 = '<span class="fa fa-exchange fa-lg"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,'',$options1);
 				return $content;
 			// }
 		// }

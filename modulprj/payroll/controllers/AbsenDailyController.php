@@ -27,10 +27,14 @@ use ptrnov\postman4excel\Postman4ExcelBehavior;
 use modulprj\absensi\models\AbsenImportPeriode;
 use modulprj\payroll\models\AbsenPayroll;
 use modulprj\payroll\models\AbsenPayrollSearch;
+use modulprj\payroll\models\AbsenPaid;
+use modulprj\payroll\models\AbsenPayrollPaidSearch;
+use modulprj\payroll\models\AbsenPayrollPrintSearch;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
 use modulprj\master\models\TimetableGroup;
+
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -64,31 +68,25 @@ class AbsenDailyController extends Controller
      */
     public function actionIndex()
     {
-		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
-		$paramx=Yii::$app->getRequest()->getQueryParam('idx');
-		if ($paramFile){
-			$dataModelImport=self::getArryFile($paramFile)->getModels();
-			if(!$dataModelImport){
-				$js='$("#msg-erro-format").modal("show")';
-				$this->getView()->registerJs($js);
-			}else{
-				
-			}
-		}else{
-			if(!$paramx){
-				//DELETE STOCK GUDANG | SO_TYPE=1
-				
-			}	
-		};
 		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
 		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
 		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+		
+		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		$paramx=Yii::$app->getRequest()->getQueryParam('idx');
+		if ($paramFile){
+			$sqlStr="UPDATE absen_import SET STT_UPDATE=1 WHERE STATUS<>2 AND (IN_TGL BETWEEN '".$modelPrd->TGL_START."' AND '".$modelPrd->TGL_END."');";
+			$cmd_update=Yii::$app->db->createCommand($sqlStr);
+			$cmd_update->execute();
+		};
+		
+		
         $searchModelAbsensi = new AbsenPayrollSearch($closingParam);
         $dataProviderAbsensi = $searchModelAbsensi->searchHeader(Yii::$app->request->queryParams);
         //$dataProviderAbsensi = $searchModelAbsensi->searchHeader($param);
 		
-		$searchModelPayroll = new AbsenPayrollSearch();
-        $dataProviderPayroll = $searchModelPayroll->searchpay(Yii::$app->request->queryParams);
+		$searchModelPaid = new AbsenPayrollPaidSearch($closingParam);
+        $dataProviderPaid = $searchModelPaid->search(Yii::$app->request->queryParams);
 		
 		//return self::getValidateDate('2017-12-12');
 		//return self::getValidateDate('12-12-2017');
@@ -99,8 +97,8 @@ class AbsenDailyController extends Controller
         return $this->render('index', [
 			'searchModelAbsensi' => $searchModelAbsensi,
             'dataProviderAbsensi' => $dataProviderAbsensi,
-            'searchModelPayroll' => $searchModelPayroll,
-            'dataProviderPayroll' => $dataProviderPayroll
+            'searchModelPaid' => $searchModelPaid,
+            'dataProviderPaid' => $dataProviderPaid
         ]);
     }
 
@@ -156,31 +154,53 @@ class AbsenDailyController extends Controller
      */
 	public function actionPrintAll()
     {
-		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-		// $model = new \yii\base\DynamicModel([
-			// 'GRP_ID'
-		// ]);
 		
-		// $model->addRule(['name','email'], 'required')
-        // ->addRule(['email'], 'email')
-        // ->addRule('address', 'string',['max'=>32]);
+		$model = new \yii\base\DynamicModel([
+			'TT_GRP_ID','CAB_ID','DEP_ID'
+		]);
+		
+		$model->addRule(['TT_GRP_ID','CAB_ID','DEP_ID'], 'required')
+         ->addRule(['TT_GRP_ID','CAB_ID','DEP_ID'], 'safe');
+        //->addRule('TT_GRP_ID',['max'=>100]);
 		//$model = TimetableGroup::find()->all();
-		$model = new TimetableGroup;//::find();//->all();
+		//$model = new TimetableGroup;//::find();//->all();
+		
 		if (!$model->load(Yii::$app->request->post())) {
 			return $this->renderAjax('_fromPrintAll', [
 					'model' => $model
 				]); 				
 		}else{				
+			 $hsl = \Yii::$app->request->post();		    
+		     $cabId = $hsl['DynamicModel']['CAB_ID'];
+		     $depId = $hsl['DynamicModel']['DEP_ID'];
+			 $grpId = $hsl['DynamicModel']['TT_GRP_ID'];
+			 $aryModelKar=Karyawan::find()->where(['CAB_ID'=>$cabId,'DEP_ID'=>$depId,'GRP_ID'=>$grpId])->all();
+			 foreach($aryModelKar as $row => $val){
+				 if ($row==0){
+					 $data="'".$val['KAR_ID']."'";
+				 }else{
+					 $data=$data.",'".$val['KAR_ID']."'";
+				 }				
+			 };
+			// $aryKarID="(".$data.")";
+			 $aryKarID="(".$data.")";
+			 // print_r($aryKarID);
+			 // die();
+			 
+			 Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 			// if(Yii::$app->request->isAjax){				
 				// $model->load(Yii::$app->request->post());				
 				// return Json::encode(\yii\widgets\ActiveForm::validate($model));
 			// }else{
 				// if ($model->load(Yii::$app->request->post())) {
+					//$aryKarID="('3.0915.0001','3.0915.0002','3.0915.0004')";
+					//$aryKarID=('3.0915.0001','3.0915.0002','3.0915.0004');
 					$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-					$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+					$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END,'aryKarID'=>$aryKarID];
 					//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
-					$searchModelDetail = new AbsenPayrollSearch($closingParam);
-					$dataProviderDetail=$searchModelDetail->searchHeader(Yii::$app->request->queryParams);
+					$searchModelDetail = new AbsenPayrollPrintSearch($closingParam);
+					
+					$dataProviderDetail=$searchModelDetail->searchPrint(Yii::$app->request->queryParams);
 					$content= $this->renderPartial( '_printPdfAll',[
 						'dataProviderDetail'=>$dataProviderDetail,
 						'searchModelDetail'=>$searchModelDetail,

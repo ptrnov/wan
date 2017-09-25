@@ -12,6 +12,8 @@ use yii\helpers\Url;
 use yii\web\View;
 use modulprj\payroll\models\AbsenPayrollSearch;	
 use modulprj\absensi\models\AbsenImportPeriode;
+use modulprj\master\models\Dept;
+use modulprj\master\models\Machine;
 
 	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
 	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
@@ -20,18 +22,23 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			 </span> '.$perodeVal.'			
 	';
 	
+	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'MESIN_NM','MESIN_NM');
+	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
+	
 	$aryFieldAbsensi= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw','mergeHeader'=>false]],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw','mergeHeader'=>false]],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '50px','label'=>'UPAH_PERHARI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>false]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD_START','align'=>'center','format'=>'raw','mergeHeader'=>true]],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD_END','align'=>'center','format'=>'raw','mergeHeader'=>true]],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true]]
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>true]],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'MESIN_NM','SIZE' => '50px','label'=>'CABANG','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>$aryCbgMachine]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>$aryDept]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '40px','label'=>'UPAH/HARI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>false,'FILTER'=>false]],
+		// ['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD.START','align'=>'center','format'=>'raw','mergeHeader'=>true,'FILTER'=>false]],
+		// ['ID' =>5, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD.END','align'=>'center','format'=>'raw','mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_LBR','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL.PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_LBR','SIZE' => '50px','label'=>'TTL.LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'UANG_MAKAN','SIZE' => '50px','label'=>'UANG.MAKAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]]
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -124,18 +131,34 @@ use modulprj\absensi\models\AbsenImportPeriode;
 	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsAbsen as $key =>$value[]){	
-		// if($key=='SUB_PAY_PAGI'){
-			// $format='raw';//['decimal', 2];
-		// }else{
-			// $format='raw';
-		// }
+		if ($value[$key]['FIELD']=='MESIN_NM'){				
+			$gvfilterType=GridView::FILTER_SELECT2;
+			//$gvfilterType=false;
+			//$gvfilter =$aryDeptId;
+			$filterWidgetOpt=[				
+				'pluginOptions'=>['allowClear'=>true],		
+			]; 
+			$filterInputOpt=['placeholder'=>'-Pilih Cabang-'];
+		}elseif($value[$key]['FIELD']=='DEP_NM'){
+			$gvfilterType=GridView::FILTER_SELECT2;
+			$filterWidgetOpt=[				
+				'pluginOptions'=>['allowClear'=>true],		
+			]; 
+			$filterInputOpt=['placeholder'=>'-Pilih Dept-'];
+		}else{
+			$gvfilterType=false;
+			//$gvfilter=true;
+			$filterWidgetOpt=[];		
+			$filterInputOpt=[];					
+		};
+		
 		$attDinamikAbsensi[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
-			// 'filterType'=>$gvfilterType,
-			// 'filter'=>$gvfilter,
-			// 'filterWidgetOptions'=>$filterWidgetOpt,	
-			//'filterInputOptions'=>$filterInputOpt,				
+			'filter'=>$value[$key]['FILTER'],
+			'filterType'=>$gvfilterType,
+			'filterWidgetOptions'=>$filterWidgetOpt,	
+			'filterInputOptions'=>$filterInputOpt,				
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			'mergeHeader'=>$value[$key]['mergeHeader'],
@@ -272,11 +295,11 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
-			'heading'=>tombolPrintAll().' '.tombolCreatePeriode().' '.$perode,
+			'heading'=>tombolPrintAll().' '.tombolCreatePeriode().' '.$perode.' '.tombolCheckUlang(),
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,
-			'footer'=>true,
+			//'footer'=>false,
 			
 		],
 		'pjax'=>true,

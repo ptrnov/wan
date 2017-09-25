@@ -56,25 +56,25 @@ use yii\web\View;
 					<th style="width:100px">Pagi</th>
 					<th style="width:10px">:</th>
 					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_PAGI'],2) ?></th>
-					<th style="width:80px;padding-left:20px">Pinjaman</th>
-					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_PINJAMAN'],2) ?></th>
-				  </tr>
-				   <tr>
-					<th style="width:100px">Lembur</th>
-					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_OT'],2) ?></th>
 					<th style="width:80px;padding-left:20px">PPh</th>
 					<th style="width:10px">:</th>
 					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_PPH'],2) ?></th>
 				  </tr>
+				   <tr>
+					<th style="width:100px">Lembur</th>
+					<th style="width:10px">:</th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_LBR'],2) ?></th>					
+					<th style="width:80px;padding-left:20px">Pinjaman</th>
+					<th style="width:10px">:</th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_PINJAMAN'],2) ?></th>
+				  </tr>
 				  <tr>
 					<th style="width:100px">Uang Makan Malam</th>
 					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_OT'],2) ?></th>
-					<th style="width:80px;padding-left:20px">Jamsostek</th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['UANG_MAKAN'],2) ?></th>
+					<th style="width:80px;padding-left:20px">Pot.Telat</th>
 					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_JAMSOSTEK'],2) ?></th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_POTONGAN_PAGI'],2) ?></th>
 				  </tr>
 				  <tr>
 					<th style="width:100px">Total Upah / Minggu</th>

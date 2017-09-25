@@ -20,12 +20,15 @@ use yii\web\View;
 		// $ambilField[]=$rows;
 		// $ambilValue[]=$val;
 	// };
+	// print_r($modelDetail[0]);
+	// die();
+	
 	$inc=0;
 	foreach($modelDetail[0] as $rows => $val){
 		//unset($splt);
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
-		if($splt[0]=='PAGI' OR $splt[0]=='OT'){
+		if($splt[0]=='PAGI' OR $splt[0]=='LBR'){
 			$nmField1[]=$rows;		//FULL FIELD NAME
 			$nmLabel[]=$splt[0];	//SPLIT LABEL NAME
 			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center','BCOLOR'=>$colorHeader]];
@@ -41,7 +44,7 @@ use yii\web\View;
 		//unset($splt);
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
-		if($rows=='TTL_PAGI' OR $rows=='TTL_OT'){
+		if($rows=='TTL_PAGI' OR $rows=='TTL_LBR'){
 			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center','BCOLOR'=>$colorTTL]];
 			if($rows=='TTL_PAGI'){
 				$headerContent2[]=['content'=>'HARI_KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    
