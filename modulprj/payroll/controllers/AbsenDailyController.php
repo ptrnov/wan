@@ -101,6 +101,18 @@ class AbsenDailyController extends Controller
             'dataProviderPaid' => $dataProviderPaid
         ]);
     }
+	
+	/**
+     * TEMPORARY : BAYAR GAJI
+     */
+	public function actionPaid($id,$start,$end)
+    {
+		//print_r($id.'-'.$start.'-'.$end);
+		$sqlStr="UPDATE absen_import SET STATUS=2 WHERE KAR_ID='".$id."' AND (IN_TGL BETWEEN '".$start."' AND '".$end."');";
+		$cmd_update=Yii::$app->db->createCommand($sqlStr);
+		$cmd_update->execute();
+		return $this->redirect(['index']);		
+    }
 
 	/**
      * TEMPORARY : PRINT PER KARYAWAN
@@ -149,6 +161,52 @@ class AbsenDailyController extends Controller
 		
     }
 	
+	/**
+     * TEMPORARY : PRINT PER KARYAWAN
+     */
+	public function actionRePrint($id)
+    {
+		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
+		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
+		$searchModelDetail = new AbsenPayrollPaidSearch($closingParam);
+		$dataProviderDetail=$searchModelDetail->search(['AbsenPayrollPaidSearch'=>['KAR_ID'=>$id]]);
+		$content= $this->renderPartial( '_printPdf',[
+			'dataProviderDetail'=>$dataProviderDetail,
+			'model'=>$dataProviderDetail->getModels()
+		]);
+		
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT,
+			// stream to browser inline
+			'destination' => Pdf::DEST_BROWSER,
+			//'destination' => Pdf::DEST_FILE ,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
+			'cssFile' => '@modulprj/web/addasset/pdf-asset/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:12px}',
+			 // set mPDF properties on the fly
+			//'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
+			 // call mPDF methods on the fly
+			// 'methods' => [
+				// 'SetHeader'=>['Copyright@wanindo '.date("r")],
+				// 'SetFooter'=>['{PAGENO}'],
+			// ]
+		]);
+		
+		return $pdf->render();
+		
+    }
 	/**
      * TEMPORARY : TEMPORARY : PRINT ALL KARYAWAN
      */
@@ -243,7 +301,7 @@ class AbsenDailyController extends Controller
     }
 	
 	/**====================================
-     * EXPORT EXCEL REPORT
+     * EXPORT EXCEL REPORT PAID
      * @return mixed
 	 * @author piter [ptr.nov@gmail.com]
 	 * @since 1.2
@@ -251,49 +309,69 @@ class AbsenDailyController extends Controller
      */
 	public function actionExportExcel(){
 		//DATA IMPORT
-		$aryImport=[
-			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
-			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
-		];		
-		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
-        $excel_titleImport = $excel_dataImport['excel_title'];
-        $excel_ceilsImport = $excel_dataImport['excel_ceils'];
+		// $aryPaid=[
+			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
+			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
+		// ];
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
+		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+		$searchModelDetail = new AbsenPayrollPaidSearch($closingParam);
+		$dataProviderDetail=$searchModelDetail->searchExcelExport(Yii::$app->request->queryParams);
+		$aryPaid=$dataProviderDetail->getModels();	
+		
+		$excel_dataPaid = Postman4ExcelBehavior::excelDataFormat($aryPaid);
+        $excel_titlePaid = $excel_dataPaid['excel_title'];
+        $excel_ceilsPaid = $excel_dataPaid['excel_ceils'];
 		$excel_content = [
 			 [
-				'sheet_name' => 'Import-Absensi',
+				'sheet_name' => 'Payroll-Paid-Data',
                 'sheet_title' => [
-					['TERMINAL_ID','FINGER_ID','NAMA','TGL_IN','TGL_OUT','JAM_IN','JAM_OUT']
+					['KAR_ID','KAR_NM','CABANG','DEPARTMENT','UPAH_HARIAN','PERIODE_MULAI','PERIODE_AKHIR','PAGI','LEMBUR','UANG_MAKAN','TTL_PAGI','TTL_LEMBUR','TTL_POTONGAN','TOTAL']
 				],
-			    'ceils' => $excel_ceilsImport,
+			    'ceils' => $excel_ceilsPaid,
                 'freezePane' => 'A2',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
                 'headerStyle'=>[					
 					[
-						'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
-						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'KARYAWAN' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'TGL_IN' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'TGL_OUT' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'JAM_IN' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'JAM_OUT' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'KAR_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KAR_NM' =>['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'CABANG' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'DEPARTMENT' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'UPAH_HARIAN' => ['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'PERIODE_MULAI' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'PERIODE_AKHIR' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'UANG_MAKAN' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'TTL_PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'TTL_LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'TTL_POTONGAN' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'TOTAL' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
 					]						
 				],
 				'contentStyle'=>[
 					[						
-						'TERMINAL_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'FINGER_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'KARYAWAN' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'TGL_IN' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'TGL_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'JAM_IN' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'JAM_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'KAR_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KAR_NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CABANG' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'DEPARTMENT' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'UPAH_HARIAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'PERIODE_MULAI' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PERIODE_AKHIR' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PAGI' =>['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'UANG_MAKAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_PAGI' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_POTONGAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TOTAL' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			]
 		];
-		$excel_file = "PayrollData";
+		$excel_file = "Payroll-Paid-Data";
 		$this->export4excel($excel_content, $excel_file,0);
 	}
 	

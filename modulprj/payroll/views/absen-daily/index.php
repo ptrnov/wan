@@ -20,9 +20,7 @@ use yii\web\View;
 	
 	//CSS
 	$this->registerCss("
-		.kv-grid-table :link {
-			color: #fdfdfd;
-		}
+		
 		/* mouse over link */
 		a:hover {
 			color: #5a96e7;

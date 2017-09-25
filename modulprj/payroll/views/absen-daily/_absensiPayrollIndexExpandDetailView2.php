@@ -81,7 +81,12 @@ use kartik\helpers\Html;
 				<dt style="text-align:center">Menerima</dt>				
 				
 			</dl>
-		</div>
+		</div>		
+	</div>
+	<div class="col-lg-12" style="float:right">
+		<dl>			
+			<dt style="text-align:right"><?=tombolRePrint($modelPaid)?></dt>					
+		</dl>
 	</div>
 </div>
 

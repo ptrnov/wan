@@ -25,13 +25,14 @@ use yii\web\View;
 		'model'=>$dataProviderDetailPaid->getModels()
 	]);
 	$detaiPaidView2=$this->render('_absensiPayrollIndexExpandDetailView2',[
-		'model'=>$dataProviderDetailPaid->getModels()
+		'model'=>$dataProviderDetailPaid->getModels(),
+		'modelPaid'=>$modelPaid
 	]);
 	
 	$dvAbsenPaid=$this->render('_absensiPayrollIndexExpandGridView',[
 		'searchModelDetailPaid'=>$searchModelDetailPaid,
 		'dataProviderDetailPaid'=>$dataProviderDetailPaid,
-		//'modelPaid'=>$modelPaid
+		'modelPaid'=>$modelPaid
 	]);
 	
 		

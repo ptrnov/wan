@@ -20,6 +20,22 @@ $this->registerCss("
 		border-radius: 5px;
 	}
 	
+	#payroll-paid span {
+		 cursor:pointer;
+		 color:black;
+	}
+	#payroll-print span {
+		 cursor:pointer;
+		 color:black;
+	}
+	
+	#payroll-paid  :link {
+		color: black;
+	}
+	
+	#payroll-print  :link {
+		color: black;
+	}
 ");
 
 	
@@ -32,7 +48,7 @@ $this->registerCss("
  * ===============================
 */
 	/*
-	 * LINK BUTTON : Link Button Refresh
+	 * LINK BUTTON : Link PRINT
 	*/
 	function tombolPrint($model){
 		//$paramFile=Yii::$app->getRequest()->getQueryParam('id');
@@ -56,6 +72,59 @@ $this->registerCss("
 		$label1 = $icon1 . '  ' . $title;
 		$content = Html::a($label1,$url,$options1);		
 		return '<li>'.$content.'</li>';
+	}
+	
+	/*
+	 * LINK BUTTON : Link PRINT
+	*/
+	function tombolRePrint($model){
+		//$paramFile=Yii::$app->getRequest()->getQueryParam('id');
+		$title = Yii::t('app','');
+		$url =  Url::toRoute(['/payroll/absen-daily/re-print','id'=>$model['KAR_ID']]);
+		$options1 = [
+					//'value'=>$url,
+					'id'=>'payroll-reprint',
+					'data-pjax' => true,
+					'target'=>'_blank',
+					'class'=>"btn btn-xs",
+					'title'=>'Re-Print Slip gaji',
+					'style'=>['text-align'=>'right','color:red','margin-left'=>'0px','width'=>'100%', 'height'=>'25px','border'=> 'none'],								
+		];
+		$icon1 = '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle-thin fa-stack-2x " style="color:black" ></i>
+				<i class="fa fa-print fa-stack-1x" style="color:black"></i>
+			</span>
+		';      
+		$label1 = $icon1 . '  ' . $title;
+		$content = Html::a($label1,$url,$options1);		
+		return '<li>'.$content.'</li>';
+	}
+	
+	/*
+	 * LINK BUTTON : Button - BAYAR.
+	*/
+	function tombolPaid($model){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', ' Bayar');
+				$url =  Url::toRoute(['/payroll/absen-daily/paid','id'=>$model['KAR_ID'],'start'=>$model['TGL_STARTING'],'end'=>$model['TGL_CLOSING']]);
+				$options1 = [
+							'id'=>'payroll-paid',
+							'data-pjax' => true,
+							'class'=>"btn btn-default btn-xs",
+							'title'=>'Bayar Gaji',
+							'style'=>['text-align'=>'left','color:red','margin-left'=>'0px','width'=>'100%', 'height'=>'25px','border'=> 'none'],
+				];
+				$icon1 = '<span class="fa-stack fa-xs">																	
+							<i class="fa fa-circle-thin fa-stack-2x " ></i>
+							<i class="fa fa-money fa-stack-1x" style="color:black"></i>
+						</span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,$url,$options1);
+				return '<li>'.$content.'</li>';
+			// }
+		// }
 	}
 	
 	/*
@@ -96,7 +165,8 @@ $this->registerCss("
 				$options1 = [
 							'id'=>'export-excel-',
 							'data-pjax' => true,
-							'class'=>"btn btn-default btn-sm"  
+							'class'=>"btn btn-default btn-sm",
+							'title'=>'Export To Excel',							
 				];
 				$icon1 = '<span class="fa fa-file-excel-o fa-lg"></span>';
 				$label1 = $icon1 . ' ' . $title1;
@@ -107,7 +177,7 @@ $this->registerCss("
 	}	
 	
 	/*
-	 * LINK BUTTON : Button - EXPORT EXCEL.
+	 * LINK BUTTON : Button - RECHECK.
 	*/
 	function tombolCheckUlang(){
 		// if(getPermission()){
@@ -127,6 +197,8 @@ $this->registerCss("
 			// }
 		// }
 	}	
+	
+		
 	
 	/*
 	 * PAYROLL: PERIODE

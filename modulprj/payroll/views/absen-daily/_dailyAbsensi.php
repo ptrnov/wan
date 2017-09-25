@@ -201,16 +201,16 @@ use modulprj\master\models\Machine;
 		];	
 	};	
 	
-	$attDinamikAbsensi[]=[
+	/* $attDinamikAbsensi[]=[
 		'attribute'=>'STATUS',
 		'label'=>'STATUS',
-		/* 'filterType'=>GridView::FILTER_SELECT2,
-		'filterWidgetOptions'=>[
-			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
-		],
-		'filterInputOptions'=>['placeholder'=>'Select'],
-		'filter'=>$valSttAbsensi,//Yii::$app->gv->gvStatusArray(),
-		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor), */
+		 // 'filterType'=>GridView::FILTER_SELECT2,
+		// 'filterWidgetOptions'=>[
+			// 'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
+		// ],
+		// 'filterInputOptions'=>['placeholder'=>'Select'],
+		// 'filter'=>$valSttAbsensi,//Yii::$app->gv->gvStatusArray(),
+		// 'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
 		'filter'=>false,
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
@@ -228,11 +228,11 @@ use modulprj\master\models\Machine;
 		//gvContainHeader($align,$width,$bColor)
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor,'white'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
-	];
+	]; */
 	//ACTION
 	$attDinamikAbsensi[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{print}',
+		'template' => '{print}{bayar}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
@@ -246,10 +246,10 @@ use modulprj\master\models\Machine;
 		],
 		'buttons' => [
 			'print' =>function ($url, $model){
-			 return  tombolPrint($model);
+				return  tombolPrint($model);
 			},
-			'delete' =>function ($url, $model){
-			  //return  tombolDeleteTmp($url, $model);
+			'bayar' =>function ($url, $model){
+				return tombolPaid($model);
 			},
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),

@@ -17,6 +17,7 @@ class AbsenPayrollPaidSearch extends AbsenPaid
 	public $tglEnd;
 	public $MESIN_NM;
 	public $DEP_NM;
+
 	/**
      * @inheritdoc
      */
@@ -75,6 +76,39 @@ class AbsenPayrollPaidSearch extends AbsenPaid
         return $dataProvider;
 	}
 		
+	/**
+	* SEARCH HEADER [GROUPING KARYAWAN ID].
+	* CLOSING STATMENT PER-WEEK
+	*/
+	public function searchExcelExport($params)
+    {
+		//$sql="call NEW_RPT_FROMAT('2017-09-07','2017-09-14')";
+		$sql="call NEW_RPT_FROMAT_EXCEL('".date('Y-m-d', strtotime($this->tglStart))."','".date('Y-m-d', strtotime($this->tglEnd))."')";
+		//$sql="call NEW_RPT_FROMAT('".$this->tglStart."','".$this->tglEnd."')";
+		$qrySql= Yii::$app->db->createCommand($sql)->queryAll(); 		
+		$dataProvider= new ArrayDataProvider([
+			'allModels'=>$qrySql,	
+			'pagination' => [
+				'pageSize' =>2000,
+			],			
+		]);
+		
+		if (!($this->load($params) && $this->validate())) {
+ 			return $dataProvider;
+ 		}
+		
+		// print_r($dataProvider);
+		// die(); 
+		
+		$filter = new Filter();
+ 		$this->addCondition($filter, 'KAR_ID', true);
+ 		// $this->addCondition($filter, 'PERIODE_MULAI', true);	
+ 		// $this->addCondition($filter, 'PERIODE_AKHIR', true);
+ 		$dataProvider->allModels = $filter->filter($qrySql);
+		
+        return $dataProvider;
+	}
+	
 	public function addCondition(Filter $filter, $attribute, $partial = false)
     {
         $value = $this->$attribute;
