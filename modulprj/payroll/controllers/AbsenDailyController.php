@@ -196,12 +196,12 @@ class AbsenDailyController extends Controller
 			// any css to be embedded if required
 			'cssInline' => '.kv-heading-1{font-size:12px}',
 			 // set mPDF properties on the fly
-			//'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
+			'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
 			 // call mPDF methods on the fly
-			// 'methods' => [
-				// 'SetHeader'=>['Copyright@wanindo '.date("r")],
-				// 'SetFooter'=>['{PAGENO}'],
-			// ]
+			'methods' => [
+				'SetHeader'=>['Copyright@wanindo '.date("r")],
+				'SetFooter'=>['{PAGENO}'],
+			]
 		]);
 		
 		return $pdf->render();
