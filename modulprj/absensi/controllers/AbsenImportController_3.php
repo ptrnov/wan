@@ -130,7 +130,7 @@ class AbsenImportController extends Controller
 				$modelPeriode->AKTIF =1; 
 				if ($modelPeriode->save()){
 					//return $this->redirect(['index','#ai-tab1']);
-				    return $this->redirect(['/absensi/absen-import#ai-tab0']);
+				    return $this->redirect(['/absensi/absen-import#ai-tab1']);
 				}  
 		}else{
 			return $this->renderAjax('_formPeriode', [
@@ -443,9 +443,9 @@ class AbsenImportController extends Controller
 										// $rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0		
 										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 	//TERMINAL
 										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);		//FINGER
-										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
+										$modelTmp->IN_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL MASUK
 										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);				//WAKTU MASUK
-										$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL KELUAR
+										$modelTmp->OUT_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL KELUAR
 										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);				//WAKTU KELUAR
 										$modelTmp->save();										
 								}
@@ -709,8 +709,10 @@ class AbsenImportController extends Controller
 		$rsltHd1=ArrayHelper::merge($hd1_1,$hd1_2);
 		$rsltHd2=ArrayHelper::merge($hd2_1,$hd2_2);
 		$rsltContent=ArrayHelper::merge($hd1_1,$ttlContent);
-		// $rowResult=ArrayHelper::merge($row_1,$datafield);
-		
+		$rowResult=ArrayHelper::merge($row_1,$datafield);
+		foreach($rowResult as $rws1 => $val){
+				$rowResult1[$rws1]= $val[];	
+		};
 		//TITLE 
 		$fieldTitelhd1_1[]='TERMINAL_ID';
 		$fieldTitelhd1_1[]='FINGER_ID';
@@ -727,15 +729,13 @@ class AbsenImportController extends Controller
 						// 'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
 
 		
-		// print_r($rowResult);
-		// die();
+		print_r($rowResult1);
+		die();
 		
 		//DATA IMPORT
-		$aryImport=[
+		$aryImport=[$rowResult
 			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
 			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
-			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00'],
-			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00'],
 		];		
 		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
         $excel_titleImport = $excel_dataImport['excel_title'];

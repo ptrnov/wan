@@ -42,6 +42,9 @@ class AbsenImportTmpSearch extends AbsenImport
      */
     public function search($params)
     {
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		//$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+		
         $query = AbsenImportTmp::find();
 		$cnt=AbsenImportTmp::find()->count();
         // add conditions that should always apply here
@@ -80,7 +83,8 @@ class AbsenImportTmpSearch extends AbsenImport
         ]);
 
         $query->andFilterWhere(['like', 'TERMINAL_ID', $this->TERMINAL_ID])
-			->andFilterWhere(['between', 'IN_TGL', "2018-09-8", "2018-09-14" ])
+			//->andFilterWhere(['between', 'IN_TGL', "2018-09-8", "2018-09-14" ])
+			->andFilterWhere(['between', 'IN_TGL', $modelPrd->TGL_START, $modelPrd->TGL_END])
             ->andFilterWhere(['like', 'FINGER_ID', $this->FINGER_ID])
             ->andFilterWhere(['like', 'MESIN_NM', $this->MESIN_NM])
             ->andFilterWhere(['like', 'KAR_ID', $this->KAR_ID])
