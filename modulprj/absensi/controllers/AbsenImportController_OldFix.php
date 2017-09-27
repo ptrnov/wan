@@ -69,7 +69,7 @@ class AbsenImportController extends Controller
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		$paramx=Yii::$app->getRequest()->getQueryParam('idx');
 		if ($paramFile){
-			$dataModelImport=self::getArryFile($paramFile);//->getModels();
+			$dataModelImport=self::getArryFile($paramFile)->getModels();
 			if(!$dataModelImport){
 				$js='$("#msg-erro-format").modal("show")';
 				$this->getView()->registerJs($js);
@@ -426,31 +426,22 @@ class AbsenImportController extends Controller
 						$exportFile->saveAs($path);
 						//return $this->redirect(['index','id'=>$model->FILE_NM]);
 						// $dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
-						$dataModelImport=self::getArryFile($model->FILE_NM);//->getModels();
-						if($dataModelImport){
-							$scrcData=self::dataKombinasi($dataModelImport);
-							$cnt=self::tglCount($dataModelImport);
-
-							$i=0;
-							for($i=0; $i<=$cnt; $i++){
-								//$IN[]=self::excelColumnName(($i+$i)+4);
-								$IN=self::excelColumnName(($i+$i)+4);	//0 + 4 + 0
-								$OUT=self::excelColumnName(($i+$i)+5);	//0 + 5 + 0		
-								foreach($scrcData as $srcRows){		
-										$modelTmp = new AbsenImportTmp();
-										// $rsltTgl[]=$srcRows[$i];		//0 
-										// $rsltIn[]=$srcRows[$IN];		//0 + 4 + 0
-										// $rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0		
-										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 	//TERMINAL
-										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);		//FINGER
-										$modelTmp->IN_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL MASUK
-										$modelTmp->IN_WAKTU=$srcRows[$IN];									//WAKTU MASUK
-										$modelTmp->OUT_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL KELUAR
-										$modelTmp->OUT_WAKTU=$srcRows[$OUT];								//WAKTU KELUAR
-										$modelTmp->save();										
-								}
-								
-							};
+						$dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
+						if($dataModelImport){		
+													
+							foreach($dataModelImport as $key => $value){
+								$modelTmp = new AbsenImportTmp();
+								//$modelTmp->ID=null;
+								//$modelTmp->isNewRecord = true;							
+								$modelTmp->TERMINAL_ID=str_replace("'","",(string)$value['TERMINAL_ID']);
+								$modelTmp->FINGER_ID=str_replace("'","",(string)$value['FINGER_ID']);
+								$modelTmp->IN_TGL=date('Y-m-d', strtotime($value['TGL_IN']));
+								$modelTmp->IN_WAKTU=$value['JAM_IN'];
+								$modelTmp->OUT_TGL=date('Y-m-d', strtotime($value['TGL_OUT']));
+								$modelTmp->OUT_WAKTU=$value['JAM_OUT'];
+								$modelTmp->save();
+								//unset($modelTmp);
+							}
 						};
 						return $this->redirect(['index','id'=>$model->FILE_NM]);
 
@@ -470,89 +461,6 @@ class AbsenImportController extends Controller
 		}
 	}
 	
-	/**================================================
-	* Data tanggal Dan Data Rows
-	* row1 dan row2 excel di eliminasi, untuk gabungan
-	**=================================================
-	*/
-	private function dataKombinasi($data){
-		//ARRAY TGL
-		foreach($data as $rowTgl => $valTgl){
-			if($rowTgl==1){				
-				foreach($valTgl as $rowTgl1 => $valTgl1){
-					if($valTgl1<>''){
-						$tmp=$valTgl1;
-					}else{
-						$aryTgl[]=$tmp;
-					};
-				}	
-			}
-		} 
-		//print_r($aryTgl);
-		
-		//ARRAY DATA AND ARRAY ADD
-		foreach($data as &$record){
-			//if($row1<>1 AND $row1<>2){
-			//if($row1==1){
-				foreach($aryTgl as $rowAryTgl => $valAryTgl){
-					$record[$rowAryTgl]=$valAryTgl;
-					
-				}
-				$dataKombinasi[]=$record;
-			//}
-		} 
-		
-		// print_r($hari1);
-		//return $dataKombinasi;
-		foreach($dataKombinasi as $rowRslt => $valRslt){
-			if($rowRslt<>0 AND $rowRslt<>1){
-			// if($rowRslt==0){
-				$rsltAry[]=$valRslt;
-			}
-		} 
-		
-		$dataProvider = new \yii\data\ArrayDataProvider([
-			'allModels' => $rsltAry
-		]);
-		return $dataProvider->getModels();
-	}
-	
-	/**================================================
-	* COUNT JUMLAH TANGGAL DI MASUKAN
-	**=================================================
-	*/
-	private function tglCount($data){
-		//ARRAY TGL
-		foreach($data as $rowTgl => $valTgl){
-			if($rowTgl==1){				
-				foreach($valTgl as $rowTgl1 => $valTgl1){
-					if($valTgl1<>''){
-						$tmp=$valTgl1;
-					}else{
-						$aryTgl[]=$tmp;
-					};
-				}	
-			}
-		} 
-		$cnt=count($aryTgl);
-		return $cnt!=0?($cnt-1):0;
-	}
-	
-	/**================================================
-	* GENERATE COLUMN INDEX NAME BY ALFABET
-	**=================================================
-	*/
-	public static function excelColumnName($index)
-    {
-        --$index;
-        if ($index >= 0 && $index < 26)
-            return chr(ord('A') + $index);
-        else if ($index > 25)
-            return (self::excelColumnName($index / 26)) . (self::excelColumnName($index % 26 + 1));
-        else
-            throw new Exception("Invalid Column # " . ($index + 1));
-    }
-	
 	/**=====================================
      * GET ARRAY FROM FILE
      * @return mixed
@@ -569,20 +477,17 @@ class AbsenImportController extends Controller
 			//$fileName='/var/www/backup/ExternalData/import_gudang/'.$fileData;
 			$config='';
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
-			//Test Direct file
-			$pathImportTmp=realpath(Yii::$app->basePath) . '/web/uploads/temp/test.xlsx';
-			
+
 			$data = \moonland\phpexcel\Excel::widget([
 				'id'=>'import-absensi',
 				'mode' => 'import',
-				//'fileName' => $fileData,
-				'fileName' => $pathImportTmp,
-				'setFirstRecordAsKeys' => false, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
+				'fileName' => $fileData,
+				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
 				'getOnlySheet' => 'Import-Absensi', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
 
-			/* //print_r($data);
+			//print_r($data);
 			$aryDataProvider= new ArrayDataProvider([
 				'allModels'=>$data,
 				 'pagination' => [
@@ -591,9 +496,7 @@ class AbsenImportController extends Controller
 			]);
 
 			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
-			return $aryDataProvider; */
-			
-			return $data;
+			return $aryDataProvider;
 			
 	}
 	
