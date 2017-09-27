@@ -59,9 +59,16 @@ class DefaultController extends Controller
 			}
 			
 		};
-		print_r($rsltTgl);	
+		//print_r($rsltTgl);	
 		//print_r($cnt);	
+		return self::checkWaktu('09:0e');
     }
+	
+	private function checkWaktu($value){
+		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
+		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
+		return $a!=false?$a:'';
+	}
 	
 	/**================================================
 	* Data tanggal Dan Data Rows

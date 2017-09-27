@@ -171,7 +171,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			'{export}',
 		],	
 		'panel'=>[
-			'heading'=>tombolRefreshLog().' '.tombolCreatePeriode().' '.$perode,		
+			'heading'=>tombolRefreshLog().' '.$perode,		
 			'type'=>'success',
 			'after'=>false,
 			'before'=>false,

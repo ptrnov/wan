@@ -64,7 +64,7 @@ class AbsenImportTmpSearch extends AbsenImport
         // grid filtering conditions
         $query->andFilterWhere([
             'ID' => $this->ID,
-            'IN_TGL' => $this->IN_TGL,
+            //'IN_TGL' => $this->IN_TGL,
             'IN_WAKTU' => $this->IN_WAKTU,
             'OUT_TGL' => $this->OUT_TGL,
             'OUT_WAKTU' => $this->OUT_WAKTU,
@@ -80,6 +80,7 @@ class AbsenImportTmpSearch extends AbsenImport
         ]);
 
         $query->andFilterWhere(['like', 'TERMINAL_ID', $this->TERMINAL_ID])
+			->andFilterWhere(['between', 'IN_TGL', "2018-09-8", "2018-09-14" ])
             ->andFilterWhere(['like', 'FINGER_ID', $this->FINGER_ID])
             ->andFilterWhere(['like', 'MESIN_NM', $this->MESIN_NM])
             ->andFilterWhere(['like', 'KAR_ID', $this->KAR_ID])

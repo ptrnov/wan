@@ -95,7 +95,7 @@ use yii\web\View;
 			//'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-clock-o fa-2x"></i> List Absensi Log','content'=>$_indexAbsensi,
+			'label'=>'<i class="fa fa-clock-o fa-2x"></i> List Absensi Maintain','content'=>$_indexAbsensi,
 			//'active'=>$tab1,
 		]	
 	];

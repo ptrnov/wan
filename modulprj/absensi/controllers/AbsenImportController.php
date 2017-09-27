@@ -444,9 +444,9 @@ class AbsenImportController extends Controller
 										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 	//TERMINAL
 										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);		//FINGER
 										$modelTmp->IN_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL MASUK
-										$modelTmp->IN_WAKTU=$srcRows[$IN];									//WAKTU MASUK
+										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);				//WAKTU MASUK
 										$modelTmp->OUT_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL KELUAR
-										$modelTmp->OUT_WAKTU=$srcRows[$OUT];								//WAKTU KELUAR
+										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);				//WAKTU KELUAR
 										$modelTmp->save();										
 								}
 								
@@ -575,8 +575,8 @@ class AbsenImportController extends Controller
 			$data = \moonland\phpexcel\Excel::widget([
 				'id'=>'import-absensi',
 				'mode' => 'import',
-				//'fileName' => $fileData,
-				'fileName' => $pathImportTmp,
+				'fileName' => $fileData,
+				//'fileName' => $pathImportTmp,
 				'setFirstRecordAsKeys' => false, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
 				'getOnlySheet' => 'Import-Absensi', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
@@ -631,6 +631,12 @@ class AbsenImportController extends Controller
 		}		 
 	}
 
+	private function checkWaktu($value){
+		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
+		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
+		return $a!=false?$a:'';
+	}
+	
 	/* function getValidateTime($time)
 	{
 		
