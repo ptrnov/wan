@@ -140,6 +140,47 @@ class AbsenImportController extends Controller
 		} 
     } 
 	
+	/**
+     * ACTUAL  : CHECKED LEMBURAN
+     */
+	public function actionCheckLemburan()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $idKode=$request->post('idKode');
+          //$dataKeySelect=$request->post('keysSelect');
+          //if ($dataKeySelect!=0){
+           // foreach ($dataKeySelect as $id) {
+              $items = AbsenImport::find()->where(['ID'=>$idKode])->one();
+              $items->STT_LEMBUR =1;
+              $items->save();
+          // }
+         //}
+        return true;
+      }
+    }
+	
+	/**
+     * ACTUAL  : UN_CHECKED LEMBURAN
+     */
+	public function actionUncheckLemburan()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $idKode=$request->post('idKode');
+		  // $dataKeySelect=$request->post('keysSelect');
+		  // if ($dataKeySelect!=0){
+			// foreach ($dataKeySelect as $id) {
+              $items = AbsenImport::find()->where(['ID'=>$idKode])->one();
+              $items->STT_LEMBUR = 0;
+              $items->save();
+           // }
+         // }
+        return true;
+      }
+    }
 	
 	/**
      * TEMPORARY : CREATE
@@ -441,33 +482,118 @@ class AbsenImportController extends Controller
 										// $rsltTgl[]=$srcRows[$i];		//0 
 										// $rsltIn[]=$srcRows[$IN];		//0 + 4 + 0
 										// $rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0		
-										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 	//TERMINAL
-										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);		//FINGER
+										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 								//TERMINAL
+										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);									//FINGER
 										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
-										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);				//WAKTU MASUK
-										$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL KELUAR
-										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);				//WAKTU KELUAR
+										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);											//WAKTU MASUK
+										//$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));		//TGL KELUAR
+										$modelTmp->OUT_TGL=self::formulaTglOut($srcRows[$OUT],$srcRows[$i]);							//TGL KELUAR
+										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
+										$modelTmp->STT_LEMBUR=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->save();										
 								}
 								
 							};
 						};
 						return $this->redirect(['index','id'=>$model->FILE_NM]);
-
-
-						
-						// return $this->redirect(['index','id'=>$model->FILE_NM]);
-						// $searchModel = new AbsenImportSearch();
-						// $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-						// return $this->render('index', [
-							// 'searchModel' => $searchModel,
-							// 'dataProvider' => $dataProvider,
-							// 'dataModelImport'=>$dataModelImport
-						// ]);
 					}
 				}
 			}
 		}
+	}
+	
+	// POSISI INSERT STS_LEMBUR DAN IJIN
+	private function formulaStt($valWaktuIn,$valWaktuOut){
+		if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
+			return '0';
+		}elseif(($valWaktuIn=='AL' or $valWaktuIn=='al') OR ($valWaktuOut=='AL' or $valWaktuOut=='al')){
+			return '3';
+		}elseif(($valWaktuIn=='OF' or $valWaktuIn=='of') OR ($valWaktuOut=='OF' or $valWaktuOut=='of')){
+			return '2';
+		}elseif($valWaktuIn=='' AND $valWaktuOut<>''){
+			return '2';
+		}elseif($valWaktuIn<>'' AND $valWaktuOut==''){
+			return '2';
+		}elseif($valWaktuIn=='' AND $valWaktuOut==''){
+			return '3';
+		}else{
+			return '3';
+		}		
+	}
+	
+	private function formulaIn($valWaktuIn,$valTgl){
+		if(self::checkWaktu($valWaktuIn)){
+			return self::checkWaktu($valWaktuIn);
+		}else{
+			return '00:00';
+		};	
+	}
+	
+	//CLOSING TIME OUT on 07:59
+	private function formulaOut($valWaktuOut){
+		if(self::checkWaktu($valWaktuOut)){
+			$timeOUT=self::checkWaktu($valWaktuOut);
+			if ($timeOUT >='08:00'){
+				return '07:59';
+			}
+		}else{
+			//return '17:00';
+			return '00:00';
+		};	
+	}
+	
+	private function formulaTglOut($valWaktuOut,$valTgl){
+		$strtgl=date('Y-m-d', strtotime(str_replace("'","",(string)$valTgl)));
+		//if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
+		if(self::checkWaktu($valWaktuOut)){
+			//$timeIN= self::checkWaktu($valWaktuIn);
+			$timeOUT= self::checkWaktu($valWaktuOut);
+			if ($timeOUT >'00:00' AND $timeOUT<'08:00'){
+				return date('Y-m-d', strtotime('+1 day',  strtotime($strtgl)));
+				// return date('Y-m-d', strtotime('+1 day',  strtotime(date('Y-m-d', strtotime(str_replace("'","",(string)$valTgl))))));
+				// date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')));
+			}else{
+				return $strtgl;
+			}
+		}else{
+			return $strtgl;
+		}
+	}
+	
+	/**=========================
+	* Validasi Waktu dan format
+	**==========================
+	*/
+	private function checkWaktu($value){
+		$inVal=str_replace("'","",(string)$value);
+		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
+		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $inVal);
+		return $a!=false?$inVal:false;
+	}
+	
+	/**====================================
+     * VALIDATION INPUT DATE
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	function getValidateDate($date)
+	{		
+		$tgl=date('Y-m-d', strtotime($date)); 
+		if($tgl<>'1970-01-01'){ //check String
+			if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$tgl))
+			{
+				$tempDate = explode('-', $tgl);
+				// checkdate(month, day, year)
+				return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+			}else{
+				//echo 'Date is invalid';
+				return false;
+			}
+		}else{
+			return false;
+		}		 
 	}
 	
 	/**================================================
@@ -606,36 +732,9 @@ class AbsenImportController extends Controller
 	public function getValidateDataImport($paramFile){
 		
 	}
-	/**====================================
-     * VALIDATION INPUT DATE
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * ====================================
-     */
-	function getValidateDate($date)
-	{		
-		$tgl=date('Y-m-d', strtotime($date)); 
-		if($tgl<>'1970-01-01'){ //check String
-			if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$tgl))
-			{
-				$tempDate = explode('-', $tgl);
-				// checkdate(month, day, year)
-				return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
-			}else{
-				//echo 'Date is invalid';
-				return false;
-			}
-		}else{
-			return false;
-		}		 
-	}
+	
 
-	private function checkWaktu($value){
-		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
-		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
-		return $a!=false?$a:'';
-	}
+	
 	
 	/* function getValidateTime($time)
 	{
@@ -734,8 +833,8 @@ class AbsenImportController extends Controller
 		$aryImport=[
 			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
 			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
-			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00'],
-			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00'],
+			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00','OUT0'=>'17:00'],
+			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00','OUT0'=>'17:00'],
 		];		
 		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
         $excel_titleImport = $excel_dataImport['excel_title'];
@@ -831,15 +930,18 @@ class AbsenImportController extends Controller
 					["3.Refrensi."],
 					["  [TERMINAL_ID] = Serial Number pada mesin finger setiap cabang"],
 					["  [FINGER_ID] =  Kode Finger yang di dapatkan saat pendaftaran jadi di mesin per-Cabang"],
-					["  [KARYAWAN]  =  Nama dari karyawan yang pernah di daftarkan"],
-					["  [TGL_IN]    = Tanggal pada saat absensi masuk "],
-					["  [TGL_OUT]   = Tanggal pada saat absensi keluar "],
-					["  [TGL_OUT]   = Jam pada saat absensi masuk "],
-					["  [TGL_OUT]   = Jam pada saat absensi keluar "],
+					["  [NAME]  =  Nama dari karyawan yang pernah di daftarkan"],
+					["  [TGL]    = Otomatis keluar saat export pada periode aktif "],
+					["  [IN]   = Jam pada saat absensi masuk "],
+					["  [OUT]   = Jam pada saat absensi keluar "],
 					["4.Refrensi Kode."],
 					["  [TERMINAL_ID] = Sheet Cabang-Mechine"],
 					["  [FINGER_ID]  = Sheet Data-Karyawan"],					
-					["  [KARYAWAN]    = Sheet Data-Karyawan"],					
+					["  [KARYAWAN]    = Sheet Data-Karyawan"],
+					["5.Exceptions/Ketidak hadiran."],
+					["  AL [Alfa] = tidak masuk "],							
+					["  OF [OFF]  = tidak masuk untuk Harian"],	
+					["  IJ [IJIN] = dianggap masuk "],					
 				],
 				'headerStyle'=>[					
 					[

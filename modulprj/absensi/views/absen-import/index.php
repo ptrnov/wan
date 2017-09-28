@@ -18,9 +18,17 @@ use yii\web\View;
 //print_r($dataModelImport);
 	//CSS
 	$this->registerCss("
-		.kv-grid-table :link {
+		#tmp-import-absen .kv-grid-table :link {
 			color: #fdfdfd;
 		}
+		#import-absen-log .kv-grid-table :link {
+			color: #fdfdfd;
+		}
+		
+		#import-absen-log .kv-grid-table .actual-delete :link {
+			color: #fdfdfd;
+		}		
+		
 		/* mouse over link */
 		a:hover {
 			color: #5a96e7;

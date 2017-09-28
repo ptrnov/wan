@@ -61,13 +61,18 @@ class DefaultController extends Controller
 		};
 		//print_r($rsltTgl);	
 		//print_r($cnt);	
-		return self::checkWaktu('09:0e');
+		//return self::checkWaktu('09:00');
+		return date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')));
     }
 	
 	private function checkWaktu($value){
 		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
-		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
-		return $a!=false?$a:'';
+		// $a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
+		// return $a!=false?$a:'';
+		$inVal=str_replace("'","",$value);
+		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
+		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', '09:00');
+		return $a!=false?$inVal:'';
 	}
 	
 	/**================================================

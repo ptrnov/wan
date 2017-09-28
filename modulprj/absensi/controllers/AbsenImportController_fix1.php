@@ -130,7 +130,7 @@ class AbsenImportController extends Controller
 				$modelPeriode->AKTIF =1; 
 				if ($modelPeriode->save()){
 					//return $this->redirect(['index','#ai-tab1']);
-				    return $this->redirect(['/absensi/absen-import#ai-tab1']);
+				    return $this->redirect(['/absensi/absen-import#ai-tab0']);
 				}  
 		}else{
 			return $this->renderAjax('_formPeriode', [
@@ -140,6 +140,47 @@ class AbsenImportController extends Controller
 		} 
     } 
 	
+	/**
+     * ACTUAL  : CHECKED LEMBURAN
+     */
+	public function actionCheckLemburan()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $idKode=$request->post('idKode');
+          //$dataKeySelect=$request->post('keysSelect');
+          //if ($dataKeySelect!=0){
+           // foreach ($dataKeySelect as $id) {
+              $items = AbsenImport::find()->where(['ID'=>$idKode])->one();
+              $items->STT_LEMBUR =1;
+              $items->save();
+          // }
+         //}
+        return true;
+      }
+    }
+	
+	/**
+     * ACTUAL  : UN_CHECKED LEMBURAN
+     */
+	public function actionUncheckLemburan()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $idKode=$request->post('idKode');
+		  // $dataKeySelect=$request->post('keysSelect');
+		  // if ($dataKeySelect!=0){
+			// foreach ($dataKeySelect as $id) {
+              $items = AbsenImport::find()->where(['ID'=>$idKode])->one();
+              $items->STT_LEMBUR = 0;
+              $items->save();
+           // }
+         // }
+        return true;
+      }
+    }
 	
 	/**
      * TEMPORARY : CREATE
@@ -441,33 +482,66 @@ class AbsenImportController extends Controller
 										// $rsltTgl[]=$srcRows[$i];		//0 
 										// $rsltIn[]=$srcRows[$IN];		//0 + 4 + 0
 										// $rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0		
-										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 	//TERMINAL
-										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);		//FINGER
-										$modelTmp->IN_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL MASUK
-										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);				//WAKTU MASUK
-										$modelTmp->OUT_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL KELUAR
-										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);				//WAKTU KELUAR
+										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 								//TERMINAL
+										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);									//FINGER
+										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
+										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);											//WAKTU MASUK
+										$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL KELUAR
+										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
 										$modelTmp->save();										
 								}
 								
 							};
 						};
 						return $this->redirect(['index','id'=>$model->FILE_NM]);
-
-
-						
-						// return $this->redirect(['index','id'=>$model->FILE_NM]);
-						// $searchModel = new AbsenImportSearch();
-						// $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-						// return $this->render('index', [
-							// 'searchModel' => $searchModel,
-							// 'dataProvider' => $dataProvider,
-							// 'dataModelImport'=>$dataModelImport
-						// ]);
 					}
 				}
 			}
 		}
+	}
+	
+	// POSISI INSERT STS_LEMBUR DAN IJIN
+	private function formulaStt($valWaktu,$valTgl){
+		if(self::checkWaktu($valWaktu)){
+			return '0';
+		}elseif($valWaktu=='AL' OR $valWaktu=='al'){
+			return '3';
+		}elseif($valWaktu=='OF' OR $valWaktu=='of'){
+			return '2';
+		}else{
+			return '3';
+		}		
+	}
+	
+	private function formulaIn($valWaktuIn,$valTgl){
+		if(self::checkWaktu($valWaktu)){
+			return self::checkWaktu($valWaktu);
+		}else{
+			return '08:00';
+		};	
+	}
+	
+	private function formulaOut($valWaktuOut,$valTgl){
+		if(self::checkWaktu($valWaktu)){
+			return self::checkWaktu($valWaktu);
+		}else{
+			return '17:00';
+		};	
+	}
+	
+	private function formulaTglOut($valWaktuOut,$valTgl){
+		
+	}
+	
+	/**=========================
+	* Validasi Waktu dan format
+	**==========================
+	*/
+	private function checkWaktu($value){
+		$inVal=str_replace("'","",(string)$value);
+		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
+		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $inVal);
+		return $a!=false?$inVal:false;
 	}
 	
 	/**================================================
@@ -631,11 +705,7 @@ class AbsenImportController extends Controller
 		}		 
 	}
 
-	private function checkWaktu($value){
-		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
-		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
-		return $a!=false?$a:'';
-	}
+	
 	
 	/* function getValidateTime($time)
 	{
@@ -678,11 +748,64 @@ class AbsenImportController extends Controller
 		$prdStart=date('Y-m-d', strtotime($modelPeriode->TGL_START));
 		$prdEnd=date('Y-m-d', strtotime($modelPeriode->TGL_END));
 		
+		$mergeVal=('1,0');
+		$s1=0;
+		while ($prdStart <=$prdEnd)
+		{
+			$hd1_2["'".$prdStart."'"]=['font-size'=>'8','width'=>'5','valign'=>'center','align'=>'center','merge'=>$mergeVal];
+			$hd1_2[$prdStart.'x']=['font-size'=>'8','width'=>'5','valign'=>'center','align'=>'center'];
+			$hd2_2['IN'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$hd2_2['OUT'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$ttlhd1[]=$prdStart;
+			$ttlhd1[]=$prdStart.'merge';			
+			$fieldTitelhd2_2[]='IN';
+			$fieldTitelhd2_2[]='OUT';
+			$ttlContent['IN'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$ttlContent['OUT'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$datafield[]=['IN'.$s1=>'08:00:00'];
+			$datafield[]=['OUT'.$s1=>'17:00:00'];
+			$prdStart = date('Y-m-d', strtotime($prdStart . ' +1 day'));
+			$s1=$s1+1;
+		}
+		$hd1_1['TERMINAL_ID']=['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center','merge'=>'0,2'];
+		$hd1_1['FINGER_ID']=['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'0,2'];
+		$hd1_1['NAMA']=['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center','merge'=>'0,2'];
+		$hd2_1['TERMINAL_ID']=['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'];
+		$hd2_1['FINGER_ID']=['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'];
+		$hd2_1['NAMA']=['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'];
+		$row_1[]=['TERMINAL_ID'=>'01234567890'];
+		$row_1[]=['FINGER_ID'=>'321'];
+		$row_1[]=['NAMA'=>'Piter'];
+		$rsltHd1=ArrayHelper::merge($hd1_1,$hd1_2);
+		$rsltHd2=ArrayHelper::merge($hd2_1,$hd2_2);
+		$rsltContent=ArrayHelper::merge($hd1_1,$ttlContent);
+		// $rowResult=ArrayHelper::merge($row_1,$datafield);
+		
+		//TITLE 
+		$fieldTitelhd1_1[]='TERMINAL_ID';
+		$fieldTitelhd1_1[]='FINGER_ID';
+		$fieldTitelhd1_1[]='NAMA';
+		
+		foreach($ttlhd1 as $rws){
+				$fieldTitelhd1_2[]="'".$rws."'";	
+		};
+		$fieldTitelhd1=ArrayHelper::merge($fieldTitelhd1_1,$fieldTitelhd1_2);
+		$fieldTitelhd2=ArrayHelper::merge($fieldTitelhd1_1,$fieldTitelhd2_2);
+						// 'TGL1' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL11' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						// 'TGL2' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+
+		
+		// print_r($rowResult);
+		// die();
 		
 		//DATA IMPORT
 		$aryImport=[
-			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
-			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
+			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
+			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
+			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00','OUT0'=>'17:00'],
+			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00','OUT0'=>'17:00'],
 		];		
 		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
         $excel_titleImport = $excel_dataImport['excel_title'];
@@ -722,41 +845,41 @@ class AbsenImportController extends Controller
 			 [
 				'sheet_name' => 'Import-Absensi',
                 'sheet_title' => [
-					['TERMINAL_ID','FINGER_ID','NAMA','TGL1','TGL11','TGL2','TGL22'],
-					['TERMINAL_ID','FINGER_ID','NAMA','IN','OUT','IN','OUT']
+					$fieldTitelhd1,
+					$fieldTitelhd2,
 				],
 			    'ceils' => $excel_ceilsImport,
                 'freezePane' => 'A3',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerStyle'=>[					
-					[
-						'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center','merge'=>'0,2'],
-						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'0,2'],
-						'NAMA' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center','merge'=>'0,2'],
-						'TGL1' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
-						'TGL11' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'TGL2' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
-						'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-					],
-					[
-						'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
-						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'NAMA' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'IN' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'OUT' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'IN' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'OUT' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-					]						
+                'headerStyle'=>[$rsltHd1,//$rsltHd2					
+					// [
+						// 'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center','merge'=>'0,2'],
+						// 'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'0,2'],
+						// 'NAMA' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center','merge'=>'0,2'],
+						// 'TGL1' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL11' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						// 'TGL2' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+					// ],
+					// [
+						// 'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						// 'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						// 'NAMA' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						// 'IN' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						// 'OUT' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						// 'IN' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						// 'OUT' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+					// ]						
 				],
-				'contentStyle'=>[
+				'contentStyle'=>[//$rsltContent
 					[						
 						'TERMINAL_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
 						'FINGER_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
 						'KARYAWAN' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'TGL_IN' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'TGL_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'JAM_IN' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'JAM_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'IN' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'IN' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -778,15 +901,18 @@ class AbsenImportController extends Controller
 					["3.Refrensi."],
 					["  [TERMINAL_ID] = Serial Number pada mesin finger setiap cabang"],
 					["  [FINGER_ID] =  Kode Finger yang di dapatkan saat pendaftaran jadi di mesin per-Cabang"],
-					["  [KARYAWAN]  =  Nama dari karyawan yang pernah di daftarkan"],
-					["  [TGL_IN]    = Tanggal pada saat absensi masuk "],
-					["  [TGL_OUT]   = Tanggal pada saat absensi keluar "],
-					["  [TGL_OUT]   = Jam pada saat absensi masuk "],
-					["  [TGL_OUT]   = Jam pada saat absensi keluar "],
+					["  [NAME]  =  Nama dari karyawan yang pernah di daftarkan"],
+					["  [TGL]    = Otomatis keluar saat export pada periode aktif "],
+					["  [IN]   = Jam pada saat absensi masuk "],
+					["  [OUT]   = Jam pada saat absensi keluar "],
 					["4.Refrensi Kode."],
 					["  [TERMINAL_ID] = Sheet Cabang-Mechine"],
 					["  [FINGER_ID]  = Sheet Data-Karyawan"],					
-					["  [KARYAWAN]    = Sheet Data-Karyawan"],					
+					["  [KARYAWAN]    = Sheet Data-Karyawan"],
+					["5.Exceptions/Ketidak hadiran."],
+					["  AL [Alfa] = tidak masuk "],							
+					["  OF [OFF]  = tidak masuk untuk Harian"],	
+					["  IJ [IJIN] = dianggap masuk "],					
 				],
 				'headerStyle'=>[					
 					[

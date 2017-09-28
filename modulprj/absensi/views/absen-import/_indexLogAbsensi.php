@@ -66,6 +66,29 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				]
 			],					
 	];
+	$attDinamikLog[] =[
+		'class'=>'kartik\grid\CheckboxColumn',
+		'header'=>'Lembur',
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'20px',
+				'font-family'=>'tahoma',
+				'font-size'=>'8pt',
+				'background-color'=>$bColor,
+				'color'=>'white'
+			]
+		],
+		'rowSelectedClass' => GridView::TYPE_WARNING,
+		'checkboxOptions' => function ($model, $key, $index, $column){		
+				if($model->STT_LEMBUR == 1)
+				{
+					return ['checked' => $model->ID];
+				}else{
+					return ['value' => $model->ID];
+				}				
+		}
+	];
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsLog as $key =>$value[]){			
 		$attDinamikLog[]=[		
@@ -86,6 +109,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],  
 			'contentOptions'=>[
@@ -203,6 +227,58 @@ use modulprj\absensi\models\AbsenImportPeriode;
 <?=$actualImportLog?>
 
 <?php
+ $this->registerJs("
+	var target = $(this).attr('href');
+	$('#import-absen-log').on('change','input[type=checkbox]',function(){
+		var idKode =$(this).val();
+		var keysSelect = $('#import-absen-log').yiiGridView('getSelectedRows');
+		if ($(this).is(':checked')){
+			$.ajax({
+				 url: '/absensi/absen-import/check-lemburan',
+				 //cache: true,
+				 type: 'POST',
+				 data:{keysSelect:keysSelect,idKode:idKode},
+				 dataType: 'json',
+				 success: function(response) {
+					if (response == true ){
+						  $.pjax.reload({container:'#import-absen-log'});
+					}
+					 else {
+
+					 }
+				 }
+			})
+		}
+		else{
+			$.ajax({
+			 url: '/absensi/absen-import/uncheck-lemburan',
+			 //cache: true,
+			 type: 'POST',
+			 data:{keysSelect:keysSelect,idKode:idKode},
+			 dataType: 'json',
+			 success: function(response) {
+				 if (response == true ){
+					 $.pjax.reload({container:'#import-absen-log'});
+					  $(this).parent().parent().removeClass('alert-success');
+				 }
+					else {
+						  $.pjax.reload({container:'#import-absen-log'});
+					}
+				}
+			})
+		}
+	});
+",$this::POS_READY);
+
+
+
+
+
+
+
+
+
+
 /* $this->registerJs("
 $(document).on('ready pjax:success', function () {
   $('.ajaxDelete').on('click', function (e) {

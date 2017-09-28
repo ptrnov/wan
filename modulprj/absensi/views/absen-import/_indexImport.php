@@ -72,7 +72,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				]
 			],					
 	];
-
+	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsTmp as $key =>$value[]){			
 		$attDinamikTmp[]=[		
@@ -85,7 +85,26 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,			
+			'noWrap'=>true,	
+			'value'=>function($data)use($key,$value){
+				$x=$value[$key]['FIELD'];
+				if($x=='IN_WAKTU' OR $x=='OUT_WAKTU'){					
+					if ($data->STT_LEMBUR=='0'){
+						return $data->$x;
+					}elseif($data->STT_LEMBUR=='3'){
+						return 'ALFA';
+					}elseif($data->STT_LEMBUR=='2'){
+						if ($data->$x<>'00:00:00'){
+							return $data->$x;
+						}else{
+							return 'OFF';
+						}
+					};					
+				}else{
+					return $data->$x;
+				}
+				
+			},
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
@@ -152,7 +171,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 	];
 	//ACTION
-	$attDinamikTmp[]=[
+	/* $attDinamikTmp[]=[
 		'class' => 'kartik\grid\ActionColumn',
 		'template' => '{review}{delete}',
 		'header'=>'ACTION',
@@ -176,7 +195,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','0',''),
-	];
+	]; */
 	$tempImport= GridView::widget([
 		'id'=>'tmp-import-absen',
 		'dataProvider' => $dataProviderTmp,
