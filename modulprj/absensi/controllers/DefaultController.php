@@ -62,7 +62,35 @@ class DefaultController extends Controller
 		//print_r($rsltTgl);	
 		//print_r($cnt);	
 		//return self::checkWaktu('09:00');
-		return date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')));
+		// return date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')))
+		
+/* 		<style>
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+</style>
+<span class="blink">TULISAN BERKEDIP</span>; */
+
+
+		$awal  = strtotime('2017-08-10 10:05:25');
+		$akhir = strtotime('2017-08-11 11:07:33');
+		$diff  = $akhir - $awal;
+
+		$jam   = floor($diff / (60 * 60));
+		$menit = $diff - $jam * (60 * 60);
+		$X='Waktu tinggal: ' . $jam .  ' jam, ' . floor( $menit / 60 ) . ' menit';
+		print_r($X);
     }
 	
 	private function checkWaktu($value){

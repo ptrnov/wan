@@ -66,6 +66,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				]
 			],					
 	];
+	
 	$attDinamikLog[] =[
 		'class'=>'kartik\grid\CheckboxColumn',
 		'header'=>'Lembur',
@@ -89,6 +90,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				}				
 		}
 	];
+	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsLog as $key =>$value[]){			
 		$attDinamikLog[]=[		

@@ -487,9 +487,11 @@ class AbsenImportController extends Controller
 										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
 										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);											//WAKTU MASUK
 										//$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));		//TGL KELUAR
-										$modelTmp->OUT_TGL=self::formulaTglOut($srcRows[$OUT],$srcRows[$i]);							//TGL KELUAR
-										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
+										$modelTmp->OUT_TGL=self::formulaTglOut(self::formulaOut($srcRows[$OUT]),$srcRows[$i]);				//TGL KELUAR
+										$modelTmp->OUT_WAKTU=self::formulaOut($srcRows[$OUT]);											//WAKTU KELUAR
+										//$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
 										$modelTmp->STT_LEMBUR=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
+										$modelTmp->LEBIH_WAKTU=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->save();										
 								}
 								
@@ -505,16 +507,26 @@ class AbsenImportController extends Controller
 	// POSISI INSERT STS_LEMBUR DAN IJIN
 	private function formulaStt($valWaktuIn,$valWaktuOut){
 		if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
-			return '0';
-		}elseif(($valWaktuIn=='AL' or $valWaktuIn=='al') OR ($valWaktuOut=='AL' or $valWaktuOut=='al')){
+			if(self::checkWaktu($valWaktuOut)>'08:00' AND self::checkWaktu($valWaktuOut)<='12:00'){
+				return '7'; 																						// LEWAT WAKTU DI TENTUKAN
+			}else{
+				return '0';
+			}			
+		}elseif(($valWaktuIn=='OF' or $valWaktuIn=='of') OR ($valWaktuOut=='OF' or $valWaktuOut=='of')){		//STATUS LIBUR
+			return '2';
+		}elseif(($valWaktuIn=='AL' or $valWaktuIn=='al') OR ($valWaktuOut=='AL' or $valWaktuOut=='al')){		//STATUS ALFA
 			return '3';
-		}elseif(($valWaktuIn=='OF' or $valWaktuIn=='of') OR ($valWaktuOut=='OF' or $valWaktuOut=='of')){
+		}elseif(($valWaktuIn=='SK' or $valWaktuIn=='sk') OR ($valWaktuOut=='SK' or $valWaktuOut=='sk')){		//STATUS SAKIR
+			return '4';
+		}elseif(($valWaktuIn=='LK' or $valWaktuIn=='lk') OR ($valWaktuOut=='LK' or $valWaktuOut=='lk')){		//STATUS LUAR KOTA
+			return '5';
+		}elseif(($valWaktuIn=='IJ' or $valWaktuIn=='ij') OR ($valWaktuOut=='IJ' or $valWaktuOut=='ij')){		//STATUS IJIN
+			return '6';
+		}elseif($valWaktuIn=='' AND $valWaktuOut<>''){															// in/oot kosong diangap LIBUR
 			return '2';
-		}elseif($valWaktuIn=='' AND $valWaktuOut<>''){
+		}elseif($valWaktuIn<>'' AND $valWaktuOut==''){															// IN / OUT kosong diangap LIBUR
 			return '2';
-		}elseif($valWaktuIn<>'' AND $valWaktuOut==''){
-			return '2';
-		}elseif($valWaktuIn=='' AND $valWaktuOut==''){
+		}elseif($valWaktuIn=='' AND $valWaktuOut==''){															// IN & OUT kosong diangap ALFA
 			return '3';
 		}else{
 			return '3';
@@ -529,12 +541,14 @@ class AbsenImportController extends Controller
 		};	
 	}
 	
-	//CLOSING TIME OUT on 07:59
+	//CLOSING TIME OUT on 07:00
 	private function formulaOut($valWaktuOut){
 		if(self::checkWaktu($valWaktuOut)){
 			$timeOUT=self::checkWaktu($valWaktuOut);
-			if ($timeOUT >='08:00'){
-				return '07:59';
+			if ($timeOUT <='08:00'){
+				return '07:00';
+			}else{
+				return $timeOUT;
 			}
 		}else{
 			//return '17:00';
@@ -542,13 +556,28 @@ class AbsenImportController extends Controller
 		};	
 	}
 	
+	/* //KELEBIHAN WAKTU : lewat jam 08:00 lemburan di cut
+	private function formulaLebihWaktu($valWaktuOut){
+		if(self::checkWaktu($valWaktuOut)){
+			$timeOUT=self::checkWaktu($valWaktuOut);
+			if ($timeOUT >='07:00' AND $timeOUT <='12:00'){
+				return '07:00';
+			}else{
+				return $timeOUT;
+			}
+		}else{
+			//return '17:00';
+			return '00:00';
+		};	
+	} */
+	
 	private function formulaTglOut($valWaktuOut,$valTgl){
 		$strtgl=date('Y-m-d', strtotime(str_replace("'","",(string)$valTgl)));
 		//if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
 		if(self::checkWaktu($valWaktuOut)){
 			//$timeIN= self::checkWaktu($valWaktuIn);
 			$timeOUT= self::checkWaktu($valWaktuOut);
-			if ($timeOUT >'00:00' AND $timeOUT<'08:00'){
+			if ($timeOUT >='00:00' AND $timeOUT<'08:00'){
 				return date('Y-m-d', strtotime('+1 day',  strtotime($strtgl)));
 				// return date('Y-m-d', strtotime('+1 day',  strtotime(date('Y-m-d', strtotime(str_replace("'","",(string)$valTgl))))));
 				// date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')));
@@ -860,7 +889,7 @@ class AbsenImportController extends Controller
 			'key' => 'ID',
 			'allModels'=>Yii::$app->db->createCommand("
 				SELECT 
-					x1.TerminalID AS TERMINAL_ID,x1.KAR_ID,x2.KAR_NM,x1.FingerPrintID AS FINGER_ID
+					x1.TerminalID AS TERMINAL_ID,x1.FingerPrintID AS FINGER_ID,x2.KAR_NM,x1.KAR_ID
 				FROM kar_finger x1 left join karyawan x2 on x2.KAR_ID=x1.KAR_ID					
 			")->queryAll()
 		]);
@@ -940,8 +969,10 @@ class AbsenImportController extends Controller
 					["  [KARYAWAN]    = Sheet Data-Karyawan"],
 					["5.Exceptions/Ketidak hadiran."],
 					["  AL [Alfa] = tidak masuk "],							
-					["  OF [OFF]  = tidak masuk untuk Harian"],	
-					["  IJ [IJIN] = dianggap masuk "],					
+					["  OF [OFF]  = tidak masuk"],	
+					["  IJ [IJIN] = tidak masuk "],	
+					["  SK [SAKIT] = tidak masuk "],					
+					["  LK [LUAR KOTA] = tidak masuk "],					
 				],
 				'headerStyle'=>[					
 					[
@@ -984,7 +1015,7 @@ class AbsenImportController extends Controller
 			[
 				'sheet_name' => 'Data-Karyawan',
                 'sheet_title' => [
-					['TERMINAL_ID','KAR_ID','KAR_NM','FINGER_ID']
+					['TERMINAL_ID','FINGER_ID','KAR_NM','KAR_ID']
 				],
 			    'ceils' => $excel_ceilsKarFinger,
                 'freezePane' => 'A2',
@@ -992,17 +1023,18 @@ class AbsenImportController extends Controller
                 'headerStyle'=>[					
 					[
 						'TERMINAL_ID' =>['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'KAR_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],						
 						'KAR_NM' =>['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'KAR_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						
 					]						
 				],
 				'contentStyle'=>[
 					[						
-						'TERMINAL_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'KAR_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'KAR_NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'TERMINAL_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],						
 						'FINGER_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KAR_NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KAR_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),

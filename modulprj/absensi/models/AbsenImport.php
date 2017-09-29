@@ -49,7 +49,7 @@ class AbsenImport extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_AT', 'UPDATE_AT','STT_LEMBUR'], 'safe'],
+            [['IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_AT', 'UPDATE_AT','STT_LEMBUR','LEBIH_WAKTU'], 'safe'],
             [['GRP_ID', 'STATUS'], 'integer'],
             [['PAY_DAY', 'VAL_PAGI', 'VAL_LEMBUR', 'PAY_PAGI', 'PAY_LEMBUR'], 'number'],
             [['DCRP_DETIL'], 'string'],
