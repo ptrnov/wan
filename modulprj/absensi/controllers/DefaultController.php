@@ -34,7 +34,7 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         //return $this->render('index');
-		$pathImport=realpath(Yii::$app->basePath) . '/web/uploads/temp/test.xlsx';
+		/* $pathImport=realpath(Yii::$app->basePath) . '/web/uploads/temp/test.xlsx';
 		$data = \moonland\phpexcel\Excel::widget([
 				'id'=>'import-absensi',
 				'mode' => 'import',
@@ -58,7 +58,7 @@ class DefaultController extends Controller
 					$rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0				
 			}
 			
-		};
+		}; */
 		//print_r($rsltTgl);	
 		//print_r($cnt);	
 		//return self::checkWaktu('09:00');
@@ -83,14 +83,14 @@ class DefaultController extends Controller
 <span class="blink">TULISAN BERKEDIP</span>; */
 
 
-		$awal  = strtotime('2017-08-10 10:05:25');
-		$akhir = strtotime('2017-08-11 11:07:33');
+		$awal  = strtotime('2017-08-10 9:00:00');
+		$akhir = strtotime('2017-08-10 07:00:00');
 		$diff  = $akhir - $awal;
 
 		$jam   = floor($diff / (60 * 60));
 		$menit = $diff - $jam * (60 * 60);
 		$X='Waktu tinggal: ' . $jam .  ' jam, ' . floor( $menit / 60 ) . ' menit';
-		print_r($X);
+		return ($X);
     }
 	
 	private function checkWaktu($value){

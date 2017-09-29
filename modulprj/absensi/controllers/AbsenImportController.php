@@ -66,6 +66,8 @@ class AbsenImportController extends Controller
      */
     public function actionIndex()
     {
+		// print_r(self::selisihWaktu('07:00','09:00'));
+		// die();
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		$paramx=Yii::$app->getRequest()->getQueryParam('idx');
 		if ($paramFile){
@@ -178,6 +180,41 @@ class AbsenImportController extends Controller
               $items->save();
            // }
          // }
+        return true;
+      }
+    }
+	
+	/**
+     * TEMP  : CHECKED OVER TIME LIMIT
+     */
+	public function actionCheckLimitTime()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $idKode=$request->post('idKode');
+			$items = AbsenImportTmp::find()->where(['ID'=>$idKode])->one();
+			$items->STT_LEMBUR =7;
+			$items->save();
+        return true;
+      }
+    }
+	
+	/**
+     * TEMP  : CHECKED OVER TIME LIMIT
+     */
+	public function actionUncheckLimitTime()
+    {
+      	if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          $request= Yii::$app->request;
+          $idKode=$request->post('idKode');
+			$items = AbsenImportTmp::find()->where(['ID'=>$idKode])->one();
+			$items->STT_LEMBUR =8;			
+			$items->LEBIH_WAKTU= self::selisihWaktu('07:00',$items->OUT_WAKTU);
+			$items->OUT_WAKTU ='07:00';
+			$items->OUT_TGL= self::formulaTglOut('07:00',$items->IN_TGL);
+			$items->save();
         return true;
       }
     }
@@ -312,8 +349,8 @@ class AbsenImportController extends Controller
 			// print_r($kdPo);
 			// die();
 			if($textValidate=="setuju"){
-				$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
-				SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
+				$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,LEBIH_WAKTU,GRP_ID,STT_LEMBUR)
+				SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,LEBIH_WAKTU,GRP_ID,STT_LEMBUR
 				FROM absen_import_tmp
 				";
 				Yii::$app->db->CreateCommand($sql)->execute();
@@ -623,6 +660,23 @@ class AbsenImportController extends Controller
 		}else{
 			return false;
 		}		 
+	}
+	
+	/**=========================
+	* get Selisih Waktu
+	**==========================
+	*/
+	private function selisihWaktu($starTime,$endTime){
+		$awal  = strtotime($starTime);
+		$akhir = strtotime($endTime);
+		// $awal  = strtotime('07:00:00');
+		// $akhir = strtotime('10:00:00');
+		$diff  = $akhir - $awal;
+		$jam   = floor($diff / (60 * 60));
+		$menit = $diff - $jam * (60 * 60);
+		//$X='Waktu tinggal: ' . $jam .  ' jam, ' . floor( $menit / 60 ) . ' menit';
+		$X='0'.$jam.':0'.floor($menit / 60 );
+		return $X;
 	}
 	
 	/**================================================

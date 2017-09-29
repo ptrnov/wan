@@ -103,7 +103,36 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,			
+			'noWrap'=>true,	
+			'value'=>function($data)use($key,$value){
+				$x=$value[$key]['FIELD'];
+				if($x=='IN_WAKTU' OR $x=='OUT_WAKTU'){					
+					if ($data->STT_LEMBUR=='0'){
+						return $data->$x;
+					}elseif($data->STT_LEMBUR=='3'){
+						return 'AL';
+					}elseif($data->STT_LEMBUR=='4'){
+						return 'SK';
+					}elseif($data->STT_LEMBUR=='5'){
+						return 'LK';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='2'){
+						if ($data->$x<>'00:00:00'){
+							return $data->$x;
+						}else{
+							return 'OFF';
+						}
+					}else{
+						return $data->$x;
+					};					
+				}else{
+					return $data->$x;
+				}
+				
+			},			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
