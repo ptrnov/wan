@@ -40,7 +40,7 @@ class AbsenPaid extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'absen_payroll';
+        return 'absen_import';
     }
 
     /**

@@ -530,11 +530,12 @@ class AbsenImportController extends Controller
 	}
 	
 	//CLOSING TIME OUT on 07:59
+	//belum di gunakan
 	private function formulaOut($valWaktuOut){
 		if(self::checkWaktu($valWaktuOut)){
 			$timeOUT=self::checkWaktu($valWaktuOut);
-			if ($timeOUT >='08:00'){
-				return '07:59';
+			if ($timeOUT >='07:00'){
+				return '07:00';
 			}
 		}else{
 			//return '17:00';
