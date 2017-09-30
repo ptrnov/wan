@@ -206,7 +206,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 	];
 	//ACTION
-	/* $attDinamikTmp[]=[
+	$attDinamikTmp[]=[
 		'class' => 'kartik\grid\ActionColumn',
 		'template' => '{review}{delete}',
 		'header'=>'ACTION',
@@ -230,7 +230,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','0',''),
-	]; */
+	]; 
 	$tempImport= GridView::widget([
 		'id'=>'tmp-import-absen',
 		'dataProvider' => $dataProviderTmp,
