@@ -187,7 +187,7 @@ $this->registerCss("
 				$options1 = [
 							'id'=>'payroll-check-data',
 							'data-pjax' => true,
-							'data'=>'["oklah","asd"]',
+							//'data'=>'["oklah","asd"]',
 							'class'=>"btn btn-default btn-sm"  
 				];
 				$icon1 = '<span class="fa fa-exchange fa-lg"></span>';
