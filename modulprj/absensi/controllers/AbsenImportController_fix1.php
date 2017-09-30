@@ -486,8 +486,11 @@ class AbsenImportController extends Controller
 										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);									//FINGER
 										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
 										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);											//WAKTU MASUK
-										$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL KELUAR
-										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
+										//$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));		//TGL KELUAR
+										$modelTmp->OUT_TGL=self::formulaTglOut($srcRows[$OUT],$srcRows[$i]);							//TGL KELUAR
+										$modelTmp->OUT_WAKTU=self::formulaOut($srcRows[$OUT]);											//WAKTU KELUAR
+										//$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
+										$modelTmp->STT_LEMBUR=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->save();										
 								}
 								
@@ -501,36 +504,64 @@ class AbsenImportController extends Controller
 	}
 	
 	// POSISI INSERT STS_LEMBUR DAN IJIN
-	private function formulaStt($valWaktu,$valTgl){
-		if(self::checkWaktu($valWaktu)){
+	private function formulaStt($valWaktuIn,$valWaktuOut){
+		if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
 			return '0';
-		}elseif($valWaktu=='AL' OR $valWaktu=='al'){
+		}elseif(($valWaktuIn=='AL' or $valWaktuIn=='al') OR ($valWaktuOut=='AL' or $valWaktuOut=='al')){
 			return '3';
-		}elseif($valWaktu=='OF' OR $valWaktu=='of'){
+		}elseif(($valWaktuIn=='OF' or $valWaktuIn=='of') OR ($valWaktuOut=='OF' or $valWaktuOut=='of')){
 			return '2';
+		}elseif($valWaktuIn=='' AND $valWaktuOut<>''){
+			return '2';
+		}elseif($valWaktuIn<>'' AND $valWaktuOut==''){
+			return '2';
+		}elseif($valWaktuIn=='' AND $valWaktuOut==''){
+			return '3';
 		}else{
 			return '3';
 		}		
 	}
 	
 	private function formulaIn($valWaktuIn,$valTgl){
-		if(self::checkWaktu($valWaktu)){
-			return self::checkWaktu($valWaktu);
+		if(self::checkWaktu($valWaktuIn)){
+			return self::checkWaktu($valWaktuIn);
 		}else{
-			return '08:00';
+			return '00:00';
 		};	
 	}
 	
-	private function formulaOut($valWaktuOut,$valTgl){
-		if(self::checkWaktu($valWaktu)){
-			return self::checkWaktu($valWaktu);
+	//CLOSING TIME OUT on 07:59
+	//belum di gunakan
+	private function formulaOut($valWaktuOut){
+		if(self::checkWaktu($valWaktuOut)){
+			$timeOUT=self::checkWaktu($valWaktuOut);
+			if ($timeOUT >='07:00'){
+				return '07:00';
+			}else{
+				return $timeOUT;
+			}
 		}else{
-			return '17:00';
+			//return '17:00';
+			return '00:00';
 		};	
 	}
 	
 	private function formulaTglOut($valWaktuOut,$valTgl){
-		
+		$strtgl=date('Y-m-d', strtotime(str_replace("'","",(string)$valTgl)));
+		//if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
+		if(self::checkWaktu($valWaktuOut)){
+			//$timeIN= self::checkWaktu($valWaktuIn);
+			$timeOUT= self::checkWaktu($valWaktuOut);
+			if ($timeOUT >'00:00' AND $timeOUT<'08:00'){
+				return date('Y-m-d', strtotime('+1 day',  strtotime($strtgl)));
+				// return date('Y-m-d', strtotime('+1 day',  strtotime(date('Y-m-d', strtotime(str_replace("'","",(string)$valTgl))))));
+				// date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')));
+			}else{
+				return $strtgl;
+			}
+		}else{
+			return $strtgl;
+		}
 	}
 	
 	/**=========================
@@ -542,6 +573,31 @@ class AbsenImportController extends Controller
 		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
 		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $inVal);
 		return $a!=false?$inVal:false;
+	}
+	
+	/**====================================
+     * VALIDATION INPUT DATE
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	function getValidateDate($date)
+	{		
+		$tgl=date('Y-m-d', strtotime($date)); 
+		if($tgl<>'1970-01-01'){ //check String
+			if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$tgl))
+			{
+				$tempDate = explode('-', $tgl);
+				// checkdate(month, day, year)
+				return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
+			}else{
+				//echo 'Date is invalid';
+				return false;
+			}
+		}else{
+			return false;
+		}		 
 	}
 	
 	/**================================================
@@ -680,30 +736,7 @@ class AbsenImportController extends Controller
 	public function getValidateDataImport($paramFile){
 		
 	}
-	/**====================================
-     * VALIDATION INPUT DATE
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * ====================================
-     */
-	function getValidateDate($date)
-	{		
-		$tgl=date('Y-m-d', strtotime($date)); 
-		if($tgl<>'1970-01-01'){ //check String
-			if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$tgl))
-			{
-				$tempDate = explode('-', $tgl);
-				// checkdate(month, day, year)
-				return checkdate($tempDate[1], $tempDate[2], $tempDate[0]);
-			}else{
-				//echo 'Date is invalid';
-				return false;
-			}
-		}else{
-			return false;
-		}		 
-	}
+	
 
 	
 	
@@ -911,8 +944,10 @@ class AbsenImportController extends Controller
 					["  [KARYAWAN]    = Sheet Data-Karyawan"],
 					["5.Exceptions/Ketidak hadiran."],
 					["  AL [Alfa] = tidak masuk "],							
-					["  OF [OFF]  = tidak masuk untuk Harian"],	
-					["  IJ [IJIN] = dianggap masuk "],					
+					["  OF [OFF]  = tidak masuk"],	
+					["  IJ [IJIN] = tidak masuk "],	
+					["  SK [SAKIT] = tidak masuk "],					
+					["  LK [LUAR KOTA] = tidak masuk "],					
 				],
 				'headerStyle'=>[					
 					[

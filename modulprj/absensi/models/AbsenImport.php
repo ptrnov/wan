@@ -49,7 +49,7 @@ class AbsenImport extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_AT', 'UPDATE_AT','STT_LEMBUR'], 'safe'],
+            [['IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_AT', 'UPDATE_AT','STT_LEMBUR','LEBIH_WAKTU'], 'safe'],
             [['GRP_ID', 'STATUS'], 'integer'],
             [['PAY_DAY', 'VAL_PAGI', 'VAL_LEMBUR', 'PAY_PAGI', 'PAY_LEMBUR'], 'number'],
             [['DCRP_DETIL'], 'string'],
@@ -95,4 +95,37 @@ class AbsenImport extends \yii\db\ActiveRecord
             'DCRP_DETIL' => 'Dcrp  Detil',
         ];
     }
+	
+	public function fields()
+	{
+		return [			
+			'KAR_NM'=>function($model){
+				return $model->KAR_NM;
+			},
+			'DEP_NM'=>function($model){
+				return $model->DEP_NM;
+			},					
+			'HARI'=>function($model){
+				return $model->HARI;
+			},	
+			'IN_TGL'=>function($model){
+				return $model->IN_TGL;
+			},				
+			'IN_WAKTU'=>function($model){
+				return 'sss';//$model->IN_WAKTU;
+			},	
+			'OUT_TGL'=>function($model){
+				return $model->OUT_TGL;
+			},
+			'OUT_WAKTU'=>function($model){
+				return $model->OUT_WAKTU;
+			},
+			'PAY_PAGI'=>function($model){
+				return $model->PAY_PAGI;
+			},
+			'PAY_LEMBUR'=>function($model){
+				return $model->PAY_LEMBUR;
+			}	
+		];
+	}
 }

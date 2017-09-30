@@ -66,6 +66,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				]
 			],					
 	];
+	
 	$attDinamikLog[] =[
 		'class'=>'kartik\grid\CheckboxColumn',
 		'header'=>'Lembur',
@@ -81,14 +82,17 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		],
 		'rowSelectedClass' => GridView::TYPE_WARNING,
 		'checkboxOptions' => function ($model, $key, $index, $column){		
-				if($model->STT_LEMBUR == 1)
+				if($model->STT_LEMBUR == 1 )
 				{
 					return ['checked' => $model->ID];
-				}else{
+				}elseif($model->STT_LEMBUR ==0 OR $model->STT_LEMBUR ==8){
 					return ['value' => $model->ID];
+				}else{
+					return ['value' => $model->ID,'hidden'=>true];
 				}				
 		}
 	];
+	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsLog as $key =>$value[]){			
 		$attDinamikLog[]=[		
@@ -101,7 +105,43 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,			
+			'noWrap'=>true,	
+			'value'=>function($data)use($key,$value){
+				$x=$value[$key]['FIELD'];
+				if($x=='IN_WAKTU' OR $x=='OUT_WAKTU'){					
+					if ($data->STT_LEMBUR=='0'){
+						return $data->$x;
+					}elseif($data->STT_LEMBUR=='3'){
+						return 'AL';
+					}elseif($data->STT_LEMBUR=='4'){
+						return 'SK';
+					}elseif($data->STT_LEMBUR=='5'){
+						return 'LK';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='2'){
+						if ($data->$x<>'00:00:00'){
+							return $data->$x;
+						}else{
+							return 'OFF';
+						}
+					}else{
+						return $data->$x;
+					};					
+				}elseif($x=='VAL_PAGI' OR $x=='VAL_LEMBUR'){
+					if ($data->STT_LEMBUR=='0' OR $data->STT_LEMBUR=='1' OR $data->STT_LEMBUR=='8' ){
+						return $data->$x;
+					}else{
+						return 0;
+					}
+			    }else{
+					return $data->$x;
+				};
+				
+				
+			},			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',

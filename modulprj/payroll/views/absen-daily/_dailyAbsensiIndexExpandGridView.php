@@ -126,7 +126,56 @@ use yii\web\View;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,			
+			'noWrap'=>true,	
+			/* 'value'=>function($data)use($key,$value){
+				$x=$value[$key]['FIELD'];
+				//return $data['PAGI_2017-09-22'];
+				return $data['STT_LEMBUR'];
+				// $splt=explode('_',$x);
+				// if($splt[0]=='PAGI'){
+					//return $splt[0];
+					// if ($data['STT_LEMBUR']=='0'){
+						// return $data[$x];
+					// }elseif($data['STT_LEMBUR']=='3'){
+						// return 'AL';
+					// }elseif($data['STT_LEMBUR']=='4'){
+						// return 'SK';
+					// }elseif($data['STT_LEMBUR']=='5'){
+						// return 'LK';
+					// }elseif($data['STT_LEMBUR']=='6'){
+						// return 'IJ';
+					// }
+				// }else{
+					// return 'x';
+				// }
+								
+				//if($splt[0]=='PAGI'){				
+				//if($x=='PAGI_2017-09-22'){				
+					// if ($data->STT_LEMBUR=='0'){
+						// return $data[$x];
+					// }elseif($data->STT_LEMBUR=='3'){
+						// return 'AL';
+					// }elseif($data->STT_LEMBUR=='4'){
+						// return 'SK';
+					// }elseif($data->STT_LEMBUR=='5'){
+						// return 'LK';
+					// }elseif($data->STT_LEMBUR=='6'){
+						// return 'IJ';
+					// }elseif($data->STT_LEMBUR=='6'){
+						// return 'IJ';
+					// }elseif($data->STT_LEMBUR=='2'){
+						// if ($data[$x]<>'00:00:00'){
+							// return $data[$x];
+						// }else{
+							// return 'OFF';
+						// }
+					// }else{
+						// $data[$x];
+					// };					
+				// }else{
+					// $data[$x];
+				// }		 
+			},	 */		
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
@@ -136,7 +185,7 @@ use yii\web\View;
 					'background-color'=>$value[$key]['BCOLOR'],
 				]
 			],  
-			'format'=>['decimal', 2],
+			//'format'=>['decimal', 2],
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>$value[$key]['align'],

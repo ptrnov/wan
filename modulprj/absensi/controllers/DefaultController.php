@@ -34,7 +34,7 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         //return $this->render('index');
-		$pathImport=realpath(Yii::$app->basePath) . '/web/uploads/temp/test.xlsx';
+		/* $pathImport=realpath(Yii::$app->basePath) . '/web/uploads/temp/test.xlsx';
 		$data = \moonland\phpexcel\Excel::widget([
 				'id'=>'import-absensi',
 				'mode' => 'import',
@@ -58,11 +58,39 @@ class DefaultController extends Controller
 					$rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0				
 			}
 			
-		};
+		}; */
 		//print_r($rsltTgl);	
 		//print_r($cnt);	
 		//return self::checkWaktu('09:00');
-		return date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')));
+		// return date('Y-m-d', strtotime('+1 day', strtotime('2017-09-22')))
+		
+/* 		<style>
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+</style>
+<span class="blink">TULISAN BERKEDIP</span>; */
+
+
+		$awal  = strtotime('2017-08-10 9:00:00');
+		$akhir = strtotime('2017-08-10 07:00:00');
+		$diff  = $akhir - $awal;
+
+		$jam   = floor($diff / (60 * 60));
+		$menit = $diff - $jam * (60 * 60);
+		$X='Waktu tinggal: ' . $jam .  ' jam, ' . floor( $menit / 60 ) . ' menit';
+		return ($X);
     }
 	
 	private function checkWaktu($value){
