@@ -10,10 +10,10 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
-	$colorHeader='rgba(0, 0, 0, 0.15)';
-	$colorHeader1='rgba(0, 0, 0, 0.25)';
-	$colorHeader2='rgba(0, 0, 0, 0.15)';
-	$colorTTL='rgba(0, 0, 0, 0.25)';
+	$colorHeader='rgba(230, 230, 230, 1)';
+	$colorHeader1='rgba(140, 140, 140, 1)';
+	$colorHeader2='rgba(230, 230, 230, 1)';
+	$colorTTL='rgba(140, 140, 140, 1)';
 	
 	$modelDetail=$dataProviderDetail->getModels();
 	// foreach($modelDetail[0] as $rows => $val){
@@ -25,7 +25,7 @@ use yii\web\View;
 		//unset($splt);
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
-		if($splt[0]=='PAGI' OR $splt[0]=='OT'){
+		if($splt[0]=='PAGI' OR $splt[0]=='LBR'){
 			$nmField1[]=$rows;		//FULL FIELD NAME
 			$nmLabel[]=$splt[0];	//SPLIT LABEL NAME
 			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center','BCOLOR'=>$colorHeader]];
@@ -41,7 +41,7 @@ use yii\web\View;
 		//unset($splt);
 		//$ambilField[]=$rows; 		
 		$splt=explode('_',$rows);	
-		if($rows=='TTL_PAGI' OR $rows=='TTL_OT'){
+		if($rows=='TTL_PAGI' OR $rows=='TTL_LBR'){
 			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[1],'align'=>'center','BCOLOR'=>$colorTTL]];
 			if($rows=='TTL_PAGI'){
 				$headerContent2[]=['content'=>'HARI_KERJA','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    

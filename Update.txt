@@ -1,0 +1,10 @@
+#Master
+cabang
+karyawan
+kar_finger
+
+#Transaksi
+absen_import_tmp		: temporari Import Log
+absen_import_file		: File Name Import
+absen_import_periode	: Prdiode Aktif
+absen_import			: Data Absensi, Payroll

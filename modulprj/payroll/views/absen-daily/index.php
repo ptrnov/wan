@@ -20,9 +20,9 @@ use yii\web\View;
 	
 	//CSS
 	$this->registerCss("
-		.kv-grid-table :link {
-			color: #fdfdfd;
-		}
+		// .kv-grid-table :link {
+			// color: #fdfdfd;
+		// }
 		/* mouse over link */
 		a:hover {
 			color: #5a96e7;
@@ -80,8 +80,8 @@ use yii\web\View;
 	]);
 	
 	$absensiPayroll=$this->render('_absensiPayroll',[
-		'searchModelPayroll' => $searchModelPayroll,
-		'dataProviderPayroll' => $dataProviderPayroll	
+		 'searchModelPaid' => $searchModelPaid,
+         'dataProviderPaid' => $dataProviderPaid
 	]);
 	
 	if($tab==0){
@@ -93,11 +93,11 @@ use yii\web\View;
 	}
 	$items=[
 		[
-			'label'=>'<i class="fa fa-files-o fa-2x"></i> Rekap Absensi','content'=>$absensi_daily,
+			'label'=>'<i class="fa fa-files-o fa-2x"></i> Rekap Absensi Payment','content'=>$absensi_daily,
 			//'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-money fa-2x"></i> List Payment Payroll','content'=>$absensiPayroll,
+			'label'=>'<i class="fa fa-money fa-2x"></i> List Payment Paid','content'=>$absensiPayroll,
 			//'active'=>$tab1,
 		]
 	];

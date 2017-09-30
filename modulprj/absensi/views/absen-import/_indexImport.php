@@ -10,17 +10,25 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
+use modulprj\absensi\models\AbsenImportPeriode;
 
+	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
+	$perode='<span class="fa-stack fa-xs text-right">				  
+				<i class="fa fa-mail-forward fa-1x"></i>
+			 </span> '.$perodeVal.'			
+	';
 	$aryFieldTmp= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'LEBIH_WAKTU','SIZE' => '6px','label'=>'Kelebihan Waktu','align'=>'center']],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
+		['ID' =>2, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
 	];	
 	$valFieldsTmp = ArrayHelper::map($aryFieldTmp, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -65,7 +73,31 @@ use yii\web\View;
 				]
 			],					
 	];
-
+	
+	$attDinamikTmp[] =[
+		'class'=>'kartik\grid\CheckboxColumn',
+		'header'=>'Limit',
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'20px',
+				'font-family'=>'tahoma',
+				'font-size'=>'8pt',
+				'background-color'=>$bColor,
+				'color'=>'white'
+			]
+		],
+		'rowSelectedClass' =>GridView::TYPE_DANGER,
+		'checkboxOptions' => function ($model, $key, $index, $column){		
+				if($model->STT_LEMBUR == 7)
+				{
+					return ['checked' => $model->ID];
+				}else{
+					return ['value' => $model->ID,'hidden'=>true];
+				}	
+		}
+	];
+	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsTmp as $key =>$value[]){			
 		$attDinamikTmp[]=[		
@@ -78,7 +110,36 @@ use yii\web\View;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,			
+			'noWrap'=>true,	
+			'value'=>function($data)use($key,$value){
+				$x=$value[$key]['FIELD'];
+				if($x=='IN_WAKTU' OR $x=='OUT_WAKTU'){					
+					if ($data->STT_LEMBUR=='0'){
+						return $data->$x;
+					}elseif($data->STT_LEMBUR=='3'){
+						return 'AL';
+					}elseif($data->STT_LEMBUR=='4'){
+						return 'SK';
+					}elseif($data->STT_LEMBUR=='5'){
+						return 'LK';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='2'){
+						if ($data->$x<>'00:00:00'){
+							return $data->$x;
+						}else{
+							return 'OFF';
+						}
+					}else{
+						return $data->$x;
+					};					
+				}else{
+					return $data->$x;
+				}
+				
+			},
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
@@ -145,7 +206,7 @@ use yii\web\View;
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 	];
 	//ACTION
-	$attDinamikTmp[]=[
+	/* $attDinamikTmp[]=[
 		'class' => 'kartik\grid\ActionColumn',
 		'template' => '{review}{delete}',
 		'header'=>'ACTION',
@@ -169,7 +230,7 @@ use yii\web\View;
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','0',''),
-	];
+	]; */
 	$tempImport= GridView::widget([
 		'id'=>'tmp-import-absen',
 		'dataProvider' => $dataProviderTmp,
@@ -182,11 +243,13 @@ use yii\web\View;
 				{					
 					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=100 WHERE ID='.$model->ID)->execute();
 					return ['class' => 'danger'];
-				}elseif(date('Y-m-d h:i:s', strtotime($model->IN_TGL.' '.$model->IN_WAKTU)) >= date('Y-m-d h:i:s', strtotime($model->OUT_TGL.' '.$model->OUT_WAKTU))){
+				}
+				/* elseif(date('Y-m-d h:i:s', strtotime((string)$model->IN_TGL.' '.(string)$model->IN_WAKTU)) > date('Y-m-d h:i:s', strtotime((string)$model->OUT_TGL.' '.(string)$model->OUT_WAKTU))){
 				//===Datetime1 > Dateime2 ====
 					Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=101 WHERE ID='.$model->ID)->execute();
 					return ['class' => 'danger'];
-				}else{
+				} */
+				else{
 					$numClients =Yii::$app->db->createCommand("SELECT x1.ID FROM absen_import x1 where x1.TERMINAL_ID='".$model->TERMINAL_ID."' AND 
 												  x1.FINGER_ID='".$model->FINGER_ID."' AND 
 												  x1.IN_TGL='".date('Y-m-d', strtotime($model->IN_TGL.' '.$model->IN_WAKTU))."'
@@ -198,7 +261,12 @@ use yii\web\View;
 					}else{
 					//===SAVED====
 						Yii::$app->db->CreateCommand('UPDATE absen_import_tmp SET STATUS=0 WHERE ID='.$model->ID)->execute();
-						return ['class' => 'default'];
+						if ($model->STT_LEMBUR=='8'){
+							return ['class' => 'warning'];
+						}else{
+							return ['class' => 'default'];
+						}
+						
 					}
 					
 				}
@@ -209,7 +277,7 @@ use yii\web\View;
 		],	
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
-			'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
+			'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' '.tombolCreatePeriode().' '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync().' '.$perode,					
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,
@@ -241,6 +309,51 @@ use yii\web\View;
 		'floatHeader'=>true,
 	]);
 
+
+ $this->registerJs("
+	var target = $(this).attr('href');
+	$('#tmp-import-absen').on('change','input[type=checkbox]',function(){
+		var idKode =$(this).val();
+		var keysSelect = $('#tmp-import-absen').yiiGridView('getSelectedRows');
+		if ($(this).is(':checked')){
+			$.ajax({
+				 url: '/absensi/absen-import/check-limit-time',
+				 //cache: true,
+				 type: 'POST',
+				 data:{keysSelect:keysSelect,idKode:idKode},
+				 dataType: 'json',
+				 success: function(response) {
+					if (response == true ){
+						  $.pjax.reload({container:'#tmp-import-absen'});
+						  console.log(idKode);
+					}
+					 else {
+
+					 }
+				 }
+			})
+		}
+		else{
+			$.ajax({
+			 url: '/absensi/absen-import/uncheck-limit-time',
+			 //cache: true,
+			 type: 'POST',
+			 data:{keysSelect:keysSelect,idKode:idKode},
+			 dataType: 'json',
+			 success: function(response) {
+				 if (response == true ){
+					 $.pjax.reload({container:'#tmp-import-absen'});
+					  $(this).parent().parent().removeClass('alert-success');
+					  console.log(idKode);
+				 }
+					else {
+						  $.pjax.reload({container:'#tmp-import-absen'});
+					}
+				}
+			})
+		}
+	});
+",$this::POS_READY);
 ?>
 <?=$tempImport?>
 

@@ -21,17 +21,18 @@ use yii\web\View;
 	/**
 	 * Import Data
 	*/
-	$detaiView1=$this->render('_dailyAbsensiIndexExpandDetailView1',[
-		'model'=>$dataProviderDetail->getModels()
+	$detaiPaidView1=$this->render('_absensiPayrollIndexExpandDetailView1',[
+		'model'=>$dataProviderDetailPaid->getModels()
 	]);
-	$detaiView2=$this->render('_dailyAbsensiIndexExpandDetailView2',[
-		'model'=>$dataProviderDetail->getModels()
+	$detaiPaidView2=$this->render('_absensiPayrollIndexExpandDetailView2',[
+		'model'=>$dataProviderDetailPaid->getModels(),
+		'modelPaid'=>$modelPaid
 	]);
 	
-	$dvAbsen=$this->render('_dailyAbsensiIndexExpandGridView',[
-		'searchModelDetail'=>$searchModelDetail,
-		'dataProviderDetail'=>$dataProviderDetail,
-		'modelHeader'=>$model
+	$dvAbsenPaid=$this->render('_absensiPayrollIndexExpandGridView',[
+		'searchModelDetailPaid'=>$searchModelDetailPaid,
+		'dataProviderDetailPaid'=>$dataProviderDetailPaid,
+		'modelPaid'=>$modelPaid
 	]);
 	
 		
@@ -41,12 +42,12 @@ use yii\web\View;
 		<dt><h5><u><b>TAKE HOME PAY</b></u></h5></dt>
 	</div><div class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 7pt;">	
 		<div class="row">
-			<?=$detaiView1?>
+			<?=$detaiPaidView1?>
 		</div>
 	</div>
 	<div class="col-xs-12 col-sm-12 col-lg-12" style="padding-top:-15px;font-family: tahoma ;font-size: 6pt;">
-		<?=$dvAbsen?>
-		<?=$detaiView2?>
+		<?=$dvAbsenPaid?>
+		<?=$detaiPaidView2?>
 	</div>
 </div>
 

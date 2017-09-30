@@ -9,13 +9,9 @@ use yii\data\ArrayDataProvider;
 use yii\debug\components\search\Filter;
 use yii\debug\components\search\matchers;
 
-use modulprj\payroll\models\AbsenPayroll;
+use modulprj\payroll\models\AbsenPaid;
 
-
-/**
- * AbsenImportSearch represents the model behind the search form about `modulprj\payroll\models\AbsenImport`.
- */
-class AbsenPayrollSearch extends AbsenPayroll
+class AbsenPayrollPaidSearch extends AbsenPaid
 {
 	public $tglStart;
 	public $tglEnd;
@@ -31,7 +27,7 @@ class AbsenPayrollSearch extends AbsenPayroll
             [['ID', 'GRP_ID', 'STATUS'], 'integer'],
 			[['tglStart','tglEnd'],'safe'],
             [['TERMINAL_ID', 'FINGER_ID', 'MESIN_NM', 'KAR_ID', 'KAR_NM', 'DEP_ID', 'DEP_NM', 'HARI', 'IN_TGL', 'IN_WAKTU', 'OUT_TGL', 'OUT_WAKTU', 'CREATE_BY', 'CREATE_AT', 'UPDATE_BY', 'UPDATE_AT', 'DCRP_DETIL'], 'safe'],
-            [['PAY_DAY', 'VAL_PAGI', 'VAL_LEMBUR', 'PAY_PAGI', 'PAY_LEMBUR','STT_LEMBUR'], 'number'],
+            [['PAY_DAY', 'VAL_PAGI', 'VAL_LEMBUR', 'PAY_PAGI', 'PAY_LEMBUR'], 'number'],
         ];
     }
 
@@ -48,10 +44,10 @@ class AbsenPayrollSearch extends AbsenPayroll
 	* SEARCH HEADER [GROUPING KARYAWAN ID].
 	* CLOSING STATMENT PER-WEEK
 	*/
-	public function searchHeader($params)
+	public function search($params)
     {
 		//$sql="call NEW_RPT_FROMAT('2017-09-07','2017-09-14')";
-		$sql="call NEW_RPT_FROMAT_PAYROLL('".date('Y-m-d', strtotime($this->tglStart))."','".date('Y-m-d', strtotime($this->tglEnd))."')";
+		$sql="call NEW_RPT_FROMAT_PAID('".date('Y-m-d', strtotime($this->tglStart))."','".date('Y-m-d', strtotime($this->tglEnd))."')";
 		//$sql="call NEW_RPT_FROMAT('".$this->tglStart."','".$this->tglEnd."')";
 		$qrySql= Yii::$app->db->createCommand($sql)->queryAll(); 		
 		$dataProvider= new ArrayDataProvider([
@@ -72,9 +68,42 @@ class AbsenPayrollSearch extends AbsenPayroll
  		$this->addCondition($filter, 'KAR_ID', true);
  		$this->addCondition($filter, 'KAR_NM', true);	
  		$this->addCondition($filter, 'DEP_NM', true);	
- 		$this->addCondition($filter, 'STATUS', true);	
- 		$this->addCondition($filter, 'MESIN_NM', true);	
- 		$this->addCondition($filter, 'DEP_NM', true);	
+		$this->addCondition($filter, 'STATUS', true);	
+		$this->addCondition($filter, 'MESIN_NM', true);	
+ 		$this->addCondition($filter, 'DEP_NM', true);
+ 		$dataProvider->allModels = $filter->filter($qrySql);
+		
+        return $dataProvider;
+	}
+		
+	/**
+	* SEARCH HEADER [GROUPING KARYAWAN ID].
+	* CLOSING STATMENT PER-WEEK
+	*/
+	public function searchExcelExport($params)
+    {
+		//$sql="call NEW_RPT_FROMAT('2017-09-07','2017-09-14')";
+		$sql="call NEW_RPT_FROMAT_EXCEL('".date('Y-m-d', strtotime($this->tglStart))."','".date('Y-m-d', strtotime($this->tglEnd))."')";
+		//$sql="call NEW_RPT_FROMAT('".$this->tglStart."','".$this->tglEnd."')";
+		$qrySql= Yii::$app->db->createCommand($sql)->queryAll(); 		
+		$dataProvider= new ArrayDataProvider([
+			'allModels'=>$qrySql,	
+			'pagination' => [
+				'pageSize' =>2000,
+			],			
+		]);
+		
+		if (!($this->load($params) && $this->validate())) {
+ 			return $dataProvider;
+ 		}
+		
+		// print_r($dataProvider);
+		// die(); 
+		
+		$filter = new Filter();
+ 		$this->addCondition($filter, 'KAR_ID', true);
+ 		// $this->addCondition($filter, 'PERIODE_MULAI', true);	
+ 		// $this->addCondition($filter, 'PERIODE_AKHIR', true);
  		$dataProvider->allModels = $filter->filter($qrySql);
 		
         return $dataProvider;

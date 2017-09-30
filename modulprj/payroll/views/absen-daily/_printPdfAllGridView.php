@@ -10,6 +10,9 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
+	$idHeader=$idgrid.'h';
+	$idHeader1=$idgrid.'h1';
+	$idHeader2=$idgrid.'h2';
 	$colorHeader='rgba(230, 230, 230, 1)';
 	$colorHeader1='rgba(140, 140, 140, 1)';
 	$colorHeader2='rgba(230, 230, 230, 1)';
@@ -20,9 +23,6 @@ use yii\web\View;
 		// $ambilField[]=$rows;
 		// $ambilValue[]=$val;
 	// };
-	// print_r($modelDetail[0]);
-	// die();
-	
 	$inc=0;
 	foreach($modelDetail[0] as $rows => $val){
 		//unset($splt);
@@ -34,7 +34,7 @@ use yii\web\View;
 			$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>$rows,'SIZE' => '6px','label'=>$splt[0],'align'=>'center','BCOLOR'=>$colorHeader]];
 			if ($splt[0]=='PAGI'){
 				$ambilFieldTgl[]=Yii::$app->hari->DayofDate($splt[1]);
-				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader2.';font-family: tahoma ;font-size: 6pt;']];
+				$headerContent1[]=['content'=>$splt[1],'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader2.';font-family: tahoma ;font-size: 6pt;height:5px']];
 				$headerContent2[]=['content'=>Yii::$app->hari->DayofDate($splt[1]),'options'=>['colspan'=>2,'class'=>'text-center','style'=>'background-color:'.$colorHeader1.';font-family: tahoma ;font-size: 6pt;']];    
 			}
 			$inc=$inc+1;
@@ -52,7 +52,7 @@ use yii\web\View;
 			$inc=$inc+1;
 		}
 	};
-	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center danger','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];								
+	$headerContent1[]=['content'=>'KETERANGAN','options'=>['colspan'=>3,'class'=>'text-center','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;height:5px']];								
 	$headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>1,'class'=>'text-center warning','style'=>'background-color:'.$colorTTL.';font-family: tahoma ;font-size: 6pt;']];    		
 	$aryFieldAbsensiDetail[]=['ID' =>$inc, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '6px','label'=>'PERHARI','align'=>'center','BCOLOR'=>$colorTTL]];	
 	
@@ -126,72 +126,24 @@ use yii\web\View;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,	
-			/* 'value'=>function($data)use($key,$value){
-				$x=$value[$key]['FIELD'];
-				//return $data['PAGI_2017-09-22'];
-				return $data['STT_LEMBUR'];
-				// $splt=explode('_',$x);
-				// if($splt[0]=='PAGI'){
-					//return $splt[0];
-					// if ($data['STT_LEMBUR']=='0'){
-						// return $data[$x];
-					// }elseif($data['STT_LEMBUR']=='3'){
-						// return 'AL';
-					// }elseif($data['STT_LEMBUR']=='4'){
-						// return 'SK';
-					// }elseif($data['STT_LEMBUR']=='5'){
-						// return 'LK';
-					// }elseif($data['STT_LEMBUR']=='6'){
-						// return 'IJ';
-					// }
-				// }else{
-					// return 'x';
-				// }
-								
-				//if($splt[0]=='PAGI'){				
-				//if($x=='PAGI_2017-09-22'){				
-					// if ($data->STT_LEMBUR=='0'){
-						// return $data[$x];
-					// }elseif($data->STT_LEMBUR=='3'){
-						// return 'AL';
-					// }elseif($data->STT_LEMBUR=='4'){
-						// return 'SK';
-					// }elseif($data->STT_LEMBUR=='5'){
-						// return 'LK';
-					// }elseif($data->STT_LEMBUR=='6'){
-						// return 'IJ';
-					// }elseif($data->STT_LEMBUR=='6'){
-						// return 'IJ';
-					// }elseif($data->STT_LEMBUR=='2'){
-						// if ($data[$x]<>'00:00:00'){
-							// return $data[$x];
-						// }else{
-							// return 'OFF';
-						// }
-					// }else{
-						// $data[$x];
-					// };					
-				// }else{
-					// $data[$x];
-				// }		 
-			},	 */		
+			'noWrap'=>false,			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
 					'width'=>$value[$key]['SIZE'],
+					'height'=>'4px	',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'7pt',
+					'font-size'=>'6pt',
 					'background-color'=>$value[$key]['BCOLOR'],
 				]
 			],  
-			//'format'=>['decimal', 2],
+			'format'=>['decimal', 2],
 			'contentOptions'=>[
 				'style'=>[
 					'text-align'=>$value[$key]['align'],
 					//'width'=>'12px',
 					'font-family'=>'tahoma, arial, sans-serif',
-					'font-size'=>'7pt',
+					'font-size'=>'6pt',
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
@@ -201,7 +153,7 @@ use yii\web\View;
 				'style'=>[
 						'text-align'=>'right',		
 						'font-family'=>'tahoma',
-						'font-size'=>'7pt',	
+						'font-size'=>'6pt',	
 						'text-decoration'=>'underline',
 						'font-weight'=>'bold',
 						'border-left-color'=>'transparant',		
@@ -225,7 +177,7 @@ use yii\web\View;
 		// $headerContent2[]=['content'=>'UPAH','options'=>['colspan'=>2,'class'=>'text-center warning','style'=>'font-family: tahoma ;font-size: 6pt;']];					
 	
 	$gvDailyAbsenDetail= GridView::widget([
-		'id'=>'daily-absen-detail',
+		'id'=>$idgrid,
 		'dataProvider' => $dataProviderDetail,
 		//'filterModel' => $searchModelDetail,
 		'filterRowOptions'=>['style'=>'background-color:'.$colorHeader.'; align:center'],
@@ -274,7 +226,7 @@ use yii\web\View;
 		'pjaxSettings'=>[
 			'options'=>[
 				'enablePushState'=>false,
-				'id'=>'daily-absen-detail',
+				'id'=>$idgrid,
 			],
 		],
 		'hover'=>true, //cursor select

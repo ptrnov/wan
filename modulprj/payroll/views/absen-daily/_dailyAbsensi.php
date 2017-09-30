@@ -11,17 +11,34 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
 use modulprj\payroll\models\AbsenPayrollSearch;	
+use modulprj\absensi\models\AbsenImportPeriode;
+use modulprj\master\models\Dept;
+use modulprj\master\models\Machine;
+
+	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
+	$perode='<span class="fa-stack fa-xs text-right">				  
+				<i class="fa fa-mail-forward fa-1x"></i>
+			 </span> '.$perodeVal.'			
+	';
+	
+	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'MESIN_NM','MESIN_NM');
+	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 	
 	$aryFieldAbsensi= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '50px','label'=>'UPAH_PERHARI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'TTL_OT','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL_PAGI','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_OT','SIZE' => '50px','label'=>'TTL_LEMBUR','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2]]],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2]]]
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>true]],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'MESIN_NM','SIZE' => '50px','label'=>'CABANG','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>$aryCbgMachine]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>$aryDept]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '40px','label'=>'UPAH/HARI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>false,'FILTER'=>false]],
+		// ['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD.START','align'=>'center','format'=>'raw','mergeHeader'=>true,'FILTER'=>false]],
+		// ['ID' =>5, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD.END','align'=>'center','format'=>'raw','mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_LBR','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL.PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_LBR','SIZE' => '50px','label'=>'TTL.LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'UANG_MAKAN','SIZE' => '50px','label'=>'UANG.MAKAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]]
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -35,10 +52,8 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 			'			
 	;
 	$arySttAbsensi= [
-	  ['STATUS' => 0, 'STT_NM' => 'Ready'],		  
-	  ['STATUS' => 100, 'STT_NM' => 'Empty'],
-	  ['STATUS' => 101, 'STT_NM' => 'DateTime'],
-	  ['STATUS' => 102, 'STT_NM' => 'OverWrite']
+	  ['STATUS' => 1, 'STT_NM' => 'Ready'],		  
+	  ['STATUS' => 2, 'STT_NM' => 'Paid']
 	];	
 	$valSttAbsensi = ArrayHelper::map($arySttAbsensi, 'STATUS', 'STT_NM');
 	
@@ -55,6 +70,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],
 			'contentOptions'=>[
@@ -63,6 +79,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					'width'=>'10px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'9pt',
+					'color'=>'red',
 				]
 			],					
 	];
@@ -76,9 +93,11 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 			},
 			'detail'=>function ($model, $key, $index, $column){
 				//$searchModelDetail = new AbsenPayrollSearch(['IN_TGL'=>$model['IN_TGL'],'KAR_ID'=>$model['KAR_ID']]);
-				$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14','KAR_ID'=>$model['KAR_ID']];
+				$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
+				$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+				//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
 				$searchModelDetail = new AbsenPayrollSearch($closingParam);
-				$dataProviderDetail = $searchModelDetail->searchHeader(Yii::$app->request->queryParams);
+				$dataProviderDetail = $searchModelDetail->searchHeader(['AbsenPayrollSearch'=>['KAR_ID'=>$model['KAR_ID']]]);
 				//$dataProviderDetail=$searchModelDetail->searchdetails(Yii::$app->request->queryParams);
 				// return Yii::$app->controller->renderPartial('_dailyAbsensiDetail',[
 					// 'searchModelDetail'=>$searchModelDetail,
@@ -97,6 +116,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					'font-family'=>'verdana, arial, sans-serif',
 					'font-size'=>'9pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],
 			'contentOptions'=>[
@@ -111,21 +131,37 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsAbsen as $key =>$value[]){	
-		// if($key=='SUB_PAY_PAGI'){
-			// $format='raw';//['decimal', 2];
-		// }else{
-			// $format='raw';
-		// }
+		if ($value[$key]['FIELD']=='MESIN_NM'){				
+			$gvfilterType=GridView::FILTER_SELECT2;
+			//$gvfilterType=false;
+			//$gvfilter =$aryDeptId;
+			$filterWidgetOpt=[				
+				'pluginOptions'=>['allowClear'=>true],		
+			]; 
+			$filterInputOpt=['placeholder'=>'-Pilih Cabang-'];
+		}elseif($value[$key]['FIELD']=='DEP_NM'){
+			$gvfilterType=GridView::FILTER_SELECT2;
+			$filterWidgetOpt=[				
+				'pluginOptions'=>['allowClear'=>true],		
+			]; 
+			$filterInputOpt=['placeholder'=>'-Pilih Dept-'];
+		}else{
+			$gvfilterType=false;
+			//$gvfilter=true;
+			$filterWidgetOpt=[];		
+			$filterInputOpt=[];					
+		};
+		
 		$attDinamikAbsensi[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
-			// 'filterType'=>$gvfilterType,
-			// 'filter'=>$gvfilter,
-			// 'filterWidgetOptions'=>$filterWidgetOpt,	
-			//'filterInputOptions'=>$filterInputOpt,				
+			'filter'=>$value[$key]['FILTER'],
+			'filterType'=>$gvfilterType,
+			'filterWidgetOptions'=>$filterWidgetOpt,	
+			'filterInputOptions'=>$filterInputOpt,				
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
-			//'mergeHeader'=>true,
+			'mergeHeader'=>$value[$key]['mergeHeader'],
 			'noWrap'=>true,			
 			'headerOptions'=>[		
 					'style'=>[									
@@ -134,6 +170,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],  
 			'format'=>$value[$key]['format'],
@@ -143,6 +180,7 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 					//'width'=>'12px',
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
+					
 					//'background-color'=>'rgba(13, 127, 3, 0.1)',
 				]
 			],
@@ -163,40 +201,38 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 		];	
 	};	
 	
-	$attDinamikAbsensi[]=[
+	/* $attDinamikAbsensi[]=[
 		'attribute'=>'STATUS',
-		'filterType'=>GridView::FILTER_SELECT2,
-		'filterWidgetOptions'=>[
-			'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
-		],
-		'filterInputOptions'=>['placeholder'=>'Select'],
-		'filter'=>$valSttAbsensi,//Yii::$app->gv->gvStatusArray(),
-		'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
+		'label'=>'STATUS',
+		 // 'filterType'=>GridView::FILTER_SELECT2,
+		// 'filterWidgetOptions'=>[
+			// 'pluginOptions' =>Yii::$app->gv->gvPliginSelect2(),
+		// ],
+		// 'filterInputOptions'=>['placeholder'=>'Select'],
+		// 'filter'=>$valSttAbsensi,//Yii::$app->gv->gvStatusArray(),
+		// 'filterOptions'=>Yii::$app->gv->gvFilterContainHeader('0','50px',$bColor),
+		'filter'=>false,
 		'hAlign'=>'right',
 		'vAlign'=>'middle',
-		'mergeHeader'=>false,
+		'mergeHeader'=>true,
 		'noWrap'=>false,
 		'format' => 'raw',	
 		'value'=>function($model){
-			if($model->STATUS==0){
+			if($model['STATUS']==1){
 				return 'Ready';
-			}elseif($model->STATUS==100){
-				return 'Empty';
-			}elseif($model->STATUS==101){
-				return 'DateTime';
-			}elseif($model->STATUS==102){
-				return 'Overwrite';
-			}
+			}elseif($model->STATUS==2){
+				return 'Paid';
+			};
 			//return sttMsgImport($model->STATUS);				 
 		},
 		//gvContainHeader($align,$width,$bColor)
-		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
+		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor,'white'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
-	];
+	]; */
 	//ACTION
 	$attDinamikAbsensi[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{print}',
+		'template' => '{print}{bayar}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
@@ -210,10 +246,10 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 		],
 		'buttons' => [
 			'print' =>function ($url, $model){
-			 return  tombolPrint($model);
+				return  tombolPrint($model);
 			},
-			'delete' =>function ($url, $model){
-			  //return  tombolDeleteTmp($url, $model);
+			'bayar' =>function ($url, $model){
+				return tombolPaid($model);
 			},
 		], 
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
@@ -259,11 +295,11 @@ use modulprj\payroll\models\AbsenPayrollSearch;
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
-			'heading'=>tombolPrintAll(),
+			'heading'=>tombolPrintAll().' '.tombolCreatePeriode().' '.$perode.' '.tombolCheckUlang(),
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,
-			'footer'=>false,
+			//'footer'=>false,
 			
 		],
 		'pjax'=>true,

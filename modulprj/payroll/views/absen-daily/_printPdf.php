@@ -15,6 +15,7 @@ use yii\web\View;
 		'dataProviderDetail'=>$dataProviderDetail,
 		'model'=>$model
 	]);
+	$imgStr=Yii::$app->arrayBantuan->gambar1();
 ?>
 
 <div class="container-fluid" style="padding-top:10px;background-color:white;font-family: verdana, arial, sans-serif ;font-size: 7pt">
@@ -23,13 +24,22 @@ use yii\web\View;
 	</div>
 	<div class="col-xs-12 col-sm-12 col-lg-12" style="font-family: tahoma ;font-size: 6pt;">	
 		<div class="row">
-			<dl>			
+			<dl style="width:300px; padding-top:20px;float:left;">			
 				<dt style="width:100px;float:left;">NAMA</dt>
 				<dd>: <?=$model[0]['KAR_NM'] ?></dd>
 				<dt style="width:100px; float:left;">Divisi</dt>
 				<dd>: <?=$model[0]['DEP_NM'] ?></dd>
 				<dt style="width:100px; float:left;">PERIODE</dt>
 				<dd>: <?=$model[0]['TGL_STARTING'] ?>  s/d  <?=$model[0]['TGL_CLOSING'] ?></dd>
+			</dl>
+			<dl style="float:right;">
+				<table style="width:300px">			
+					<tr>
+						<th style="text-align:left;padding-left:300px;width:50px;text-align:right;font-weight: normal;">
+							<?=Html::img($imgStr,['width'=>'140','height'=>'60']);?>
+						</th>
+					</tr>			
+				</table>
 			</dl>
 		</div>
 	</div>
@@ -46,25 +56,25 @@ use yii\web\View;
 					<th style="width:100px">Pagi</th>
 					<th style="width:10px">:</th>
 					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_PAGI'],2) ?></th>
-					<th style="width:80px;padding-left:20px">Pinjaman</th>
-					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_PINJAMAN'],2) ?></th>
-				  </tr>
-				   <tr>
-					<th style="width:100px">Lembur</th>
-					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_OT'],2) ?></th>
 					<th style="width:80px;padding-left:20px">PPh</th>
 					<th style="width:10px">:</th>
 					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_PPH'],2) ?></th>
 				  </tr>
+				   <tr>
+					<th style="width:100px">Lembur</th>
+					<th style="width:10px">:</th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_LBR'],2) ?></th>					
+					<th style="width:80px;padding-left:20px">Pinjaman</th>
+					<th style="width:10px">:</th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_PINJAMAN'],2) ?></th>
+				  </tr>
 				  <tr>
 					<th style="width:100px">Uang Makan Malam</th>
 					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['SUB_PAY_OT'],2) ?></th>
-					<th style="width:80px;padding-left:20px">Jamsostek</th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['UANG_MAKAN'],2) ?></th>
+					<th style="width:80px;padding-left:20px">Pot.Telat</th>
 					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_JAMSOSTEK'],2) ?></th>
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($model[0]['TTL_POTONGAN_PAGI'],2) ?></th>
 				  </tr>
 				  <tr>
 					<th style="width:100px">Total Upah / Minggu</th>

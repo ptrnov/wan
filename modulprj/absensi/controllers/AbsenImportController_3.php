@@ -1,6 +1,6 @@
 <?php
 
-namespace modulprj\payroll\controllers;
+namespace modulprj\absensi\controllers;
 
 use Yii;
 use yii\web\Controller;
@@ -20,25 +20,23 @@ use yii\widgets\Pjax;
 use yii\web\Response;
 use yii\web\Request;
 use kartik\form\ActiveForm;
-use kartik\mpdf\Pdf;
-use yii\base\DynamicModel;
 
 use ptrnov\postman4excel\Postman4ExcelBehavior;
-use modulprj\absensi\models\AbsenImportPeriode;
-use modulprj\payroll\models\AbsenPayroll;
-use modulprj\payroll\models\AbsenPayrollSearch;
-use modulprj\payroll\models\AbsenPaid;
-use modulprj\payroll\models\AbsenPayrollPaidSearch;
-use modulprj\payroll\models\AbsenPayrollPrintSearch;
+
+use modulprj\absensi\models\AbsenImport;
+use modulprj\absensi\models\AbsenImportSearch;
+use modulprj\absensi\models\AbsenImportFile;
+use modulprj\absensi\models\AbsenImportTmp;
+use modulprj\absensi\models\AbsenImportTmpSearch;
 use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
-use modulprj\master\models\TimetableGroup;
+use modulprj\absensi\models\AbsenImportPeriode;
 
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
-class AbsenDailyController extends Controller
+class AbsenImportController extends Controller
 {
     /**
      * @inheritdoc
@@ -68,25 +66,27 @@ class AbsenDailyController extends Controller
      */
     public function actionIndex()
     {
-		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
-		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
-		
 		$paramFile=Yii::$app->getRequest()->getQueryParam('id');
 		$paramx=Yii::$app->getRequest()->getQueryParam('idx');
 		if ($paramFile){
-			$sqlStr="UPDATE absen_import SET STT_UPDATE=1 WHERE STATUS<>2 AND (IN_TGL BETWEEN '".$modelPrd->TGL_START."' AND '".$modelPrd->TGL_END."');";
-			$cmd_update=Yii::$app->db->createCommand($sqlStr);
-			$cmd_update->execute();
+			$dataModelImport=self::getArryFile($paramFile);//->getModels();
+			if(!$dataModelImport){
+				$js='$("#msg-erro-format").modal("show")';
+				$this->getView()->registerJs($js);
+			}else{
+				
+			}
+		}else{
+			if(!$paramx){
+				//DELETE STOCK GUDANG | SO_TYPE=1
+				
+			}	
 		};
 		
-		
-        $searchModelAbsensi = new AbsenPayrollSearch($closingParam);
-        $dataProviderAbsensi = $searchModelAbsensi->searchHeader(Yii::$app->request->queryParams);
-        //$dataProviderAbsensi = $searchModelAbsensi->searchHeader($param);
-		
-		$searchModelPaid = new AbsenPayrollPaidSearch($closingParam);
-        $dataProviderPaid = $searchModelPaid->search(Yii::$app->request->queryParams);
+        $searchModelTmp = new AbsenImportTmpSearch();
+        $dataProviderTmp = $searchModelTmp->search(Yii::$app->request->queryParams);
+		$searchModel = new AbsenImportSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 		
 		//return self::getValidateDate('2017-12-12');
 		//return self::getValidateDate('12-12-2017');
@@ -95,285 +95,50 @@ class AbsenDailyController extends Controller
 		//return checkdate('2017','12', '12');
 		//getValidateTime
         return $this->render('index', [
-			'searchModelAbsensi' => $searchModelAbsensi,
-            'dataProviderAbsensi' => $dataProviderAbsensi,
-            'searchModelPaid' => $searchModelPaid,
-            'dataProviderPaid' => $dataProviderPaid
+			'searchModelTmp' => $searchModelTmp,
+            'dataProviderTmp' => $dataProviderTmp,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,			
+			'dataModelImport'=>$dataModelImport
         ]);
-    }
-	
-	/**
-     * TEMPORARY : BAYAR GAJI
-     */
-	public function actionPaid($id,$start,$end)
-    {
-		//print_r($id.'-'.$start.'-'.$end);
-		$sqlStr="UPDATE absen_import SET STATUS=2 WHERE KAR_ID='".$id."' AND (IN_TGL BETWEEN '".$start."' AND '".$end."');";
-		$cmd_update=Yii::$app->db->createCommand($sqlStr);
-		$cmd_update->execute();
-		return $this->redirect(['index']);		
     }
 
 	/**
-     * TEMPORARY : PRINT PER KARYAWAN
+     * TEMPORARY : CLEAR /HAPUS LIST 
      */
-	public function actionPrint($id)
+	public function actionClearTmp()
     {
-		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
-		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
-		$searchModelDetail = new AbsenPayrollSearch($closingParam);
-		$dataProviderDetail=$searchModelDetail->searchHeader(['AbsenPayrollSearch'=>['KAR_ID'=>$id]]);
-		$content= $this->renderPartial( '_printPdf',[
-			'dataProviderDetail'=>$dataProviderDetail,
-			'model'=>$dataProviderDetail->getModels()
-		]);
-		
-		$pdf = new Pdf([
-			// set to use core fonts only
-			'mode' => Pdf::MODE_CORE,
-			// A4 paper format
-			'format' => Pdf::FORMAT_A4,
-			// portrait orientation
-			'orientation' => Pdf::ORIENT_PORTRAIT,
-			// stream to browser inline
-			'destination' => Pdf::DEST_BROWSER,
-			//'destination' => Pdf::DEST_FILE ,
-			// your html content input
-			'content' => $content,
-			// format content from your own css file if needed or use the
-			// enhanced bootstrap css built by Krajee for mPDF formatting
-			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
-			'cssFile' => '@modulprj/web/addasset/pdf-asset/kv-mpdf-bootstrap.min.css',
-			// any css to be embedded if required
-			'cssInline' => '.kv-heading-1{font-size:12px}',
-			 // set mPDF properties on the fly
-			//'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
-			 // call mPDF methods on the fly
-			// 'methods' => [
-				// 'SetHeader'=>['Copyright@wanindo '.date("r")],
-				// 'SetFooter'=>['{PAGENO}'],
-			// ]
-		]);
-		
-		return $pdf->render();
-		
-    }
-	
-	/**
-     * TEMPORARY : PRINT PER KARYAWAN
-     */
-	public function actionRePrint($id)
-    {
-		Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
-		//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
-		$searchModelDetail = new AbsenPayrollPaidSearch($closingParam);
-		$dataProviderDetail=$searchModelDetail->search(['AbsenPayrollPaidSearch'=>['KAR_ID'=>$id]]);
-		$content= $this->renderPartial( '_printPdf',[
-			'dataProviderDetail'=>$dataProviderDetail,
-			'model'=>$dataProviderDetail->getModels()
-		]);
-		
-		$pdf = new Pdf([
-			// set to use core fonts only
-			'mode' => Pdf::MODE_CORE,
-			// A4 paper format
-			'format' => Pdf::FORMAT_A4,
-			// portrait orientation
-			'orientation' => Pdf::ORIENT_PORTRAIT,
-			// stream to browser inline
-			'destination' => Pdf::DEST_BROWSER,
-			//'destination' => Pdf::DEST_FILE ,
-			// your html content input
-			'content' => $content,
-			// format content from your own css file if needed or use the
-			// enhanced bootstrap css built by Krajee for mPDF formatting
-			//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
-			'cssFile' => '@modulprj/web/addasset/pdf-asset/kv-mpdf-bootstrap.min.css',
-			// any css to be embedded if required
-			'cssInline' => '.kv-heading-1{font-size:12px}',
-			 // set mPDF properties on the fly
-			'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
-			 // call mPDF methods on the fly
-			'methods' => [
-				'SetHeader'=>['Copyright@wanindo '.date("r")],
-				'SetFooter'=>['{PAGENO}'],
-			]
-		]);
-		
-		return $pdf->render();
-		
+        $cmd_clear=Yii::$app->db->createCommand("
+				DELETE FROM absen_import_tmp;
+		");
+		$cmd_clear->execute();
+		return $this->redirect(['index']);
     }
 	/**
-     * TEMPORARY : TEMPORARY : PRINT ALL KARYAWAN
+     * TEMPORARY : CREATE
      */
-	public function actionPrintAll()
+    public function actionCreatePeriode()
     {
+        $modelPeriode = new AbsenImportPeriode();
+		//$model->scenario='create';
+        $modelPeriode = AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		if ($modelPeriode->load(Yii::$app->request->post())) {
+			$hsl = \Yii::$app->request->post();
+				$modelPeriode->TGL_START = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_START']));
+				$modelPeriode->TGL_END = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_END']));
+				$modelPeriode->TIPE =0;
+				$modelPeriode->AKTIF =1; 
+				if ($modelPeriode->save()){
+					//return $this->redirect(['index','#ai-tab1']);
+				    return $this->redirect(['/absensi/absen-import#ai-tab1']);
+				}  
+		}else{
+			return $this->renderAjax('_formPeriode', [
+                'modelPeriode' => $modelPeriode,
+            ]);
 		
-		$model = new \yii\base\DynamicModel([
-			'TT_GRP_ID','CAB_ID','DEP_ID'
-		]);
-		
-		$model->addRule(['TT_GRP_ID','CAB_ID','DEP_ID'], 'required')
-         ->addRule(['TT_GRP_ID','CAB_ID','DEP_ID'], 'safe');
-        //->addRule('TT_GRP_ID',['max'=>100]);
-		//$model = TimetableGroup::find()->all();
-		//$model = new TimetableGroup;//::find();//->all();
-		
-		if (!$model->load(Yii::$app->request->post())) {
-			return $this->renderAjax('_fromPrintAll', [
-					'model' => $model
-				]); 				
-		}else{				
-			 $hsl = \Yii::$app->request->post();		    
-		     $cabId = $hsl['DynamicModel']['CAB_ID'];
-		     $depId = $hsl['DynamicModel']['DEP_ID'];
-			 $grpId = $hsl['DynamicModel']['TT_GRP_ID'];
-			 $aryModelKar=Karyawan::find()->where(['CAB_ID'=>$cabId,'DEP_ID'=>$depId,'GRP_ID'=>$grpId])->all();
-			 foreach($aryModelKar as $row => $val){
-				 if ($row==0){
-					 $data="'".$val['KAR_ID']."'";
-				 }else{
-					 $data=$data.",'".$val['KAR_ID']."'";
-				 }				
-			 };
-			// $aryKarID="(".$data.")";
-			 $aryKarID="(".$data.")";
-			 // print_r($aryKarID);
-			 // die();
-			 
-			 Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-			// if(Yii::$app->request->isAjax){				
-				// $model->load(Yii::$app->request->post());				
-				// return Json::encode(\yii\widgets\ActiveForm::validate($model));
-			// }else{
-				// if ($model->load(Yii::$app->request->post())) {
-					//$aryKarID="('3.0915.0001','3.0915.0002','3.0915.0004')";
-					//$aryKarID=('3.0915.0001','3.0915.0002','3.0915.0004');
-					$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-					$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END,'aryKarID'=>$aryKarID];
-					//$closingParam=['tglStart'=>'2017-09-08','tglEnd'=>'2017-09-14'];
-					$searchModelDetail = new AbsenPayrollPrintSearch($closingParam);
-					
-					$dataProviderDetail=$searchModelDetail->searchPrint(Yii::$app->request->queryParams);
-					$content= $this->renderPartial( '_printPdfAll',[
-						'dataProviderDetail'=>$dataProviderDetail,
-						'searchModelDetail'=>$searchModelDetail,
-						'model'=>$dataProviderDetail->getModels()
-					]);
-							
-					$pdf = new Pdf([
-						// set to use core fonts only
-						'mode' => Pdf::MODE_CORE,
-						// A4 paper format
-						'format' => Pdf::FORMAT_A4,
-						// portrait orientation
-						'orientation' => Pdf::ORIENT_PORTRAIT,
-						// stream to browser inline
-						'destination' => Pdf::DEST_BROWSER,
-						//'destination' => Pdf::DEST_FILE ,
-						// your html content input
-						'content' => $content,
-						// format content from your own css file if needed or use the
-						// enhanced bootstrap css built by Krajee for mPDF formatting
-						//D:\xampp\htdocs\advanced\lukisongroup\web\widget\pdf-asset
-						'cssFile' => '@modulprj/web/addasset/pdf-asset/kv-mpdf-bootstrap.min.css',
-						// any css to be embedded if required
-						'cssInline' => '.kv-heading-1{font-size:12px}',
-						 // set mPDF properties on the fly
-						//'options' => ['title' => 'Slip Gaji','subject'=>'Payroll'],
-						 // call mPDF methods on the fly
-						// 'methods' => [
-							// 'SetHeader'=>['Copyright@wanindo '.date("r")],
-							// 'SetFooter'=>['{PAGENO}'],
-						// ]
-					]);					
-					return $pdf->render();					
-				// }
-			// }	
-		}		
-		
-		
-		
-    }
-	
-	/**====================================
-     * EXPORT EXCEL REPORT PAID
-     * @return mixed
-	 * @author piter [ptr.nov@gmail.com]
-	 * @since 1.2
-	 * ====================================
-     */
-	public function actionExportExcel(){
-		//DATA IMPORT
-		// $aryPaid=[
-			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
-			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
-		// ];
-		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
-		$searchModelDetail = new AbsenPayrollPaidSearch($closingParam);
-		$dataProviderDetail=$searchModelDetail->searchExcelExport(Yii::$app->request->queryParams);
-		$aryPaid=$dataProviderDetail->getModels();	
-		
-		$excel_dataPaid = Postman4ExcelBehavior::excelDataFormat($aryPaid);
-        $excel_titlePaid = $excel_dataPaid['excel_title'];
-        $excel_ceilsPaid = $excel_dataPaid['excel_ceils'];
-		$excel_content = [
-			 [
-				'sheet_name' => 'Payroll-Paid-Data',
-                'sheet_title' => [
-					['KAR_ID','KAR_NM','CABANG','DEPARTMENT','UPAH_HARIAN','PERIODE_MULAI','PERIODE_AKHIR','PAGI','LEMBUR','UANG_MAKAN','TTL_PAGI','TTL_LEMBUR','TTL_POTONGAN','TOTAL']
-				],
-			    'ceils' => $excel_ceilsPaid,
-                'freezePane' => 'A2',
-                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerStyle'=>[					
-					[
-						'KAR_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
-						'KAR_NM' =>['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'CABANG' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'DEPARTMENT' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'UPAH_HARIAN' => ['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
-						'PERIODE_MULAI' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
-						'PERIODE_AKHIR' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
-						'PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'UANG_MAKAN' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
-						'TTL_PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'TTL_LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'TTL_POTONGAN' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
-						'TOTAL' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-					]						
-				],
-				'contentStyle'=>[
-					[						
-						'KAR_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'KAR_NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'CABANG' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'DEPARTMENT' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'UPAH_HARIAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'PERIODE_MULAI' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'PERIODE_AKHIR' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'PAGI' =>['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'UANG_MAKAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'TTL_PAGI' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'TTL_LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'TTL_POTONGAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'TOTAL' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-					]
-				],
-               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
-               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
-			]
-		];
-		$excel_file = "Payroll-Paid-Data";
-		$this->export4excel($excel_content, $excel_file,0);
-	}
+		} 
+    } 
 	
 	
 	/**
@@ -393,7 +158,8 @@ class AbsenDailyController extends Controller
 				$model->OUT_TGL = date('Y-m-d', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
 				$model->OUT_WAKTU = date('H:i:s', strtotime($hsl['AbsenImportTmp']['tmpTglOut']));
 				if ($model->save()){
-					 return $this->redirect(['index', 'idx' => $model->ID]);
+					 //return $this->redirect(['index', 'idx' => $model->ID]);
+					 return $this->redirect(['index']);
 				}  
 		}else{
 			return $this->renderAjax('_form', [
@@ -423,32 +189,6 @@ class AbsenDailyController extends Controller
 				}  
 			}
         }; */
-    } 
-	
-	/**
-     * PAYROLL : SET PERIODE
-     */
-    public function actionCreatePeriode()
-    {
-        $modelPeriode = new AbsenImportPeriode();
-		//$model->scenario='create';
-        $modelPeriode = AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
-		if ($modelPeriode->load(Yii::$app->request->post())) {
-			$hsl = \Yii::$app->request->post();
-				$modelPeriode->TGL_START = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_START']));
-				$modelPeriode->TGL_END = date('Y-m-d', strtotime($hsl['AbsenImportPeriode']['TGL_END']));
-				$modelPeriode->TIPE =1;
-				$modelPeriode->AKTIF =1; 
-				if ($modelPeriode->save()){
-					//return $this->redirect(['index','#ai-tab1']);
-				    return $this->redirect(['/payroll/absen-daily#ai-tab1']);
-				}  
-		}else{
-			return $this->renderAjax('_formPeriode', [
-                'modelPeriode' => $modelPeriode,
-            ]);
-		
-		} 
     } 
 	
 	/**
@@ -512,13 +252,47 @@ class AbsenDailyController extends Controller
      */
     public function actionSync()
     {
-		$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
-			  SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
-			  FROM absen_import_tmp
-		";
-		Yii::$app->db->CreateCommand($sql)->execute();
-		Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
-		return $this->redirect(['index','#ai-tab1']);
+		$sql="SELECT sum(STATUS) FROM absen_import_tmp";		
+		$sumStt=Yii::$app->db->createCommand($sql)->queryScalar();
+		
+		$model = new \yii\base\DynamicModel([
+			'validationSave'
+		]);			
+		$model->addRule(['validationSave'], 'required');		
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_msgSaveDb', [
+					'model' => $model,
+					'sumStt'=>$sumStt
+				]); 				
+		}else{
+			$hsl = \Yii::$app->request->post();
+			$textValidate = $hsl['DynamicModel']['validationSave'];			
+			// print_r($kdPo);
+			// die();
+			if($textValidate=="setuju"){
+				$sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
+				SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
+				FROM absen_import_tmp
+				";
+				Yii::$app->db->CreateCommand($sql)->execute();
+				Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
+				return $this->redirect(['index','#ai-tab1']);
+			}else{
+				return $this->redirect(['index']);
+			}
+		}
+			
+	
+		
+		
+		// $sql="INSERT INTO absen_import (TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID)
+			  // SELECT TERMINAL_ID,FINGER_ID,IN_TGL,IN_WAKTU,OUT_TGL,OUT_WAKTU,GRP_ID
+			  // FROM absen_import_tmp
+		// ";
+		// Yii::$app->db->CreateCommand($sql)->execute();
+		// Yii::$app->db->CreateCommand("DELETE FROM absen_import_tmp")->execute();
+		// return $this->redirect(['index','#ai-tab1']);
     } 
 	
 	/**
@@ -604,7 +378,7 @@ class AbsenDailyController extends Controller
     {
         self::findModel($id)->delete();
         //return $this->redirect(['index']);
-		$this->redirect(array('/payroll/absen-import/#ai-tab1'));
+		$this->redirect(array('/absensi/absen-import/#ai-tab1'));
     }
 
     /**
@@ -652,22 +426,31 @@ class AbsenDailyController extends Controller
 						$exportFile->saveAs($path);
 						//return $this->redirect(['index','id'=>$model->FILE_NM]);
 						// $dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
-						$dataModelImport=self::getArryFile($model->FILE_NM)->getModels();
-						if($dataModelImport){		
-													
-							foreach($dataModelImport as $key => $value){
-								$modelTmp = new AbsenImportTmp();
-								//$modelTmp->ID=null;
-								//$modelTmp->isNewRecord = true;							
-								$modelTmp->TERMINAL_ID=(string)$value['TERMINAL_ID'];
-								$modelTmp->FINGER_ID=(string)$value['FINGER_ID'];
-								$modelTmp->IN_TGL=$value['TGL_IN'];
-								$modelTmp->IN_WAKTU=$value['JAM_IN'];
-								$modelTmp->OUT_TGL=$value['TGL_OUT'];
-								$modelTmp->OUT_WAKTU=$value['JAM_OUT'];
-								$modelTmp->save();
-								//unset($modelTmp);
-							}
+						$dataModelImport=self::getArryFile($model->FILE_NM);//->getModels();
+						if($dataModelImport){
+							$scrcData=self::dataKombinasi($dataModelImport);
+							$cnt=self::tglCount($dataModelImport);
+
+							$i=0;
+							for($i=0; $i<=$cnt; $i++){
+								//$IN[]=self::excelColumnName(($i+$i)+4);
+								$IN=self::excelColumnName(($i+$i)+4);	//0 + 4 + 0
+								$OUT=self::excelColumnName(($i+$i)+5);	//0 + 5 + 0		
+								foreach($scrcData as $srcRows){		
+										$modelTmp = new AbsenImportTmp();
+										// $rsltTgl[]=$srcRows[$i];		//0 
+										// $rsltIn[]=$srcRows[$IN];		//0 + 4 + 0
+										// $rsltOut[]=$srcRows[$OUT];		//0 + 5 + 0		
+										$modelTmp->TERMINAL_ID=str_replace("'","",(string)$srcRows['A']); 	//TERMINAL
+										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);		//FINGER
+										$modelTmp->IN_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL MASUK
+										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);				//WAKTU MASUK
+										$modelTmp->OUT_TGL=date('Y-m-d', strtotime($srcRows[$i]));			//TGL KELUAR
+										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);				//WAKTU KELUAR
+										$modelTmp->save();										
+								}
+								
+							};
 						};
 						return $this->redirect(['index','id'=>$model->FILE_NM]);
 
@@ -687,6 +470,89 @@ class AbsenDailyController extends Controller
 		}
 	}
 	
+	/**================================================
+	* Data tanggal Dan Data Rows
+	* row1 dan row2 excel di eliminasi, untuk gabungan
+	**=================================================
+	*/
+	private function dataKombinasi($data){
+		//ARRAY TGL
+		foreach($data as $rowTgl => $valTgl){
+			if($rowTgl==1){				
+				foreach($valTgl as $rowTgl1 => $valTgl1){
+					if($valTgl1<>''){
+						$tmp=$valTgl1;
+					}else{
+						$aryTgl[]=$tmp;
+					};
+				}	
+			}
+		} 
+		//print_r($aryTgl);
+		
+		//ARRAY DATA AND ARRAY ADD
+		foreach($data as &$record){
+			//if($row1<>1 AND $row1<>2){
+			//if($row1==1){
+				foreach($aryTgl as $rowAryTgl => $valAryTgl){
+					$record[$rowAryTgl]=$valAryTgl;
+					
+				}
+				$dataKombinasi[]=$record;
+			//}
+		} 
+		
+		// print_r($hari1);
+		//return $dataKombinasi;
+		foreach($dataKombinasi as $rowRslt => $valRslt){
+			if($rowRslt<>0 AND $rowRslt<>1){
+			// if($rowRslt==0){
+				$rsltAry[]=$valRslt;
+			}
+		} 
+		
+		$dataProvider = new \yii\data\ArrayDataProvider([
+			'allModels' => $rsltAry
+		]);
+		return $dataProvider->getModels();
+	}
+	
+	/**================================================
+	* COUNT JUMLAH TANGGAL DI MASUKAN
+	**=================================================
+	*/
+	private function tglCount($data){
+		//ARRAY TGL
+		foreach($data as $rowTgl => $valTgl){
+			if($rowTgl==1){				
+				foreach($valTgl as $rowTgl1 => $valTgl1){
+					if($valTgl1<>''){
+						$tmp=$valTgl1;
+					}else{
+						$aryTgl[]=$tmp;
+					};
+				}	
+			}
+		} 
+		$cnt=count($aryTgl);
+		return $cnt!=0?($cnt-1):0;
+	}
+	
+	/**================================================
+	* GENERATE COLUMN INDEX NAME BY ALFABET
+	**=================================================
+	*/
+	public static function excelColumnName($index)
+    {
+        --$index;
+        if ($index >= 0 && $index < 26)
+            return chr(ord('A') + $index);
+        else if ($index > 25)
+            return (self::excelColumnName($index / 26)) . (self::excelColumnName($index % 26 + 1));
+        else
+            throw new Exception("Invalid Column # " . ($index + 1));
+    }
+	
 	/**=====================================
      * GET ARRAY FROM FILE
      * @return mixed
@@ -703,17 +569,20 @@ class AbsenDailyController extends Controller
 			//$fileName='/var/www/backup/ExternalData/import_gudang/'.$fileData;
 			$config='';
 			//$data = \moonland\phpexcel\Excel::import($fileName, $config);
-
+			//Test Direct file
+			$pathImportTmp=realpath(Yii::$app->basePath) . '/web/uploads/temp/test.xlsx';
+			
 			$data = \moonland\phpexcel\Excel::widget([
-				'id'=>'import-payroll',
+				'id'=>'import-absensi',
 				'mode' => 'import',
 				'fileName' => $fileData,
-				'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
+				//'fileName' => $pathImportTmp,
+				'setFirstRecordAsKeys' => false, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel.
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
-				'getOnlySheet' => 'Import-payroll', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+				'getOnlySheet' => 'Import-Absensi', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
 
-			//print_r($data);
+			/* //print_r($data);
 			$aryDataProvider= new ArrayDataProvider([
 				'allModels'=>$data,
 				 'pagination' => [
@@ -722,7 +591,9 @@ class AbsenDailyController extends Controller
 			]);
 
 			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
-			return $aryDataProvider;
+			return $aryDataProvider; */
+			
+			return $data;
 			
 	}
 	
@@ -760,6 +631,12 @@ class AbsenDailyController extends Controller
 		}		 
 	}
 
+	private function checkWaktu($value){
+		//$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value);
+		$a=preg_match('/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/', $value);
+		return $a!=false?$a:'';
+	}
+	
 	/* function getValidateTime($time)
 	{
 		
@@ -797,10 +674,68 @@ class AbsenDailyController extends Controller
      */
 	public function actionExport(){
 		
+		$modelPeriode = AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+		$prdStart=date('Y-m-d', strtotime($modelPeriode->TGL_START));
+		$prdEnd=date('Y-m-d', strtotime($modelPeriode->TGL_END));
+		
+		$mergeVal=('1,0');
+		$s1=0;
+		while ($prdStart <=$prdEnd)
+		{
+			$hd1_2["'".$prdStart."'"]=['font-size'=>'8','width'=>'5','valign'=>'center','align'=>'center','merge'=>$mergeVal];
+			$hd1_2[$prdStart.'x']=['font-size'=>'8','width'=>'5','valign'=>'center','align'=>'center'];
+			$hd2_2['IN'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$hd2_2['OUT'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$ttlhd1[]=$prdStart;
+			$ttlhd1[]=$prdStart.'merge';			
+			$fieldTitelhd2_2[]='IN';
+			$fieldTitelhd2_2[]='OUT';
+			$ttlContent['IN'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$ttlContent['OUT'.$s1]=['font-size'=>'8','width'=>'6','valign'=>'center','align'=>'center'];
+			$datafield[]=['IN'.$s1=>'08:00:00'];
+			$datafield[]=['OUT'.$s1=>'17:00:00'];
+			$prdStart = date('Y-m-d', strtotime($prdStart . ' +1 day'));
+			$s1=$s1+1;
+		}
+		$hd1_1['TERMINAL_ID']=['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center','merge'=>'0,2'];
+		$hd1_1['FINGER_ID']=['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'0,2'];
+		$hd1_1['NAMA']=['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center','merge'=>'0,2'];
+		$hd2_1['TERMINAL_ID']=['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'];
+		$hd2_1['FINGER_ID']=['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'];
+		$hd2_1['NAMA']=['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'];
+		$row_1[]=['TERMINAL_ID'=>'01234567890'];
+		$row_1[]=['FINGER_ID'=>'321'];
+		$row_1[]=['NAMA'=>'Piter'];
+		$rsltHd1=ArrayHelper::merge($hd1_1,$hd1_2);
+		$rsltHd2=ArrayHelper::merge($hd2_1,$hd2_2);
+		$rsltContent=ArrayHelper::merge($hd1_1,$ttlContent);
+		$rowResult=ArrayHelper::merge($row_1,$datafield);
+		foreach($rowResult as $rws1 => $val){
+				$rowResult1[$rws1]= $val[];	
+		};
+		//TITLE 
+		$fieldTitelhd1_1[]='TERMINAL_ID';
+		$fieldTitelhd1_1[]='FINGER_ID';
+		$fieldTitelhd1_1[]='NAMA';
+		
+		foreach($ttlhd1 as $rws){
+				$fieldTitelhd1_2[]="'".$rws."'";	
+		};
+		$fieldTitelhd1=ArrayHelper::merge($fieldTitelhd1_1,$fieldTitelhd1_2);
+		$fieldTitelhd2=ArrayHelper::merge($fieldTitelhd1_1,$fieldTitelhd2_2);
+						// 'TGL1' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL11' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						// 'TGL2' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+
+		
+		print_r($rowResult1);
+		die();
+		
 		//DATA IMPORT
-		$aryImport=[
-			['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
-			['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
+		$aryImport=[$rowResult
+			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
+			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','NAMA'=>'Piter','IN0'=>'08:00:00','OUT0'=>'17:00:00','IN1'=>'08:00:00','OUT1'=>'17:00:00','IN2'=>'08:00:00','OUT2'=>'17:00:00','IN3'=>'08:00:00','OUT3'=>'17:00:00','IN4'=>'08:00:00','OUT4'=>'17:00:00','IN5'=>'08:00:00','OUT5'=>'17:00:00','IN6'=>'08:00:00','OUT6'=>'17:00:00'],
 		];		
 		$excel_dataImport = Postman4ExcelBehavior::excelDataFormat($aryImport);
         $excel_titleImport = $excel_dataImport['excel_title'];
@@ -838,33 +773,43 @@ class AbsenDailyController extends Controller
 		
 		$excel_content = [
 			 [
-				'sheet_name' => 'Import-payroll',
+				'sheet_name' => 'Import-Absensi',
                 'sheet_title' => [
-					['TERMINAL_ID','FINGER_ID','NAMA','TGL_IN','TGL_OUT','JAM_IN','JAM_OUT']
+					$fieldTitelhd1,
+					$fieldTitelhd2,
 				],
 			    'ceils' => $excel_ceilsImport,
-                'freezePane' => 'A2',
+                'freezePane' => 'A3',
                 'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
-                'headerStyle'=>[					
-					[
-						'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
-						'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'KARYAWAN' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
-						'TGL_IN' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'TGL_OUT' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'JAM_IN' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'JAM_OUT' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-					]						
+                'headerStyle'=>[$rsltHd1,//$rsltHd2					
+					// [
+						// 'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center','merge'=>'0,2'],
+						// 'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'0,2'],
+						// 'NAMA' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center','merge'=>'0,2'],
+						// 'TGL1' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL11' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						// 'TGL2' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
+						// 'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+					// ],
+					// [
+						// 'TERMINAL_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						// 'FINGER_ID' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						// 'NAMA' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						// 'IN' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						// 'OUT' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						// 'IN' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+						// 'OUT' => ['font-size'=>'8','width'=>'7','valign'=>'center','align'=>'center'],
+					// ]						
 				],
-				'contentStyle'=>[
+				'contentStyle'=>[//$rsltContent
 					[						
 						'TERMINAL_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
 						'FINGER_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
 						'KARYAWAN' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
-						'TGL_IN' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'TGL_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'JAM_IN' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
-						'JAM_OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'IN' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'IN' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'OUT' => ['font-size'=>'8','valign'=>'center','align'=>'center'],
 					]
 				],
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
@@ -881,16 +826,16 @@ class AbsenDailyController extends Controller
                 'ceils' => [
 					["1.Pastikan format sesuai dengan yang sudah di download."],
                     ["2.Validasi format yang akan di upload:"],
-                    ["  A. NAMA SHEET: Import-payroll"],
+                    ["  A. NAMA SHEET: Import-Absensi"],
 					["  B. NAMA HEADER COLUMN : [TERMINAL_ID,FINGER_ID,NAMA,TGL_IN,TGL_OUT,JAM_IN,JAM_OUT]"],
 					["3.Refrensi."],
 					["  [TERMINAL_ID] = Serial Number pada mesin finger setiap cabang"],
 					["  [FINGER_ID] =  Kode Finger yang di dapatkan saat pendaftaran jadi di mesin per-Cabang"],
 					["  [KARYAWAN]  =  Nama dari karyawan yang pernah di daftarkan"],
-					["  [TGL_IN]    = Tanggal pada saat payroll masuk "],
-					["  [TGL_OUT]   = Tanggal pada saat payroll keluar "],
-					["  [TGL_OUT]   = Jam pada saat payroll masuk "],
-					["  [TGL_OUT]   = Jam pada saat payroll keluar "],
+					["  [TGL_IN]    = Tanggal pada saat absensi masuk "],
+					["  [TGL_OUT]   = Tanggal pada saat absensi keluar "],
+					["  [TGL_OUT]   = Jam pada saat absensi masuk "],
+					["  [TGL_OUT]   = Jam pada saat absensi keluar "],
 					["4.Refrensi Kode."],
 					["  [TERMINAL_ID] = Sheet Cabang-Mechine"],
 					["  [FINGER_ID]  = Sheet Data-Karyawan"],					

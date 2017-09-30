@@ -18,9 +18,17 @@ use yii\web\View;
 //print_r($dataModelImport);
 	//CSS
 	$this->registerCss("
-		.kv-grid-table :link {
+		#tmp-import-absen .kv-grid-table :link {
 			color: #fdfdfd;
 		}
+		#import-absen-log .kv-grid-table :link {
+			color: #fdfdfd;
+		}
+		
+		#import-absen-log .kv-grid-table .actual-delete :link {
+			color: #fdfdfd;
+		}		
+		
 		/* mouse over link */
 		a:hover {
 			color: #5a96e7;
@@ -95,7 +103,7 @@ use yii\web\View;
 			//'active'=>$tab0,
 		],
 		[
-			'label'=>'<i class="fa fa-clock-o fa-2x"></i> List Absensi Log','content'=>$_indexAbsensi,
+			'label'=>'<i class="fa fa-clock-o fa-2x"></i> List Absensi Maintain','content'=>$_indexAbsensi,
 			//'active'=>$tab1,
 		]	
 	];

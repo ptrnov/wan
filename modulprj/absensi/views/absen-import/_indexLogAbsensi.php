@@ -10,7 +10,16 @@ use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
-
+use yii\base\DynamicModel;
+use modulprj\absensi\models\AbsenImportPeriode;
+	
+	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
+	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
+	$perode='<span class="fa-stack fa-xs text-right">				  
+				<i class="fa fa-mail-forward fa-1x"></i>
+			 </span> '.$perodeVal.'			
+	';
+				
 	$aryFieldLog= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
@@ -57,7 +66,33 @@ use yii\web\View;
 				]
 			],					
 	];
-
+	
+	$attDinamikLog[] =[
+		'class'=>'kartik\grid\CheckboxColumn',
+		'header'=>'Lembur',
+		'headerOptions'=>[
+			'style'=>[
+				'text-align'=>'center',
+				'width'=>'20px',
+				'font-family'=>'tahoma',
+				'font-size'=>'8pt',
+				'background-color'=>$bColor,
+				'color'=>'white'
+			]
+		],
+		'rowSelectedClass' => GridView::TYPE_WARNING,
+		'checkboxOptions' => function ($model, $key, $index, $column){		
+				if($model->STT_LEMBUR == 1 )
+				{
+					return ['checked' => $model->ID];
+				}elseif($model->STT_LEMBUR ==0 OR $model->STT_LEMBUR ==8){
+					return ['value' => $model->ID];
+				}else{
+					return ['value' => $model->ID,'hidden'=>true];
+				}				
+		}
+	];
+	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsLog as $key =>$value[]){			
 		$attDinamikLog[]=[		
@@ -70,7 +105,43 @@ use yii\web\View;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
-			'noWrap'=>true,			
+			'noWrap'=>true,	
+			'value'=>function($data)use($key,$value){
+				$x=$value[$key]['FIELD'];
+				if($x=='IN_WAKTU' OR $x=='OUT_WAKTU'){					
+					if ($data->STT_LEMBUR=='0'){
+						return $data->$x;
+					}elseif($data->STT_LEMBUR=='3'){
+						return 'AL';
+					}elseif($data->STT_LEMBUR=='4'){
+						return 'SK';
+					}elseif($data->STT_LEMBUR=='5'){
+						return 'LK';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='6'){
+						return 'IJ';
+					}elseif($data->STT_LEMBUR=='2'){
+						if ($data->$x<>'00:00:00'){
+							return $data->$x;
+						}else{
+							return 'OFF';
+						}
+					}else{
+						return $data->$x;
+					};					
+				}elseif($x=='VAL_PAGI' OR $x=='VAL_LEMBUR'){
+					if ($data->STT_LEMBUR=='0' OR $data->STT_LEMBUR=='1' OR $data->STT_LEMBUR=='8' ){
+						return $data->$x;
+					}else{
+						return 0;
+					}
+			    }else{
+					return $data->$x;
+				};
+				
+				
+			},			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
@@ -78,6 +149,7 @@ use yii\web\View;
 					'font-family'=>'tahoma, arial, sans-serif',
 					'font-size'=>'8pt',
 					'background-color'=>$bColor,
+					'color'=>'white',
 				]
 			],  
 			'contentOptions'=>[
@@ -163,7 +235,7 @@ use yii\web\View;
 			'{export}',
 		],	
 		'panel'=>[
-			'heading'=>tombolRefreshLog(),//.' '.tombolCreateAct(),					
+			'heading'=>tombolRefreshLog().' '.$perode,		
 			'type'=>'success',
 			'after'=>false,
 			'before'=>false,
@@ -191,13 +263,63 @@ use yii\web\View;
 		],
 		'floatHeader'=>true,
 	]);
-
 ?>
 <?=$actualImportLog?>
 
 <?php
-/* $this->registerJs("
+ $this->registerJs("
+	var target = $(this).attr('href');
+	$('#import-absen-log').on('change','input[type=checkbox]',function(){
+		var idKode =$(this).val();
+		var keysSelect = $('#import-absen-log').yiiGridView('getSelectedRows');
+		if ($(this).is(':checked')){
+			$.ajax({
+				 url: '/absensi/absen-import/check-lemburan',
+				 //cache: true,
+				 type: 'POST',
+				 data:{keysSelect:keysSelect,idKode:idKode},
+				 dataType: 'json',
+				 success: function(response) {
+					if (response == true ){
+						  $.pjax.reload({container:'#import-absen-log'});
+					}
+					 else {
 
+					 }
+				 }
+			})
+		}
+		else{
+			$.ajax({
+			 url: '/absensi/absen-import/uncheck-lemburan',
+			 //cache: true,
+			 type: 'POST',
+			 data:{keysSelect:keysSelect,idKode:idKode},
+			 dataType: 'json',
+			 success: function(response) {
+				 if (response == true ){
+					 $.pjax.reload({container:'#import-absen-log'});
+					  $(this).parent().parent().removeClass('alert-success');
+				 }
+					else {
+						  $.pjax.reload({container:'#import-absen-log'});
+					}
+				}
+			})
+		}
+	});
+",$this::POS_READY);
+
+
+
+
+
+
+
+
+
+
+/* $this->registerJs("
 $(document).on('ready pjax:success', function () {
   $('.ajaxDelete').on('click', function (e) {
     e.preventDefault();
@@ -221,6 +343,5 @@ $(document).on('ready pjax:success', function () {
     );
   });
 });
-
 "); */
 ?>
