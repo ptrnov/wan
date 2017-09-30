@@ -82,11 +82,13 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		],
 		'rowSelectedClass' => GridView::TYPE_WARNING,
 		'checkboxOptions' => function ($model, $key, $index, $column){		
-				if($model->STT_LEMBUR == 1)
+				if($model->STT_LEMBUR == 1 )
 				{
 					return ['checked' => $model->ID];
-				}else{
+				}elseif($model->STT_LEMBUR ==0 OR $model->STT_LEMBUR ==8){
 					return ['value' => $model->ID];
+				}else{
+					return ['value' => $model->ID,'hidden'=>true];
 				}				
 		}
 	];
@@ -128,9 +130,16 @@ use modulprj\absensi\models\AbsenImportPeriode;
 					}else{
 						return $data->$x;
 					};					
-				}else{
+				}elseif($x=='VAL_PAGI' OR $x=='VAL_LEMBUR'){
+					if ($data->STT_LEMBUR=='0' OR $data->STT_LEMBUR=='1' OR $data->STT_LEMBUR=='8' ){
+						return $data->$x;
+					}else{
+						return 0;
+					}
+			    }else{
 					return $data->$x;
-				}
+				};
+				
 				
 			},			
 			'headerOptions'=>[		

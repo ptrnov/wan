@@ -46,9 +46,12 @@ class AbsenImportSearch extends AbsenImport
         $query = AbsenImport::find();
 
         // add conditions that should always apply here
-
+		$cnt=AbsenImport::find()->count();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+			'pagination' => [
+				 'pageSize' => $cnt,
+			]
         ]);
 
         $this->load($params);
@@ -90,6 +93,7 @@ class AbsenImportSearch extends AbsenImport
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
             ->andFilterWhere(['like', 'DCRP_DETIL', $this->DCRP_DETIL]);
 		 $query->orderBy(['IN_TGL'=>SORT_DESC]);
+		 $query->orderBy(['KAR_NM'=>SORT_ASC,'IN_TGL'=>SORT_DESC]);
         return $dataProvider;
     }
 }
