@@ -92,7 +92,7 @@ $(document).on('click','#import-button-export-format', function(ehead){
 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 //$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
 $(document).on('click','#payroll-check-data', function(ehead){ 	
-	var data = $.parseJSON($(this).attr("data")); // GET THE DATA IN ATTR
+	//var data = $.parseJSON($(this).attr("data")); // GET THE DATA IN ATTR
 	event.preventDefault();		  
 	//alert(data[1]);
 	$.pjax.reload({
