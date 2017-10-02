@@ -15,6 +15,17 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use yii\web\View;
 
+	$aryHari= [
+	  ['ID' => 1, 'HARI' => 'Minggu'],		  
+	  ['ID' => 2, 'HARI' => 'Senin'],
+	  ['ID' => 3, 'HARI' => 'Selasa'],
+	  ['ID' => 4, 'HARI' => 'Rabu'],
+	  ['ID' => 5, 'HARI' => 'Kamis'],
+	  ['ID' => 6, 'HARI' => 'Jumat'],
+	  ['ID' => 7, 'HARI' => 'Sabtu']
+	];	
+	$valHari = ArrayHelper::map($aryHari, 'HARI', 'HARI');
+	
 //print_r($dataModelImport);
 	//CSS
 	$this->registerCss("
@@ -82,12 +93,14 @@ use yii\web\View;
 	*/
 	$_indexImport=$this->render('_indexImport',[
 		'searchModelTmp' => $searchModelTmp,
-		'dataProviderTmp' => $dataProviderTmp			
+		'dataProviderTmp' => $dataProviderTmp,
+		'valHari'=>$valHari
 	]);
 	
 	$_indexAbsensi=$this->render('_indexLogAbsensi',[
 		'searchModel' => $searchModel,
-		'dataProvider' => $dataProvider,		
+		'dataProvider' => $dataProvider,
+		'valHari'=>$valHari		
 	]);
 	
 	if($tab==0){
