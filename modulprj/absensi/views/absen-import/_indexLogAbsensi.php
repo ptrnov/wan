@@ -12,7 +12,9 @@ use yii\helpers\Url;
 use yii\web\View;
 use yii\base\DynamicModel;
 use modulprj\absensi\models\AbsenImportPeriode;
-	
+use modulprj\master\models\Dept;
+use modulprj\master\models\Machine;
+
 	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
 	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
 	$perode='<span class="fa-stack fa-xs text-right">				  
@@ -20,16 +22,20 @@ use modulprj\absensi\models\AbsenImportPeriode;
 			 </span> '.$perodeVal.'			
 	';
 				
+	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'MESIN_NM','MESIN_NM');
+	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
+	
 	$aryFieldLog= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left','mergeHeader'=>false,'FILTER'=>true]],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left','mergeHeader'=>false,'FILTER'=>$aryDept]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'LEBIH_WAKTU','SIZE' => '6px','label'=>'Kelebihan Waktu','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right','mergeHeader'=>true,'FILTER'=>true]],
 	];	
 	$valFieldsLog = ArrayHelper::map($aryFieldLog, 'ID', 'ATTR'); 
 	$bColor='rgba(104, 49, 54, 1)';
@@ -69,7 +75,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 	
 	$attDinamikLog[] =[
 		'class'=>'kartik\grid\CheckboxColumn',
-		'header'=>'Lembur',
+		//'header'=>'Lembur',
 		'headerOptions'=>[
 			'style'=>[
 				'text-align'=>'center',
@@ -94,14 +100,29 @@ use modulprj\absensi\models\AbsenImportPeriode;
 	];
 	
 	/*OTHER ATTRIBUTE*/
-	foreach($valFieldsLog as $key =>$value[]){			
+	foreach($valFieldsLog as $key =>$value[]){	
+		if ($value[$key]['FIELD']=='DEP_NM'){				
+			$gvfilterType=GridView::FILTER_SELECT2;
+			//$gvfilterType=false;
+			//$gvfilter =$aryDeptId;
+			$filterWidgetOpt=[				
+				'pluginOptions'=>['allowClear'=>true],		
+			]; 
+			$filterInputOpt=['placeholder'=>'-- Pilih --'];
+		}else{
+			$gvfilterType=false;
+			//$gvfilter=true;
+			$filterWidgetOpt=[];		
+			$filterInputOpt=['class'=>"form-control"];					
+		};
+		
 		$attDinamikLog[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
-			// 'filterType'=>$gvfilterType,
-			// 'filter'=>$gvfilter,
-			// 'filterWidgetOptions'=>$filterWidgetOpt,	
-			//'filterInputOptions'=>$filterInputOpt,				
+			 'filter'=>$value[$key]['FILTER'],
+			 'filterType'=>$gvfilterType,
+			 'filterWidgetOptions'=>$filterWidgetOpt,	
+			 'filterInputOptions'=>$filterInputOpt,				
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
@@ -141,7 +162,8 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				};
 				
 				
-			},			
+			},	
+			'mergeHeader'=>$value[$key]['mergeHeader'],
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
@@ -178,7 +200,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		];	
 	};	
 	
-	$attDinamikLog[]=[
+	/* $attDinamikLog[]=[
 		'attribute'=>'STATUS',
 		'filterType'=>GridView::FILTER_SELECT2,
 		'filterWidgetOptions'=>[
@@ -199,6 +221,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','50',$bColor),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','50','')			
 	];
+	 */
 	//ACTION
 	$attDinamikLog[]=[
 		'class' => 'kartik\grid\ActionColumn',
@@ -225,6 +248,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'headerOptions'=>Yii::$app->gv->gvContainHeader('center','10px',$bColor,'#ffffff'),
 		'contentOptions'=>Yii::$app->gv->gvContainBody('center','0',''),
 	];
+	
 	$actualImportLog= GridView::widget([
 		'id'=>'import-absen-log',
 		'dataProvider' => $dataProvider,
@@ -245,7 +269,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
-				'enablePushState'=>false,
+				'enablePushState'=>true,
 				'id'=>'import-absen-log',
 			],
 		],

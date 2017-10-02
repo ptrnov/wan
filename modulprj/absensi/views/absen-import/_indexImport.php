@@ -11,6 +11,8 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 use yii\web\View;
 use modulprj\absensi\models\AbsenImportPeriode;
+use modulprj\master\models\Dept;
+use modulprj\master\models\Machine;
 
 	$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
 	$perodeVal="<b>PERIODE AKTIF : </b>".$modelPrd->TGL_START." s/d ".$modelPrd->TGL_END;
@@ -18,17 +20,21 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				<i class="fa fa-mail-forward fa-1x"></i>
 			 </span> '.$perodeVal.'			
 	';
-	$aryFieldTmp= [
-		['ID' =>0, 'ATTR' =>['FIELD'=>'LEBIH_WAKTU','SIZE' => '6px','label'=>'Kelebihan Waktu','align'=>'center']],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left']],		  
-		['ID' =>2, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left']],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left']],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center']],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center']],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center']],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center']],
-		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right']],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right']],
+	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'MESIN_NM','MESIN_NM');
+	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
+	
+	$aryFieldTmp= [		  
+		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left','mergeHeader'=>false,'FILTER'=>true]],		  
+		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left','mergeHeader'=>false,'FILTER'=>$aryDept]],
+		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'LEBIH_WAKTU','SIZE' => '6px','label'=>'Kelebihan Waktu','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],		
+		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right','mergeHeader'=>true,'FILTER'=>true]],
+		
 	];	
 	$valFieldsTmp = ArrayHelper::map($aryFieldTmp, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -99,14 +105,29 @@ use modulprj\absensi\models\AbsenImportPeriode;
 	];
 	
 	/*OTHER ATTRIBUTE*/
-	foreach($valFieldsTmp as $key =>$value[]){			
+	foreach($valFieldsTmp as $key =>$value[]){	
+		if ($value[$key]['FIELD']=='DEP_NM'){				
+			$gvfilterType=GridView::FILTER_SELECT2;
+			//$gvfilterType=false;
+			//$gvfilter =$aryDeptId;
+			$filterWidgetOpt=[				
+				'pluginOptions'=>['allowClear'=>true],		
+			]; 
+			$filterInputOpt=['placeholder'=>'-- Pilih --'];
+		}else{
+			$gvfilterType=false;
+			//$gvfilter=true;
+			$filterWidgetOpt=[];		
+			$filterInputOpt=['class'=>"form-control"];					
+		};
+		
 		$attDinamikTmp[]=[		
 			'attribute'=>$value[$key]['FIELD'],
 			'label'=>$value[$key]['label'],
-			// 'filterType'=>$gvfilterType,
-			// 'filter'=>$gvfilter,
-			// 'filterWidgetOptions'=>$filterWidgetOpt,	
-			//'filterInputOptions'=>$filterInputOpt,				
+			'filter'=>$value[$key]['FILTER'],
+			'filterType'=>$gvfilterType,
+			'filterWidgetOptions'=>$filterWidgetOpt,	
+			'filterInputOptions'=>$filterInputOpt,								
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			//'mergeHeader'=>true,
@@ -140,6 +161,8 @@ use modulprj\absensi\models\AbsenImportPeriode;
 				}
 				
 			},
+			'noWrap'=>false,	
+			'mergeHeader'=>$value[$key]['mergeHeader'],
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',
@@ -287,7 +310,7 @@ use modulprj\absensi\models\AbsenImportPeriode;
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
-				'enablePushState'=>false,
+				'enablePushState'=>true,
 				'id'=>'tmp-import-absen',
 			],
 		],

@@ -45,7 +45,7 @@ use yii\web\View;
 			height: 300px;
 		}
 		.kv-grid-container{
-			min-height:500px
+			height:600px
 		}
 		.tmp-button-delete a:hover {
 			color:red;

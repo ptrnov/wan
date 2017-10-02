@@ -29,13 +29,13 @@ use modulprj\master\models\Machine;
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>true]],		  
 		['ID' =>1, 'ATTR' =>['FIELD'=>'MESIN_NM','SIZE' => '50px','label'=>'CABANG','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>$aryCbgMachine]],
 		['ID' =>2, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'DEPARTMENT','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>$aryDept]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '40px','label'=>'UPAH/HARI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>false,'FILTER'=>false]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '40px','label'=>'UPAH/HARI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		// ['ID' =>4, 'ATTR' =>['FIELD'=>'TGL_STARTING','SIZE' => '50px','label'=>'PRD.START','align'=>'center','format'=>'raw','mergeHeader'=>true,'FILTER'=>false]],
 		// ['ID' =>5, 'ATTR' =>['FIELD'=>'TGL_CLOSING','SIZE' => '50px','label'=>'PRD.END','align'=>'center','format'=>'raw','mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>4, 'ATTR' =>['FIELD'=>'TTL_PAGI','SIZE' => '50px','label'=>'PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>5, 'ATTR' =>['FIELD'=>'TTL_LBR','SIZE' => '50px','label'=>'LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TTL.PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
-		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_LBR','SIZE' => '50px','label'=>'TTL.LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TOTAL PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_LBR','SIZE' => '50px','label'=>'TOTAL LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>8, 'ATTR' =>['FIELD'=>'UANG_MAKAN','SIZE' => '50px','label'=>'UANG.MAKAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]]
@@ -149,7 +149,7 @@ use modulprj\master\models\Machine;
 			$gvfilterType=false;
 			//$gvfilter=true;
 			$filterWidgetOpt=[];		
-			$filterInputOpt=[];					
+			$filterInputOpt=['class'=>"form-control"];					
 		};
 		
 		$attDinamikAbsensi[]=[		
@@ -305,7 +305,7 @@ use modulprj\master\models\Machine;
 		'pjax'=>true,
 		'pjaxSettings'=>[
 			'options'=>[
-				'enablePushState'=>false,
+				'enablePushState'=>true,
 				'id'=>'daily-absen',
 			],
 		],
