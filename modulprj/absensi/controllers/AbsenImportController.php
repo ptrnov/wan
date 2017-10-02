@@ -1,7 +1,5 @@
 <?php
-
 namespace modulprj\absensi\controllers;
-
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -20,9 +18,7 @@ use yii\widgets\Pjax;
 use yii\web\Response;
 use yii\web\Request;
 use kartik\form\ActiveForm;
-
 use ptrnov\postman4excel\Postman4ExcelBehavior;
-
 use modulprj\absensi\models\AbsenImport;
 use modulprj\absensi\models\AbsenImportSearch;
 use modulprj\absensi\models\AbsenImportFile;
@@ -32,7 +28,6 @@ use modulprj\master\models\Karyawan;
 use modulprj\master\models\Machine;
 use modulprj\master\models\Kar_finger;
 use modulprj\absensi\models\AbsenImportPeriode;
-
 /**
  * AbsenImportController implements the CRUD actions for AbsenImport model.
  */
@@ -59,7 +54,6 @@ class AbsenImportController extends Controller
             ],
         ];
     }
-
     /**
      * Lists all AbsenImport models.
      * @return mixed
@@ -104,7 +98,6 @@ class AbsenImportController extends Controller
 			'dataModelImport'=>$dataModelImport
         ]);
     }
-
 	/**
      * TEMPORARY : CLEAR /HAPUS LIST 
      */
@@ -407,7 +400,6 @@ class AbsenImportController extends Controller
     // public function actionCreateAct()
     // {
         // $model = new AbsenImport();
-
         // if ($model->load(Yii::$app->request->post()) && $model->save()) {
             // return $this->redirect(['view', 'id' => $model->ID]);
         // } else {
@@ -430,7 +422,6 @@ class AbsenImportController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->ID]);
         } else {
@@ -439,7 +430,6 @@ class AbsenImportController extends Controller
             ]);
         }
     }
-
     /**
        * TEMPORARY : Delete
      */
@@ -458,7 +448,6 @@ class AbsenImportController extends Controller
         //return $this->redirect(['index']);
 		$this->redirect(array('/absensi/absen-import/#ai-tab1'));
     }
-
     /**
      * Finds the AbsenImport model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -508,7 +497,6 @@ class AbsenImportController extends Controller
 						if($dataModelImport){
 							$scrcData=self::dataKombinasi($dataModelImport);
 							$cnt=self::tglCount($dataModelImport);
-
 							$i=0;
 							for($i=0; $i<=$cnt; $i++){
 								//$IN[]=self::excelColumnName(($i+$i)+4);
@@ -582,7 +570,7 @@ class AbsenImportController extends Controller
 	private function formulaOut($valWaktuOut){
 		if(self::checkWaktu($valWaktuOut)){
 			$timeOUT=self::checkWaktu($valWaktuOut);
-			if ($timeOUT <='08:00'){
+			if ($timeOUT >='08:00' AND $timeOUT <='12:00'){
 				return '07:00';
 			}else{
 				return $timeOUT;
@@ -790,7 +778,6 @@ class AbsenImportController extends Controller
 				'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric.
 				'getOnlySheet' => 'Import-Absensi', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
 				]);
-
 			/* //print_r($data);
 			$aryDataProvider= new ArrayDataProvider([
 				'allModels'=>$data,
@@ -798,7 +785,6 @@ class AbsenImportController extends Controller
 					'pageSize' => 1000,
 				]
 			]);
-
 			//return Spinner::widget(['preset' => 'medium', 'align' => 'center', 'color' => 'blue','hidden'=>false]);
 			return $aryDataProvider; */
 			
@@ -816,7 +802,6 @@ class AbsenImportController extends Controller
 		
 	}
 	
-
 	
 	
 	/* function getValidateTime($time)
@@ -907,7 +892,6 @@ class AbsenImportController extends Controller
 						// 'TGL11' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
 						// 'TGL2' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center','merge'=>'1,0'],
 						// 'TGL22' => ['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-
 		
 		// print_r($rowResult);
 		// die();
@@ -1094,7 +1078,6 @@ class AbsenImportController extends Controller
                'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
                'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
 			],
-
 		];
 		$excel_file = "ImportFormat";
 		$this->export4excel($excel_content, $excel_file,0);

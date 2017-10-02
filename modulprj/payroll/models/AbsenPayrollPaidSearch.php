@@ -53,7 +53,7 @@ class AbsenPayrollPaidSearch extends AbsenPaid
 		$dataProvider= new ArrayDataProvider([
 			'allModels'=>$qrySql,	
 			'pagination' => [
-				'pageSize' =>20,
+				'pageSize' =>50,
 			],			
 		]);
 		
