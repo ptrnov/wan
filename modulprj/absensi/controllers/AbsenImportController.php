@@ -144,14 +144,18 @@ class AbsenImportController extends Controller
           Yii::$app->response->format = Response::FORMAT_JSON;
           $request= Yii::$app->request;
           $idKode=$request->post('idKode');
-          //$dataKeySelect=$request->post('keysSelect');
-          //if ($dataKeySelect!=0){
-           // foreach ($dataKeySelect as $id) {
-              $items = AbsenImport::find()->where(['ID'=>$idKode])->one();
-              $items->STT_LEMBUR =1;
-              $items->save();
-          // }
-         //}
+          $dataKeySelect=$request->post('keysSelect');
+          if ($dataKeySelect!=0){
+			foreach ($dataKeySelect as $id) {
+				  $items = AbsenImport::find()->where(['IN','STT_LEMBUR','0,1,7,8'])->one();
+				  $items->STT_LEMBUR=1;
+				  $items->save();
+			}
+		  }else{
+			  $itemsOne = AbsenImport::find()->where(['ID'=>$idKode])->one();
+			  $itemsOne->STT_LEMBUR=1;
+			  $itemsOne->save();
+		  }
         return true;
       }
     }
@@ -162,18 +166,28 @@ class AbsenImportController extends Controller
 	public function actionUncheckLemburan()
     {
       	if (Yii::$app->request->isAjax) {
-          Yii::$app->response->format = Response::FORMAT_JSON;
-          $request= Yii::$app->request;
-          $idKode=$request->post('idKode');
-		  // $dataKeySelect=$request->post('keysSelect');
-		  // if ($dataKeySelect!=0){
-			// foreach ($dataKeySelect as $id) {
-              $items = AbsenImport::find()->where(['ID'=>$idKode])->one();
-              $items->STT_LEMBUR = 0;
-              $items->save();
-           // }
-         // }
-        return true;
+			  Yii::$app->response->format = Response::FORMAT_JSON;
+			  $request= Yii::$app->request;
+			  $idKode=$request->post('idKode');
+			  $dataKeySelect=$request->post('keysSelect');
+			  if ($dataKeySelect==""){
+					//foreach ($dataKeySelect as $id) {
+						  // $items = AbsenImport::find()->where(['IN','STT_LEMBUR','0,1,7,8'])->one();
+						  // $items->STT_LEMBUR=0;
+						  // $items->save();
+					//}
+					$cmd_clear=Yii::$app->db->createCommand("
+							UPDATE absen_import SET STT_LEMBUR=0 WHERE STT_LEMBUR=1;
+					");
+					$cmd_clear->execute();
+					return true;
+			  }else{
+					$itemsOne = AbsenImport::find()->where(['ID'=>$idKode])->one();
+					$itemsOne->STT_LEMBUR=0;
+					$itemsOne->save();
+					return true;
+			  }
+			
       }
     }
 	
@@ -709,7 +723,10 @@ class AbsenImportController extends Controller
 		} 
 		
 		$dataProvider = new \yii\data\ArrayDataProvider([
-			'allModels' => $rsltAry
+			'allModels' => $rsltAry,
+			'pagination' => [
+				 'pageSize' => 10000, //max row input
+			]
 		]);
 		return $dataProvider->getModels();
 	}
