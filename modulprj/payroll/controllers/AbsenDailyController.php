@@ -256,16 +256,23 @@ class AbsenDailyController extends Controller
 		     $cabId = $hsl['DynamicModel']['CAB_ID'];
 		     $depId = $hsl['DynamicModel']['DEP_ID'];
 			 $grpId = $hsl['DynamicModel']['TT_GRP_ID'];
-			 $aryModelKar=Karyawan::find()->where(['CAB_ID'=>$cabId,'DEP_ID'=>$depId,'GRP_ID'=>$grpId])->all();
+			// $aryModelKar=Karyawan::find()->where(['CAB_ID'=>$cabId,'DEP_ID'=>$depId,'GRP_ID'=>$grpId])->all();
+			 //$aryModelKar=AbsenPayroll::find()->select(['KAR_ID'])->where(['MESIN_NM'=>$cabId,'DEP_ID'=>$depId])->all();
+			 $aryModelKar=AbsenPayroll::find()->where(['MESIN_NM'=>$cabId,'DEP_ID'=>$depId])->groupBy(['KAR_ID'])->all();//->where(['MESIN_NM'=>$cabId,'DEP_ID'=>$depId])->all();
+			 //print_r($aryModelKar[1]->KAR_ID);
+			 // die();
 			 foreach($aryModelKar as $row => $val){
-				 if ($row==0){
-					 $data="'".$val['KAR_ID']."'";
-				 }else{
-					 $data=$data.",'".$val['KAR_ID']."'";
-				 }				
+				 if($val['KAR_ID']!=''){
+					 // if ($row==0){
+						 // $data="'".$val['KAR_ID']."'";
+					 // }else{
+						 $data=$data.",'".$val['KAR_ID']."'";
+					 // }	
+				 }
 			 };
 			// $aryKarID="(".$data.")";
-			 $aryKarID="(".$data.")";
+			 $aryKarID="(".substr("(".$data.")",2); //menghilangkan koma di depan
+		
 			 // print_r($aryKarID);
 			 // die();
 			 
