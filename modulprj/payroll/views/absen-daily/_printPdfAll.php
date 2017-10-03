@@ -73,7 +73,7 @@ use modulprj\payroll\models\AbsenPayrollPrintSearch;
 				   <tr>
 					<th style="width:100px">Lembur</th>
 					<th style="width:10px">:</th>
-					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($modelOne[0]['SUB_PAY_LBR'],2) ?></th>					
+					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($modelOne[0]['SUB_PAY_LBR']-$modelOne[0]['POT_DIVISI'],2) ?></th>					
 					<th style="width:80px;padding-left:20px">Pinjaman</th>
 					<th style="width:10px">:</th>
 					<th style="width:50px;text-align:right;font-weight: normal;"><?=number_format($modelOne[0]['TTL_PINJAMAN'],2) ?></th>

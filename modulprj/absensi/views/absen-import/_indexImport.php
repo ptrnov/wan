@@ -164,6 +164,12 @@ use modulprj\master\models\Machine;
 					}else{
 						return $data->$x;
 					};					
+				}elseif($x=='VAL_PAGI' OR $x=='VAL_LEMBUR'){
+					if ($data->STT_LEMBUR>1 AND $data->STT_LEMBUR<7){
+						return 0;
+					}else{
+						return $data->$x;
+					}
 				}else{
 					return $data->$x;
 				}

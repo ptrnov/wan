@@ -147,8 +147,8 @@ date_default_timezone_set('Asia/Jakarta');
 		'condensed'=>true,
 		'hover'=>true,
 		'mode'=>DetailView::MODE_VIEW,
-		'buttons1'=>'{update}',
-		'buttons2'=>'{view}{save}',
+		// 'buttons1'=>'{update}',
+		// 'buttons2'=>'{view}{save}',
 		'panel'=>[
 					//'heading'=>'#EMPLOYEE CONTACT',// . $model->EMP_NM . ' '.$model->EMP_NM_BLK,
 					'heading'=>'<div style="float:left;margin-right:10px" class="fa fa-1x fa-user-plus"></div><div><h6 class="modal-title"><b>IDENTITY</b></h6></div>',

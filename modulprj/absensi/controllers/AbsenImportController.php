@@ -441,7 +441,7 @@ class AbsenImportController extends Controller
 		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
 		
 		if (!$model->load(Yii::$app->request->post())) {
-			return $this->renderAjax('_viewTmp', [
+			return $this->renderAjax('_viewException', [
 					'model' => $model
 				]); 				
 		}else{		
