@@ -13,7 +13,7 @@ use modulprj\master\models\Dept;
 use modulprj\master\models\Machine;
 
 	$aryGrp=ArrayHelper::map(TimetableGroup::find()->all(), 'TT_GRP_ID','TT_GRP_NM');
-	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'CAB_ID','MESIN_NM');
+	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'MESIN_NM','MESIN_NM');
 	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
 
 	$form = ActiveForm::begin([
