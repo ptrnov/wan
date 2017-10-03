@@ -432,6 +432,32 @@ class AbsenImportController extends Controller
 		}		
     }
 	
+	/**
+     * ACTION : VIEW 
+	 */
+    public function actionFormException($id)
+    {
+    	$model=$this->findModel($id);
+		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_viewTmp', [
+					'model' => $model
+				]); 				
+		}else{		
+			
+			if(Yii::$app->request->isAjax){				
+				$model->load(Yii::$app->request->post());				
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					if ($model->save()) {
+						return $this->redirect(['index']);
+					}			
+				}
+			}	
+		}		
+    }
 	
     /**
      * ACTUAL : CREATE 

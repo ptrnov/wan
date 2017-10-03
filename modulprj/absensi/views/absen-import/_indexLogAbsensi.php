@@ -229,7 +229,7 @@ use modulprj\master\models\Machine;
 	//ACTION
 	$attDinamikLog[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{review}{delete}',
+		'template' => '{review}{exception}{delete}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
@@ -244,6 +244,9 @@ use modulprj\master\models\Machine;
 		'buttons' => [
 			'review' =>function ($url, $model){
 			  return  tombolReview($url, $model);
+			},
+			'exception' =>function ($url, $model){
+			  return  tombolException($url, $model);
 			},
 			'delete' =>function ($url, $model){
 			  return  tombolDelete($url, $model);

@@ -67,6 +67,18 @@ $(document).on('click','#import-button-review', function(ehead){
 });
 
 /*
+ * Import-EXCEPTION.
+*/
+$.fn.modal.Constructor.prototype.enforceFocus = function(){};
+//$.fn.modal.prototype.constructor.Constructor.DEFAULTS.backdrop = 'static';	
+$(document).on('click','#import-button-exception', function(ehead){ 			  
+	$('#import-modal-exception').modal('show')
+	.find('#import-modal-content-exception').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+	//.load(ehead.target.value);
+	.load($(this).attr('value'));
+})
+
+/*
  * import-Export-Excel.
 */
 $.fn.modal.Constructor.prototype.enforceFocus = function(){};	

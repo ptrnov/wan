@@ -43,7 +43,7 @@ class AbsenImportSearch extends AbsenImport
     public function search($params)
     {
 		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'0','AKTIF'=>'1'])->one();
-        $query = AbsenImport::find();
+        $query = AbsenImport::find()->andWhere('STATUS<>2');
 
         // add conditions that should always apply here
 		$cnt=AbsenImport::find()->count();
