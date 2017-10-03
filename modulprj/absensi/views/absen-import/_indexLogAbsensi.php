@@ -27,12 +27,12 @@ use modulprj\master\models\Machine;
 	
 	$aryFieldLog= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'Karyawan','align'=>'left','mergeHeader'=>false,'FILTER'=>true]],		  
-		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left','mergeHeader'=>false,'FILTER'=>$aryDept]],
-		['ID' =>2, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left','mergeHeader'=>false,'FILTER'=>true]],
-		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
-		['ID' =>4, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
-		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
-		['ID' =>6, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center','mergeHeader'=>false,'FILTER'=>true]],
+		['ID' =>1, 'ATTR' =>['FIELD'=>'DEP_NM','SIZE' => '50px','label'=>'Department','align'=>'left','mergeHeader'=>false,'FILTER'=>$aryDept]],		
+		['ID' =>2, 'ATTR' =>['FIELD'=>'IN_TGL','SIZE' => '6px','label'=>'Tgl.Masuk','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>3, 'ATTR' =>['FIELD'=>'IN_WAKTU','SIZE' => '6px','label'=>'Jam.Masuk','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>4, 'ATTR' =>['FIELD'=>'OUT_TGL','SIZE' => '6px','label'=>'Tgl.Keluar','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>5, 'ATTR' =>['FIELD'=>'OUT_WAKTU','SIZE' => '6px','label'=>'Jam.Keluar','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],
+		['ID' =>6, 'ATTR' =>['FIELD'=>'HARI','SIZE' => '8px','label'=>'Hari','align'=>'left','mergeHeader'=>false,'FILTER'=>$valHari]],
 		['ID' =>7, 'ATTR' =>['FIELD'=>'LEBIH_WAKTU','SIZE' => '6px','label'=>'Kelebihan Waktu','align'=>'center','mergeHeader'=>true,'FILTER'=>true]],
 		['ID' =>8, 'ATTR' =>['FIELD'=>'VAL_PAGI','SIZE' => '5px','label'=>'Pagi','align'=>'right','mergeHeader'=>true,'FILTER'=>true]],
 		['ID' =>9, 'ATTR' =>['FIELD'=>'VAL_LEMBUR','SIZE' => '5px','label'=>'Lembur','align'=>'right','mergeHeader'=>true,'FILTER'=>true]],
@@ -101,14 +101,18 @@ use modulprj\master\models\Machine;
 	
 	/*OTHER ATTRIBUTE*/
 	foreach($valFieldsLog as $key =>$value[]){	
-		if ($value[$key]['FIELD']=='DEP_NM'){				
+		if ($value[$key]['FIELD']=='DEP_NM' OR $value[$key]['FIELD']=='HARI'){					
 			$gvfilterType=GridView::FILTER_SELECT2;
 			//$gvfilterType=false;
 			//$gvfilter =$aryDeptId;
 			$filterWidgetOpt=[				
 				'pluginOptions'=>['allowClear'=>true],		
 			]; 
-			$filterInputOpt=['placeholder'=>'-- Pilih --'];
+			if($value[$key]['FIELD']=='HARI'){
+				$filterInputOpt=['placeholder'=>'-Pilih-'];
+			}else{
+				$filterInputOpt=['placeholder'=>'-- Pilih --'];
+			}
 		}else{
 			$gvfilterType=false;
 			//$gvfilter=true;
@@ -225,7 +229,7 @@ use modulprj\master\models\Machine;
 	//ACTION
 	$attDinamikLog[]=[
 		'class' => 'kartik\grid\ActionColumn',
-		'template' => '{review}{delete}',
+		'template' => '{review}{exception}{delete}',
 		'header'=>'ACTION',
 		'dropdown' => true,
 		'dropdownOptions'=>[
@@ -240,6 +244,9 @@ use modulprj\master\models\Machine;
 		'buttons' => [
 			'review' =>function ($url, $model){
 			  return  tombolReview($url, $model);
+			},
+			'exception' =>function ($url, $model){
+			  return  tombolException($url, $model);
 			},
 			'delete' =>function ($url, $model){
 			  return  tombolDelete($url, $model);

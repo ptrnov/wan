@@ -237,7 +237,7 @@ $this->registerCss("
 			<span class="fa-stack fa-xs">																	
 				<i class="fa fa-circle fa-stack-2x " style="color:red"></i>
 				<i class="fa fa-print fa-stack-1x" style="color:#fbfbfb"></i>
-			</span><b> PRINT SELECT</b>
+			</span><b> PRINT PAYROLL PDF</b>
 		',	
 		'size' => 'modal-sm',
 		//'options' => ['class'=>'slide'],

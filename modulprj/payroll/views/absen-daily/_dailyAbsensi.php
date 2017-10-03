@@ -37,8 +37,9 @@ use modulprj\master\models\Machine;
 		['ID' =>6, 'ATTR' =>['FIELD'=>'SUB_PAY_PAGI','SIZE' => '50px','label'=>'TOTAL PAGI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>7, 'ATTR' =>['FIELD'=>'SUB_PAY_LBR','SIZE' => '50px','label'=>'TOTAL LEMBUR','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
 		['ID' =>8, 'ATTR' =>['FIELD'=>'UANG_MAKAN','SIZE' => '50px','label'=>'UANG.MAKAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
-		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POTONGAN','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
-		['ID' =>10, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]]
+		['ID' =>9, 'ATTR' =>['FIELD'=>'TTL_POTONGAN','SIZE' => '8px','label'=>'POT TELAT','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>10, 'ATTR' =>['FIELD'=>'POT_DIVISI','SIZE' => '8px','label'=>'POT.LBR DIVISI','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]],
+		['ID' =>11, 'ATTR' =>['FIELD'=>'TTL_PAY','SIZE' => '6px','label'=>'TOTAL','align'=>'right','format'=>['decimal', 2],'mergeHeader'=>true,'FILTER'=>false]]
 	];	
 	$valFieldsAbsen = ArrayHelper::map($aryFieldAbsensi, 'ID', 'ATTR'); 
 	$bColor='rgba(87,114,111, 1)';
@@ -162,7 +163,7 @@ use modulprj\master\models\Machine;
 			'hAlign'=>'right',
 			'vAlign'=>'middle',
 			'mergeHeader'=>$value[$key]['mergeHeader'],
-			'noWrap'=>true,			
+			'noWrap'=>false,			
 			'headerOptions'=>[		
 					'style'=>[									
 					'text-align'=>'center',

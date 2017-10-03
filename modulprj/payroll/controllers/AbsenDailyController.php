@@ -62,6 +62,30 @@ class AbsenDailyController extends Controller
         ];
     }
 
+	/**
+     * Before Action Index
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true; 
+               }
+            } else {
+                return true;
+            }
+    }
+	
     /**
      * Lists all AbsenImport models.
      * @return mixed
@@ -326,7 +350,7 @@ class AbsenDailyController extends Controller
 			 [
 				'sheet_name' => 'Payroll-Paid-Data',
                 'sheet_title' => [
-					['KAR_ID','KAR_NM','CABANG','DEPARTMENT','UPAH_HARIAN','PERIODE_MULAI','PERIODE_AKHIR','PAGI','LEMBUR','UANG_MAKAN','TTL_PAGI','TTL_LEMBUR','TTL_POTONGAN','TOTAL']
+					['KAR_ID','KAR_NM','CABANG','DEPARTMENT','UPAH_HARIAN','PERIODE_MULAI','PERIODE_AKHIR','PAGI','LEMBUR','UANG_MAKAN','TTL_PAGI','TTL_LEMBUR','TTL_POT_TELAT','POT_DIVISI','TOTAL']
 				],
 			    'ceils' => $excel_ceilsPaid,
                 'freezePane' => 'A2',
@@ -345,7 +369,8 @@ class AbsenDailyController extends Controller
 						'UANG_MAKAN' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
 						'TTL_PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
 						'TTL_LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
-						'TTL_POTONGAN' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'TTL_POT_TELAT' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'POT_DIVISI' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
 						'TOTAL' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
 					]						
 				],
@@ -363,7 +388,8 @@ class AbsenDailyController extends Controller
 						'UANG_MAKAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
 						'TTL_PAGI' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
 						'TTL_LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
-						'TTL_POTONGAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_POT_TELAT' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'POT_DIVISI' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
 						'TOTAL' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
 					]
 				],

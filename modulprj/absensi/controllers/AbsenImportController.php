@@ -54,6 +54,31 @@ class AbsenImportController extends Controller
             ],
         ];
     }
+	
+	/**
+     * Before Action Index
+     */
+	public function beforeAction(){
+			if (Yii::$app->user->isGuest)  {
+				 Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+			}
+            // Check only when the user is logged in
+            if (!Yii::$app->user->isGuest)  {
+               if (Yii::$app->session['userSessionTimeout']< time() ) {
+                   // timeout
+                   Yii::$app->user->logout();
+                   $this->redirect(array('/site/login'));  //
+               } else {
+                   //Yii::$app->user->setState('userSessionTimeout', time() + Yii::app()->params['sessionTimeoutSeconds']) ;
+				   Yii::$app->session->set('userSessionTimeout', time() + Yii::$app->params['sessionTimeoutSeconds']);
+                   return true; 
+               }
+            } else {
+                return true;
+            }
+    }
+	
     /**
      * Lists all AbsenImport models.
      * @return mixed
@@ -407,6 +432,32 @@ class AbsenImportController extends Controller
 		}		
     }
 	
+	/**
+     * ACTION : VIEW 
+	 */
+    public function actionFormException($id)
+    {
+    	$model=$this->findModel($id);
+		//$model->scenario=AbsenImportTmp::SCENARIO_UPDATE;
+		
+		if (!$model->load(Yii::$app->request->post())) {
+			return $this->renderAjax('_viewTmp', [
+					'model' => $model
+				]); 				
+		}else{		
+			
+			if(Yii::$app->request->isAjax){				
+				$model->load(Yii::$app->request->post());				
+				return Json::encode(\yii\widgets\ActiveForm::validate($model));
+			}else{
+				if ($model->load(Yii::$app->request->post())) {
+					if ($model->save()) {
+						return $this->redirect(['index']);
+					}			
+				}
+			}	
+		}		
+    }
 	
     /**
      * ACTUAL : CREATE 

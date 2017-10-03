@@ -387,6 +387,33 @@ $this->registerCss("
 	}
 	
 	/*
+	 *  ACTION : EXCEPTION [IJIN/SAKIT/LUAR_KOTA/OFF]
+	*/
+	function tombolException($url, $model){
+		// if(getPermission()){
+			//Jika BTN_CREATE Show maka BTN_CVIEW Show.
+			// if(getPermission()->BTN_VIEW==1 OR getPermission()->BTN_CREATE==1){
+				$title1 = Yii::t('app',' Exception');
+				$options1 = [
+					'value'=>url::to(['/absensi/absen-import/form-exception','id'=>$model->ID]),
+					'id'=>'import-button-exception',
+					'class'=>"btn btn-default btn-xs",    
+					'style'=>['text-align'=>'left','width'=>'100%', 'height'=>'25px','border'=> 'none'],
+				];
+				$icon1 = '
+					<span class="fa-stack fa-xs">																	
+						<i class="fa fa-circle-thin fa-stack-2x " style="color:'.bgIconColor().'"></i>
+						<i class="fa fa-low-vision fa-stack-1x" style="color:black"></i>
+					</span>
+				';      
+				$label1 = $icon1 . '  ' . $title1;
+				$content = Html::button($label1,$options1);		
+				return '<li>'.$content.'</li>';
+			// }
+		// }
+	}
+	
+	/*
 	 *  ACTUAL = DELETE
 	*/
 	function tombolDelete($url, $model){
@@ -450,6 +477,31 @@ $this->registerCss("
 	echo "<div id='import-modal-content-review'></div>";
 	Modal::end();
 	
+	/*
+	 * ABSENT IMPORT - EXCEPTION.
+	*/
+	Modal::begin([
+		'id' => 'import-modal-exception',
+		'header' => '
+			<span class="fa-stack fa-xs">																	
+				<i class="fa fa-circle fa-stack-2x " style="color:'.bgIconColor().'"></i>
+				<i class="fa fa-eye fa-stack-1x" style="color:#fbfbfb"></i>
+			</span><b> REVIEW EXCEPTION </b>
+		',	
+		'size' => 'modal-dm',
+		//'options' => ['class'=>'slide'],
+		'headerOptions'=>[
+			'style'=> 'border-radius:5px; background-color:'.$modalHeaderColor,
+			//'toggleButton' => ['label' => 'click me'],
+		],
+		//'clientOptions' => ['backdrop' => 'static', 'keyboard' => TRUE]
+		'clientOptions' => [
+			'backdrop' => FALSE, //Static=disable, false=enable
+			'keyboard' => TRUE,	// Kyboard 
+		]
+	]);
+	echo "<div id='import-modal-content-exception'></div>";
+	Modal::end();
 	/*
 	 * TEMPORARY/ACTUAL: MODAL CREATE.
 	*/
