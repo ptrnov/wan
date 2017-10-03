@@ -24,7 +24,7 @@ use modulprj\master\models\Machine;
 	';
 	
 	$aryCbgMachine=ArrayHelper::map(Machine::find()->all(), 'CAB_ID','MESIN_NM');
-	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_ID','DEP_NM');
+	$aryDept=ArrayHelper::map(Dept::find()->all(), 'DEP_NM','DEP_NM');
 	
 	$aryFieldPayroll= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'KAR_NM','SIZE' => '180px','label'=>'KARYAWAN','align'=>'left','format'=>'raw','mergeHeader'=>false,'FILTER'=>true]],		  
