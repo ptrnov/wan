@@ -576,10 +576,10 @@ class AbsenImportController extends Controller
 										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);									//FINGER
 										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
 										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);											//WAKTU MASUK
-										//$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));		//TGL KELUAR
-										$modelTmp->OUT_TGL=self::formulaTglOut(self::formulaOut($srcRows[$OUT]),$srcRows[$i]);				//TGL KELUAR
-										$modelTmp->OUT_WAKTU=self::formulaOut($srcRows[$OUT]);											//WAKTU KELUAR
-										//$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
+										$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL KELUAR
+										// $modelTmp->OUT_TGL=self::formulaTglOut(self::formulaOut($srcRows[$OUT]),$srcRows[$i]);		//TGL KELUAR
+										// $modelTmp->OUT_WAKTU=self::formulaOut($srcRows[$OUT]);										//WAKTU KELUAR
+										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
 										$modelTmp->STT_LEMBUR=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->LEBIH_WAKTU=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->save();										

@@ -1,0 +1,775 @@
+==NEW_RPT_FROMAT_EXCEL== IN TGL_START DATE, IN TGL_END DATE
+BEGIN
+	SET SESSION GROUP_CONCAT_MAX_LEN = 1000000;
+	SET @tglStart=TGL_START;
+	SET @tglEnd=TGL_END;
+  #PARAMETER'2017-07-20','2017-07-20'
+	DROP TEMPORARY TABLE IF EXISTS periode_excel;
+	CREATE TEMPORARY TABLE periode_excel as( 
+		SELECT a.Date as TGL_RUN
+		FROM (
+				select @tglEnd - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
+				from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
+		) a
+		#WHERE a.Date BETWEEN date('2016-02-23') and date(z)
+		WHERE a.Date BETWEEN  @tglStart AND @tglEnd ORDER BY a.Date ASC
+	);
+	SELECT
+		GROUP_CONCAT(DISTINCT
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					#"' THEN concat(x2.VAL_PAGI,'/',x2.VAL_POTONGAN_TELAT) ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+					"' AND (STT_LEMBUR=1 OR STT_LEMBUR=0 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8) THEN x2.VAL_PAGI ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+			),
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					"' AND x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS 'LBR_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"'"												
+			)
+		) into @fildText
+	FROM 
+	(SELECT * FROM periode_excel) x1; #ORDER BY x1.TGL_RUN ASC;
+
+	#SELECT @fildText;
+	SET @sqlRslt = CONCAT("  
+		SELECT x2.KAR_ID,x2.KAR_NM,x2.MESIN_NM AS CABANG,x2.DEP_NM AS DEPARTMENT,x2.PAY_DAY AS UPAH_HARIAN,
+				#CLOSING TIME
+         DATE_FORMAT('",@tglStart,"','%Y-%m-%d') as PERIODE_MULAI,
+				 DATE_FORMAT('",@tglEnd,"','%Y-%m-%d') as PERIODE_AKHIR, 
+        #PEMASUKAN TTL PAGI DAN OT
+         #sum(x2.VAL_PAGI) as PAGI,
+         sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.VAL_PAGI ELSE 0 END) as PAGI,
+         sum(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS  LEMBUR,
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS  UANG_MAKAN,
+        #SUB TOTAL BAYARAN 
+				 #SUM(x2.PAY_PAGI) as TTL_PAGI, 
+         sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI ELSE 0 END) as TTL_PAGI,
+				 SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE '0' END) AS  TTL_LEMBUR, 
+        #POTOGAN
+				 #(sum(x2.VAL_POTONGAN_TELAT) * x2.PAY_DAY) AS TTL_POTONGAN,
+         sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POT_TELAT,
+				 SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END)	-
+         (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) AS POT_DIVISI,
+        #GRAND TOTAL PAGI+LEMBUR+UANG MAKAN
+				 #SUM(x2.PAY_PAGI) + 
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI ELSE 0 END) +
+         #SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) +  
+				 (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) +
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS TOTAL
+         
+	FROM (
+				SELECT * FROM	absen_import 
+				WHERE (IN_TGL BETWEEN @tglStart AND @tglEnd) AND STATUS=2
+				GROUP BY IN_TGL,KAR_ID ORDER BY IN_TGL ASC
+			 ) x2 GROUP BY x2.KAR_ID ORDER BY x2.MESIN_NM ASC,x2.KAR_ID ASC,x2.DEP_NM ASC
+");
+
+	PREPARE stmt FROM @sqlRslt; 
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+END
+
+
+
+==NEW_RPT_FROMAT_PAID== IN TGL_START DATE, IN TGL_END DATE
+BEGIN
+	SET SESSION GROUP_CONCAT_MAX_LEN = 1000000;
+	SET @tglStart=TGL_START;
+	SET @tglEnd=TGL_END ;
+  #PARAMETER('2017-09-08','2017-09-14')
+	# ('2017-07-20','2017-07-20','1')
+	DROP TEMPORARY TABLE IF EXISTS periode_paid;
+	CREATE TEMPORARY TABLE periode_paid as( 
+		SELECT a.Date as TGL_RUN
+		FROM (
+				select @tglEnd - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
+				from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
+		) a
+		#WHERE a.Date BETWEEN date('2016-02-23') and date(z)
+		WHERE a.Date BETWEEN  @tglStart AND @tglEnd ORDER BY a.Date ASC
+	);
+	SELECT
+		GROUP_CONCAT(DISTINCT
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					#"' THEN concat(x2.VAL_PAGI,'/',x2.VAL_POTONGAN_TELAT) ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+					"' AND (x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8) THEN x2.VAL_PAGI ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+			),
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					"' AND x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS 'LBR_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"'"												
+			)
+		) into @fildText
+	FROM 
+	(SELECT * FROM periode_paid) x1; #ORDER BY x1.TGL_RUN ASC;
+
+	#SELECT @fildText;
+	SET @sqlRslt = CONCAT("  
+		SELECT x2.KAR_ID,x2.MESIN_NM,x2.KAR_NM,x2.DEP_NM,x2.PAY_DAY,x2.STATUS AS STT,x2.STATUS,
+        #CLOSING TIME
+         DATE_FORMAT('",@tglStart,"','%Y-%m-%d') as TGL_STARTING,
+				 DATE_FORMAT('",@tglEnd,"','%Y-%m-%d') as TGL_CLOSING, 
+        #PEMASUKAN TTL PAGI DAN OT
+         sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.VAL_PAGI ELSE 0 END) as TTL_PAGI,
+         sum(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS  TTL_LBR,
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS  UANG_MAKAN,
+        #SUB TOTAL BAYARAN 
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI  ELSE 0 END) as SUB_PAY_PAGI, #add Fomula Potongan
+				 SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE '0' END) AS  SUB_PAY_LBR, 
+        #GRAND TOTAL PAGI+LEMBUR+UANG MAKAN
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI  ELSE 0 END) + 
+         (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) +  
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS TTL_PAY, 
+				#SPLIT PER-DAY
+				",@fildText,",			
+				#POTONGAN
+				  sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POTONGAN_PAGI,				
+				  '0' AS TTL_PINJAMAN,
+						'0' AS TTL_PPH,
+					sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POTONGAN,
+				  #(sum(x2.VAL_POTONGAN_TELAT) * x2.PAY_DAY) AS TTL_POTONGAN,
+					SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END)	-
+          (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) AS POT_DIVISI,
+				x2.STT_LEMBUR
+	FROM (
+				SELECT * FROM	absen_import 
+				WHERE STATUS=2 AND IN_TGL BETWEEN @tglStart AND @tglEnd
+				GROUP BY IN_TGL,KAR_ID ORDER BY IN_TGL ASC
+			 ) x2 GROUP BY x2.KAR_ID ORDER BY x2.KAR_ID ASC
+
+");
+
+	PREPARE stmt FROM @sqlRslt; 
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+END
+
+
+
+==NEW_RPT_FROMAT_PAYROLL== IN TGL_START DATE, IN TGL_END DATE
+BEGIN
+	SET SESSION GROUP_CONCAT_MAX_LEN = 1000000;
+	SET @tglStart=TGL_START;
+	SET @tglEnd=TGL_END ;
+  #PARAMETER('2017-09-08','2017-09-14')
+	# ('2017-07-20','2017-07-20','1')
+	DROP TEMPORARY TABLE IF EXISTS periode_payroll;
+	CREATE TEMPORARY TABLE periode_payroll as( 
+		SELECT a.Date as TGL_RUN
+		FROM (
+				select @tglEnd - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
+				from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
+		) a
+		#WHERE a.Date BETWEEN date('2016-02-23') and date(z)
+		WHERE a.Date BETWEEN  @tglStart AND @tglEnd ORDER BY a.Date ASC
+	);
+	SELECT
+		GROUP_CONCAT(DISTINCT
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					#"' THEN concat(x2.VAL_PAGI,'/',x2.VAL_POTONGAN_TELAT) ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+					"' AND (x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8) THEN x2.VAL_PAGI ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+			),
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					"' AND x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS 'LBR_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"'"												
+			)
+		) into @fildText
+	FROM 
+	(SELECT * FROM periode_payroll) x1; #ORDER BY x1.TGL_RUN ASC;
+
+	#SELECT @fildText;
+	SET @sqlRslt = CONCAT("  
+		SELECT x2.KAR_ID,x2.MESIN_NM,x2.KAR_NM,x2.DEP_NM,x2.PAY_DAY,x2.STATUS AS STT,x2.STATUS,
+        #CLOSING TIME
+         DATE_FORMAT('",@tglStart,"','%Y-%m-%d') as TGL_STARTING,
+				 DATE_FORMAT('",@tglEnd,"','%Y-%m-%d') as TGL_CLOSING, 
+        #PEMASUKAN TTL PAGI DAN OT
+         sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.VAL_PAGI ELSE 0 END) as TTL_PAGI,
+         sum(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS  TTL_LBR,
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS  UANG_MAKAN,
+        #SUB TOTAL BAYARAN 
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI  ELSE 0 END) as SUB_PAY_PAGI, #add Fomula Potongan
+				 SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE '0' END) AS  SUB_PAY_LBR, 
+        #GRAND TOTAL PAGI+LEMBUR+UANG MAKAN
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI  ELSE 0 END) + 
+         (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) +  
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS TTL_PAY, 
+				#SPLIT PER-DAY
+				",@fildText,",			
+				#POTONGAN
+				  sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POTONGAN_PAGI,				
+				  '0' AS TTL_PINJAMAN,
+						'0' AS TTL_PPH,
+					sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POTONGAN,
+				  #(sum(x2.VAL_POTONGAN_TELAT) * x2.PAY_DAY) AS TTL_POTONGAN,
+					SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END)	-
+          (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) AS POT_DIVISI,
+				x2.STT_LEMBUR
+	FROM (
+				SELECT * FROM	absen_import 
+				WHERE STATUS=1 AND IN_TGL BETWEEN @tglStart AND @tglEnd
+				GROUP BY IN_TGL,KAR_ID ORDER BY IN_TGL ASC
+			 ) x2 GROUP BY x2.KAR_ID ORDER BY x2.KAR_ID ASC
+
+");
+
+	PREPARE stmt FROM @sqlRslt; 
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+END
+
+
+==NEW_RPT_FROMAT_PRINT== IN TGL_START DATE, IN TGL_END DATE, IN ARY_KARID NVARCHAR(5000)
+BEGIN
+	SET SESSION GROUP_CONCAT_MAX_LEN = 1000000;
+	SET @tglStart=TGL_START;
+	SET @tglEnd=TGL_END;
+  #SET @aryKarId="('3.0915.0001','3.0915.0002')";
+  SET @aryKarId=ARY_KARID;
+  #PARAMETER('2017-09-08','2017-09-14')
+	# ('2017-07-20','2017-07-20','("3.0915.0001","3.0915.0002")')
+	# ("2017-07-20","2017-07-20","('3.0915.0001','3.0915.0002')")
+	DROP TEMPORARY TABLE IF EXISTS periode_print;
+	CREATE TEMPORARY TABLE periode_print as( 
+		SELECT a.Date as TGL_RUN
+		FROM (
+				select @tglEnd - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY as Date
+				from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b
+				cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c
+		) a
+		#WHERE a.Date BETWEEN date('2016-02-23') and date(z)
+		WHERE a.Date BETWEEN  @tglStart AND @tglEnd ORDER BY a.Date ASC
+	);
+	SELECT
+		GROUP_CONCAT(DISTINCT
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					#"' THEN concat(x2.VAL_PAGI,'/',x2.VAL_POTONGAN_TELAT) ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+					"' AND (x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8) THEN x2.VAL_PAGI ELSE 0 END) AS 'PAGI_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"',"												
+			),
+			CONCAT(
+					"MAX(CASE WHEN DATE_FORMAT(x2.IN_TGL,'%Y-%m-%d') = '",
+					DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),
+					"' AND x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS 'LBR_",DATE_FORMAT(x1.TGL_RUN,'%Y-%m-%d'),"'"												
+			)
+		) into @fildText
+	FROM 
+	(SELECT * FROM periode_print) x1; #ORDER BY x1.TGL_RUN ASC;
+
+	#SELECT @fildText;
+	SET @sqlRslt = CONCAT("  
+		SELECT x2.KAR_ID,x2.MESIN_NM,x2.KAR_NM,x2.DEP_NM,x2.PAY_DAY,x2.STATUS AS STT,x2.STATUS,
+        #CLOSING TIME
+         DATE_FORMAT('",@tglStart,"','%Y-%m-%d') as TGL_STARTING,
+				 DATE_FORMAT('",@tglEnd,"','%Y-%m-%d') as TGL_CLOSING, 
+        #PEMASUKAN TTL PAGI DAN OT
+         sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.VAL_PAGI ELSE 0 END) as TTL_PAGI,
+         sum(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.VAL_LEMBUR ELSE 0 END) AS  TTL_LBR,
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS  UANG_MAKAN,
+        #SUB TOTAL BAYARAN 
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI  ELSE 0 END) as SUB_PAY_PAGI, #add Fomula Potongan
+				 SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE '0' END) AS  SUB_PAY_LBR, 
+        #GRAND TOTAL PAGI+LEMBUR+UANG MAKAN
+				 sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=7 OR x2.STT_LEMBUR=8 THEN x2.PAY_PAGI  ELSE 0 END) + 
+         (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) +  
+         sum(CASE WHEN x2.STT_LEMBUR=1 THEN x2.VAL_MAKAN ELSE 0 END) AS TTL_PAY, 
+				#SPLIT PER-DAY
+				",@fildText,",			
+				#POTONGAN
+				  sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POTONGAN_PAGI,				
+				  '0' AS TTL_PINJAMAN,
+						'0' AS TTL_PPH,
+					sum(CASE WHEN x2.STT_LEMBUR=0 OR x2.STT_LEMBUR=1 THEN x2.VAL_POTONGAN_TELAT ELSE 0 END) * x2.PAY_DAY AS TTL_POTONGAN,
+				  #(sum(x2.VAL_POTONGAN_TELAT) * x2.PAY_DAY) AS TTL_POTONGAN,
+					SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END)	-
+          (SUM(CASE WHEN x2.STT_LEMBUR=1 OR x2.STT_LEMBUR=8 THEN x2.PAY_LEMBUR ELSE 0 END) * (x2.POT_PERSEN/100)) AS POT_DIVISI,
+				x2.STT_LEMBUR
+	FROM (
+				SELECT * FROM	absen_import 
+				WHERE (IN_TGL BETWEEN @tglStart AND @tglEnd) AND KAR_ID IN ",@aryKarId,"
+				GROUP BY IN_TGL,KAR_ID ORDER BY IN_TGL ASC
+			 ) x2 GROUP BY x2.KAR_ID ORDER BY x2.KAR_ID ASC
+
+");
+
+	PREPARE stmt FROM @sqlRslt; 
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+END
+
+
+=== absen_import == AbsenImport_BeforeInsert ===
+IF new.TERMINAL_ID   IS NOT NULL AND  new.FINGER_ID IS NOT NULL THEN 
+  
+    SELECT 
+             #x1.TerminalID,x1.FingerPrintID
+             x1.KAR_ID
+             ,x2.MESIN_NM
+            ,x3.KAR_NM,x3.DEP_ID
+           ,x4.DEP_NM
+   INTO @karId,@mesinNm,@karNm,@depId,@depNm
+   FROM kar_finger x1 LEFT JOIN machine x2 on x2.TerminalID=x1.TerminalID
+   LEFT JOIN karyawan x3 on x3.KAR_ID=x1.KAR_ID
+   LEFT JOIN departemen x4 on x4.DEP_ID=x3.DEP_ID
+   WHERE x1.TerminalID=new.TERMINAL_ID AND x1.FingerPrintID=new.FINGER_ID;
+
+    SET new.MESIN_NM=@mesinNm;    
+    SET new.KAR_ID=@karId;  
+    SET new.KAR_NM=@karNm;  
+    SET new.DEP_ID=@depId;  
+    SET new.DEP_NM=@depNm;  
+    
+    SET new.HARI=COMPONEN_hari(new.IN_TGL);
+
+    IF new.IN_TGL   IS NOT NULL AND  new.IN_WAKTU  IS NOT NULL AND new.OUT_TGL IS NOT NULL AND new.OUT_WAKTU IS NOT NULL THEN 
+    BEGIN
+    	DECLARE fnsh,IN_SEQ INTEGER DEFAULT 0;
+                   #PARAM
+	#'2017-09-04','08:00:00','2017-09-05','02:00:00'
+	DECLARE x VARCHAR(255) DEFAULT NOT NULL;
+	DECLARE IN_FOT_JAM1,IN_FOT_JAM2 time;
+	DECLARE IN_FOT_PERSEN FLOAT;
+	
+	DEClARE field_cursor CURSOR FOR SELECT FOT_JAM1,FOT_JAM2,FOT_PERSEN,SEQ FROM ot_formula ORDER BY START ASC;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fnsh = TRUE;
+	SET @sopirOb='0';
+	SET @harian='0';
+	SET @ot='0';
+  	
+                  OPEN field_cursor;	 
+	GET_PERULANGAN: LOOP
+	         FETCH field_cursor INTO IN_FOT_JAM1,IN_FOT_JAM2,IN_FOT_PERSEN,IN_SEQ;
+	         IF fnsh THEN 
+		LEAVE GET_PERULANGAN;
+	         END IF;
+                    
+                          SET @tglRule=DATE_ADD(new.IN_TGL, INTERVAL IN_SEQ DAY);
+	       SET @waktu1=CONCAT(new.IN_TGL,' ',new.IN_WAKTU); 		#'2017-09-04 08:00:00';
+	       SET @waktu2=CONCAT(new.OUT_TGL,' ',new.OUT_WAKTU);	#'2017-09-04 22:00:00';
+				
+     	       #SPLIT TIME TABLE NORMAL
+	         IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>= (CONCAT(new.IN_TGL,' ','06:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=(CONCAT(new.IN_TGL,' ','17:00:00')) THEN			  
+		#HARIAN SOPIR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','06:30:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @sopirOb=@sopirOb+IN_FOT_PERSEN;
+		END IF;
+		
+                                     #HARIAN PEKERJA LUAR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','08:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @harian=@harian+IN_FOT_PERSEN;
+		END IF;
+	            END IF;
+
+                             #UANG MAKAN
+                             IF (@waktu2>=(CONCAT(new.IN_TGL,' ','23:00:00'))) THEN
+                                 SET new.VAL_MAKAN=10000;
+                             END IF;
+
+                           #POTONGAN TELAT
+                             IF (@waktu1>(CONCAT(new.IN_TGL,' ','08:15:00'))) THEN
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','08:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.1';
+                                        SET @potonganTelat='0.1';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:15:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.2';
+                                        SET @potonganTelat='0.2';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.3';
+                                        SET @potonganTelat='0.3';
+                                  END IF;
+
+                                 IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','10:35:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.4';
+                                        SET @potonganTelat='0.4';
+                                  END IF;
+
+                                 #IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','12:00:00'))) THEN
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','13:00:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.5';
+                                        SET @potonganTelat='0.5';
+                                 END IF;
+
+                                IF (@waktu1 >CONCAT(new.IN_TGL,' ','13:00:00')) THEN
+                                        SET new.VAL_POTONGAN_TELAT='1';
+                                        SET @potonganTelat='1';
+                                 END IF;
+
+                             #ELSE
+                              #    SET new.VAL_POTONGAN_TELAT='0';
+                               #   SET @potonganTelat='0';
+                             END IF;
+
+        	        #SPLIT TIME TABLE OT
+	         IF  (CONCAT(@tglRule,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','17:00:00')) AND (CONCAT(@tglRule,' ',IN_FOT_JAM2)<=@waktu2) THEN
+		 SET @ot=@ot+IN_FOT_PERSEN;
+	         END IF;
+             END LOOP;
+        CLOSE field_cursor;
+        
+         #AMBIL GAJI HARIAN
+         SELECT PAY_DAY INTO @payday FROM payroll_salary WHERE KAR_ID=KAR_ID AND STATUS_ACTIVE=1 LIMIT 1;
+
+        #SELECT @sopirOb,@harian,@ot;
+        SET new.VAL_PAGI=@harian-new.VAL_POTONGAN_TELAT;
+        SET new.VAL_LEMBUR=@ot;
+        SET new.PAY_PAGI=@payday * (@harian-new.VAL_POTONGAN_TELAT);
+        SET new.PAY_LEMBUR=@payday * @ot;
+   END;
+
+  END IF;
+END IF
+=== absen_import == AbsenImport_BeforeUpdate ===
+IF (new.STATUS<>2) AND ((new.IN_TGL  IS NOT NULL) AND  (new.IN_WAKTU  IS NOT NULL) AND (new.OUT_TGL IS NOT NULL) AND (new.OUT_WAKTU IS NOT NULL))  THEN 
+    
+    SET new.HARI=COMPONEN_hari(new.IN_TGL);
+
+    #DRIVER REGULATION
+       SELECT DEP_ID  into @deptID FROM  karyawan WHERE KAR_ID=new.KAR_ID;
+       IF @deptID=4 THEN
+           SET new.POT_PERSEN=70;
+        END IF;
+
+     BEGIN
+    	DECLARE fnsh,IN_SEQ INTEGER DEFAULT 0;
+                   #PARAM
+	#'2017-09-04','08:00:00','2017-09-05','02:00:00'
+	DECLARE x VARCHAR(255) DEFAULT NOT NULL;
+	DECLARE IN_FOT_JAM1,IN_FOT_JAM2 time;
+	DECLARE IN_FOT_PERSEN FLOAT;
+	
+	DEClARE field_cursor CURSOR FOR SELECT FOT_JAM1,FOT_JAM2,FOT_PERSEN,SEQ FROM ot_formula ORDER BY START ASC;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fnsh = TRUE;
+	SET @sopirOb='0';
+	SET @harian='0';
+	SET @ot='0';
+  	
+                  OPEN field_cursor;	 
+	GET_PERULANGAN: LOOP
+	         FETCH field_cursor INTO IN_FOT_JAM1,IN_FOT_JAM2,IN_FOT_PERSEN,IN_SEQ;
+	         IF fnsh THEN 
+		LEAVE GET_PERULANGAN;
+	         END IF;
+                    
+                          SET @tglRule=DATE_ADD(new.IN_TGL, INTERVAL IN_SEQ DAY);
+	       SET @waktu1=CONCAT(new.IN_TGL,' ',new.IN_WAKTU); 		#'2017-09-04 08:00:00';
+	       SET @waktu2=CONCAT(new.OUT_TGL,' ',new.OUT_WAKTU);	#'2017-09-04 22:00:00';
+				
+     	       #SPLIT TIME TABLE NORMAL
+	         IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>= (CONCAT(new.IN_TGL,' ','06:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=(CONCAT(new.IN_TGL,' ','17:00:00')) THEN			  
+		#HARIAN SOPIR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','06:30:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @sopirOb=@sopirOb+IN_FOT_PERSEN;
+		END IF;
+		
+                                     #HARIAN PEKERJA LUAR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','08:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @harian=@harian+IN_FOT_PERSEN;
+		END IF;
+	         END IF;
+
+                           #UANG MAKAN
+                             IF (@waktu2>=(CONCAT(new.IN_TGL,' ','23:00:00'))) THEN
+                                 SET new.VAL_MAKAN=10000;
+                             END IF;
+
+                           #POTONGAN TELAT
+                             IF (@waktu1>(CONCAT(new.IN_TGL,' ','08:15:00'))) THEN
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','08:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.1';
+                                        SET @potonganTelat='0.1';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:15:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.2';
+                                        SET @potonganTelat='0.2';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.3';
+                                        SET @potonganTelat='0.3';
+                                  END IF;
+
+                                 IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','10:35:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.4';
+                                        SET @potonganTelat='0.4';
+                                  END IF;
+
+                                 #IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','12:00:00'))) THEN
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','13:00:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.5';
+                                        SET @potonganTelat='0.5';
+                                 END IF;
+
+                                IF (@waktu1 >CONCAT(new.IN_TGL,' ','13:00:00')) THEN
+                                        SET new.VAL_POTONGAN_TELAT='1';
+                                        SET @potonganTelat='1';
+                                 END IF;
+
+                             ELSE
+                                  SET new.VAL_POTONGAN_TELAT='0';
+                                  SET @potonganTelat='0';
+                             END IF;
+
+
+        	        #SPLIT TIME TABLE OT
+	         IF  (CONCAT(@tglRule,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','17:00:00')) AND (CONCAT(@tglRule,' ',IN_FOT_JAM2)<=@waktu2) THEN
+		 SET @ot=@ot+IN_FOT_PERSEN;
+	         END IF;
+             END LOOP;
+        CLOSE field_cursor;
+
+         #AMBIL GAJI HARIAN
+         SELECT PAY_DAY INTO @payday FROM payroll_salary WHERE KAR_ID=new.KAR_ID AND STATUS_ACTIVE=1 LIMIT 1;
+         SET new.PAY_DAY=@payday;
+				
+        #SELECT @sopirOb,@harian,@ot;
+        SET new.VAL_PAGI=@harian-new.VAL_POTONGAN_TELAT;
+        SET new.VAL_LEMBUR=@ot;
+        SET new.PAY_PAGI=@payday * (@harian-new.VAL_POTONGAN_TELAT);
+        SET new.PAY_LEMBUR=@payday * @ot;
+
+      
+   END;
+
+END IF
+
+=== absen_import_tmp == AbsenImportTmp_BeforeInsert ===
+IF new.TERMINAL_ID   IS NOT NULL  THEN 
+  
+    SELECT 
+             #x1.TerminalID,x1.FingerPrintID
+             x1.KAR_ID
+             ,x2.MESIN_NM
+            ,x3.KAR_NM,x3.DEP_ID
+           ,x4.DEP_NM
+   INTO @karId,@mesinNm,@karNm,@depId,@depNm
+   FROM kar_finger x1 LEFT JOIN machine x2 on x2.TerminalID=x1.TerminalID
+   LEFT JOIN karyawan x3 on x3.KAR_ID=x1.KAR_ID
+   LEFT JOIN departemen x4 on x4.DEP_ID=x3.DEP_ID
+   WHERE x1.TerminalID=new.TERMINAL_ID AND x1.FingerPrintID=new.FINGER_ID;
+
+    SET new.MESIN_NM=@mesinNm;    
+    SET new.KAR_ID=@karId;  
+    SET new.KAR_NM=@karNm;  
+    SET new.DEP_ID=@depId;  
+    SET new.DEP_NM=@depNm;  
+    
+    SET new.HARI=COMPONEN_hari(new.IN_TGL);
+
+    IF new.IN_TGL   IS NOT NULL AND  new.IN_WAKTU  IS NOT NULL AND new.OUT_TGL IS NOT NULL AND new.OUT_WAKTU IS NOT NULL THEN 
+    BEGIN
+    	DECLARE fnsh,IN_SEQ INTEGER DEFAULT 0;
+                   #PARAM
+	#'2017-09-04','08:00:00','2017-09-05','02:00:00'
+	DECLARE x VARCHAR(255) DEFAULT NOT NULL;
+	DECLARE IN_FOT_JAM1,IN_FOT_JAM2 time;
+	DECLARE IN_FOT_PERSEN FLOAT;
+	
+	DEClARE field_cursor CURSOR FOR SELECT FOT_JAM1,FOT_JAM2,FOT_PERSEN,SEQ FROM ot_formula ORDER BY START ASC;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fnsh = TRUE;
+	SET @sopirOb='0';
+	SET @harian='0';
+	SET @ot='0';
+  	
+                  OPEN field_cursor;	 
+	GET_PERULANGAN: LOOP
+	         FETCH field_cursor INTO IN_FOT_JAM1,IN_FOT_JAM2,IN_FOT_PERSEN,IN_SEQ;
+	         IF fnsh THEN 
+		LEAVE GET_PERULANGAN;
+	         END IF;
+                    
+                          SET @tglRule=DATE_ADD(new.IN_TGL, INTERVAL IN_SEQ DAY);
+	       SET @waktu1=CONCAT(new.IN_TGL,' ',new.IN_WAKTU); 		#'2017-09-04 08:00:00';
+	       SET @waktu2=CONCAT(new.OUT_TGL,' ',new.OUT_WAKTU);	#'2017-09-04 22:00:00';
+				
+     	       #SPLIT TIME TABLE NORMAL
+	         IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>= (CONCAT(new.IN_TGL,' ','06:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=(CONCAT(new.IN_TGL,' ','17:00:00')) THEN			  
+		#HARIAN SOPIR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','06:30:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @sopirOb=@sopirOb+IN_FOT_PERSEN;
+		END IF;
+		
+                                     #HARIAN PEKERJA LUAR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','08:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @harian=@harian+IN_FOT_PERSEN;
+		END IF;
+	            END IF;
+
+                            #POTONGAN TELAT
+                             IF (@waktu1>(CONCAT(new.IN_TGL,' ','08:15:00'))) THEN
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','08:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.1';
+                                        SET @potonganTelat='0.1';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:15:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.2';
+                                        SET @potonganTelat='0.2';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.3';
+                                        SET @potonganTelat='0.3';
+                                  END IF;
+
+                                 IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','10:35:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.4';
+                                        SET @potonganTelat='0.4';
+                                  END IF;
+
+                                 #IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','12:00:00'))) THEN
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','13:00:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.5';
+                                        SET @potonganTelat='0.5';
+                                 END IF;
+
+                                IF (@waktu1 >CONCAT(new.IN_TGL,' ','13:00:00')) THEN
+                                        SET new.VAL_POTONGAN_TELAT='1';
+                                        SET @potonganTelat='1';
+                                 END IF;
+
+                             ELSE
+                                 SET new.VAL_POTONGAN_TELAT='0';
+                                 SET @potonganTelat='0';
+                             END IF;
+
+        	        #SPLIT TIME TABLE OT
+	         IF  (CONCAT(@tglRule,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','17:00:00')) AND (CONCAT(@tglRule,' ',IN_FOT_JAM2)<=@waktu2) THEN
+		 SET @ot=@ot+IN_FOT_PERSEN;
+	         END IF;
+             END LOOP;
+        CLOSE field_cursor;
+				
+        #SELECT @sopirOb,@harian,@ot;
+        SET new.VAL_PAGI=@harian-new.VAL_POTONGAN_TELAT;
+        SET new.VAL_LEMBUR=@ot;
+        SET new.PAY_PAGI=new.PAY_DAY * @harian;
+        SET new.PAY_LEMBUR=new.PAY_DAY * @ot;
+   END;
+
+  END IF;
+END IF
+
+=== absen_import_tmp == AbsenImportTmp_BeforeUpdate ===
+IF new.TERMINAL_ID   IS NOT NULL  THEN 
+  #IF new.TERMINAL_ID   IS NOT NULL AND  new.FINGER_ID  IS NOT NULL THEN 
+ 
+    SET new.HARI=COMPONEN_hari(new.IN_TGL);
+    BEGIN
+    	DECLARE fnsh,IN_SEQ INTEGER DEFAULT 0;
+                   #PARAM
+	#'2017-09-04','08:00:00','2017-09-05','02:00:00'
+	DECLARE x VARCHAR(255) DEFAULT NOT NULL;
+	DECLARE IN_FOT_JAM1,IN_FOT_JAM2 time;
+	DECLARE IN_FOT_PERSEN FLOAT;
+	
+	DEClARE field_cursor CURSOR FOR SELECT FOT_JAM1,FOT_JAM2,FOT_PERSEN,SEQ FROM ot_formula ORDER BY START ASC;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fnsh = TRUE;
+	SET @sopirOb='0';
+	SET @harian='0';
+	SET @ot='0';
+  	
+                  OPEN field_cursor;	 
+	GET_PERULANGAN: LOOP
+	         FETCH field_cursor INTO IN_FOT_JAM1,IN_FOT_JAM2,IN_FOT_PERSEN,IN_SEQ;
+	         IF fnsh THEN 
+		LEAVE GET_PERULANGAN;
+	         END IF;
+                    
+                          SET @tglRule=DATE_ADD(new.IN_TGL, INTERVAL IN_SEQ DAY);
+	       SET @waktu1=CONCAT(new.IN_TGL,' ',new.IN_WAKTU); 		#'2017-09-04 08:00:00';
+	       SET @waktu2=CONCAT(new.OUT_TGL,' ',new.OUT_WAKTU);	#'2017-09-04 22:00:00';
+				
+     	       #SPLIT TIME TABLE NORMAL
+	         IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>= (CONCAT(new.IN_TGL,' ','06:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=(CONCAT(new.IN_TGL,' ','17:00:00')) THEN			  
+		#HARIAN SOPIR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','06:30:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @sopirOb=@sopirOb+IN_FOT_PERSEN;
+		END IF;
+		
+                                     #HARIAN PEKERJA LUAR
+		IF (CONCAT(new.IN_TGL,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','08:00:00')) AND (CONCAT(new.IN_TGL,' ',IN_FOT_JAM2))<=@waktu2 THEN
+		     SET @harian=@harian+IN_FOT_PERSEN;
+		END IF;
+	            END IF;
+
+                             #POTONGAN TELAT
+                             IF (@waktu1>(CONCAT(new.IN_TGL,' ','08:15:00'))) THEN
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','08:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.1';
+                                        SET @potonganTelat='0.1';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','08:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:15:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.2';
+                                        SET @potonganTelat='0.2';
+                                  END IF;
+
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:15:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','09:45:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.3';
+                                        SET @potonganTelat='0.3';
+                                  END IF;
+
+                                 IF (@waktu1 > (CONCAT(new.IN_TGL,' ','09:45:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','10:35:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.4';
+                                        SET @potonganTelat='0.4';
+                                  END IF;
+
+                                 #IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','12:00:00'))) THEN
+                                  IF (@waktu1 > (CONCAT(new.IN_TGL,' ','10:35:00')) AND (@waktu1 <= CONCAT(new.IN_TGL,' ','13:00:00'))) THEN
+                                        SET new.VAL_POTONGAN_TELAT='0.5';
+                                        SET @potonganTelat='0.5';
+                                 END IF;
+
+                                IF (@waktu1 >CONCAT(new.IN_TGL,' ','13:00:00')) THEN
+                                        SET new.VAL_POTONGAN_TELAT='1';
+                                        SET @potonganTelat='1';
+                                 END IF;
+
+                             ELSE
+                                 SET new.VAL_POTONGAN_TELAT='0';
+                                 SET @potonganTelat='0';
+                             END IF;
+
+        	        #SPLIT TIME TABLE OT
+	         IF  (CONCAT(@tglRule,' ',IN_FOT_JAM1))>=(CONCAT(new.IN_TGL,' ','17:00:00')) AND (CONCAT(@tglRule,' ',IN_FOT_JAM2)<=@waktu2) THEN
+		 SET @ot=@ot+IN_FOT_PERSEN;
+	         END IF;
+             END LOOP;
+        CLOSE field_cursor;
+				
+        #SELECT @sopirOb,@harian,@ot;
+        SET new.VAL_PAGI=@harian-new.VAL_POTONGAN_TELAT;
+        SET new.VAL_LEMBUR=@ot;
+        SET new.PAY_PAGI=new.PAY_DAY * @harian;
+        SET new.PAY_LEMBUR=new.PAY_DAY * @ot;
+   END;
+
+END IF
+
