@@ -97,6 +97,7 @@ date_default_timezone_set('Asia/Jakarta');
 			//'value' =>$model->IN_WAKTU,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
+					'showMeridian' => false,
 					//'format'=>'h:i:s',
 					'autoclose' => true,
 				]
@@ -125,6 +126,7 @@ date_default_timezone_set('Asia/Jakarta');
 			'type'=>DetailView::INPUT_TIME,
 			'widgetOptions'=>[
 				'pluginOptions'=>[
+					'showMeridian' => false,
 					//'format'=>['time','php:h:i:s'],
 					'autoclose' => true,
 				]

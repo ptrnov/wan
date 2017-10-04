@@ -157,7 +157,11 @@ use modulprj\master\models\Machine;
 					};					
 				}elseif($x=='VAL_PAGI' OR $x=='VAL_LEMBUR'){
 					if ($data->STT_LEMBUR=='0' OR $data->STT_LEMBUR=='1' OR $data->STT_LEMBUR=='8' ){
-						return $data->$x;
+						//if ($x=='VAL_PAGI'){
+							//return ($data->VAL_PAGI)-($data->VAL_POTONGAN_TELAT);
+						//}else{
+							return $data->$x;
+						//}						
 					}else{
 						return 0;
 					}
