@@ -92,8 +92,8 @@ class AbsenImportSearch extends AbsenImport
             ->andFilterWhere(['like', 'CREATE_BY', $this->CREATE_BY])
             ->andFilterWhere(['like', 'UPDATE_BY', $this->UPDATE_BY])
             ->andFilterWhere(['like', 'DCRP_DETIL', $this->DCRP_DETIL]);
-		 $query->orderBy(['IN_TGL'=>SORT_DESC]);
-		 $query->orderBy(['KAR_NM'=>SORT_ASC,'IN_TGL'=>SORT_DESC]);
+		 //$query->orderBy(['IN_TGL'=>SORT_DESC]);
+		 $query->orderBy(['KAR_NM'=>SORT_ASC,'IN_TGL'=>SORT_ASC]);
         return $dataProvider;
     }
 }
