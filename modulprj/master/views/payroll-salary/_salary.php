@@ -62,20 +62,20 @@ use yii\helpers\Url;
 		'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
 		'buttons' => [				
 			'view' =>function($url, $model, $key){
-					return  '<li>' . Html::button(Yii::t('app', 'view'),
+					return  '<li>' . Html::button(Yii::t('app', 'info'),
 											['value'=>url::to(['/master/payroll-salary/view-salary','id'=>$model->ID]),
 											'id'=>'modalButtonSalary',
-											//'class'=>"btn btn-primary btn-xs",			
+											'class'=>"btn btn-info btn-xs",			
 											'style'=>['width'=>'100%', 'height'=>'25px'],
 										]). '</li>' . PHP_EOL;
 			},
 			'update' =>function($url, $model, $key){
-					return  '<li>' . Html::a('<span class="fa fa-edit fa-dm"></span>'.Yii::t('app', 'Update Salary'),
-												['master/payroll-salary/edit','id'=>$model->KAR_ID],[
-												'data-toggle'=>"modal",
-												'data-target'=>"#edit-title",
-												'data-title'=> $model->KAR_ID,
-												]). '</li>' . PHP_EOL;
+					return  '<li>' . Html::button(Yii::t('app', 'Edit'),
+											['value'=>url::to(['master/payroll-salary/update','id'=>$model->ID]),
+											'id'=>'modalUpdateButtonSalary',
+											'class'=>"btn btn-success btn-xs",			
+											'style'=>['width'=>'100%', 'height'=>'25px'],
+										]). '</li>' . PHP_EOL;
 			}
 		],
 		'headerOptions'=>[					
