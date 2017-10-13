@@ -160,4 +160,28 @@ $this->sideCorp="Employee";
 		}, 1000);  
 	});
 	",$this::POS_READY);
+	
+	$this->registerJs("
+		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+		 $('#modalUpdateButtonSalary').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+			var modal = $(this)
+			var title = button.data('title')
+			var href = button.attr('href')
+			//modal.find('.modal-title').html(title)
+			modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+			$.post(href)
+				.done(function( data ) {
+					modal.find('.modal-body').html(data)
+				});
+			})
+	",$this::POS_READY);
+    Modal::begin([
+        'id' => 'modalUpdateButtonSalary',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+		'headerOptions'=>[
+				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
+		],
+    ]);
+    Modal::end();
 ?>

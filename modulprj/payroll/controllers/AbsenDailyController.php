@@ -338,7 +338,7 @@ class AbsenDailyController extends Controller
 	 * @since 1.2
 	 * ====================================
      */
-	public function actionExportExcel(){
+	public function actionExportPaid(){
 		//DATA IMPORT
 		// $aryPaid=[
 			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
@@ -347,7 +347,7 @@ class AbsenDailyController extends Controller
 		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
 		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
 		$searchModelDetail = new AbsenPayrollPaidSearch($closingParam);
-		$dataProviderDetail=$searchModelDetail->searchExcelExport(Yii::$app->request->queryParams);
+		$dataProviderDetail=$searchModelDetail->searchExcelExportPaid(Yii::$app->request->queryParams);
 		$aryPaid=$dataProviderDetail->getModels();	
 		
 		$excel_dataPaid = Postman4ExcelBehavior::excelDataFormat($aryPaid);
@@ -408,6 +408,82 @@ class AbsenDailyController extends Controller
 		$this->export4excel($excel_content, $excel_file,0);
 	}
 	
+	/**====================================
+     * EXPORT EXCEL REPORT BELUM DI BAYAR
+     * @return mixed
+	 * @author piter [ptr.nov@gmail.com]
+	 * @since 1.2
+	 * ====================================
+     */
+	public function actionExportList(){
+		//DATA IMPORT
+		// $aryPaid=[
+			// ['TERMINAL_ID'=>'01234567890','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-05','JAM_IN'=>'08:00:00','JAM_OUT'=>'17:00:00'],
+			// ['TERMINAL_ID'=>'112312312312','FINGER_ID'=>'321','KARYAWAN'=>'Piter','TGL_IN'=>'2017-09-05','TGL_OUT'=>'2017-09-06','JAM_IN'=>'08:00:00','JAM_OUT'=>'02:00:00'],
+		// ];
+		$modelPrd=AbsenImportPeriode::find()->where(['TIPE'=>'1','AKTIF'=>'1'])->one();
+		$closingParam=['tglStart'=>$modelPrd->TGL_START,'tglEnd'=>$modelPrd->TGL_END];
+		$searchModelDetail = new AbsenPayrollPaidSearch($closingParam);
+		$dataProviderDetail=$searchModelDetail->searchExcelExportList(Yii::$app->request->queryParams);
+		$aryPaid=$dataProviderDetail->getModels();	
+		
+		$excel_dataPaid = Postman4ExcelBehavior::excelDataFormat($aryPaid);
+        $excel_titlePaid = $excel_dataPaid['excel_title'];
+        $excel_ceilsPaid = $excel_dataPaid['excel_ceils'];
+		$excel_content = [
+			 [
+				'sheet_name' => 'Payroll-Paid-Data',
+                'sheet_title' => [
+					['KAR_ID','KAR_NM','CABANG','DEPARTMENT','UPAH_HARIAN','PERIODE_MULAI','PERIODE_AKHIR','PAGI','LEMBUR','UANG_MAKAN','TTL_PAGI','TTL_LEMBUR','TTL_POT_TELAT','POT_DIVISI','TOTAL']
+				],
+			    'ceils' => $excel_ceilsPaid,
+                'freezePane' => 'A2',
+                'headerColor' => Postman4ExcelBehavior::getCssClass("header"),
+                'headerStyle'=>[					
+					[
+						'KAR_ID' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'KAR_NM' =>['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'CABANG' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'DEPARTMENT' => ['font-size'=>'8','width'=>'20','valign'=>'center','align'=>'center'],
+						'UPAH_HARIAN' => ['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'PERIODE_MULAI' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'PERIODE_AKHIR' =>['font-size'=>'8','width'=>'12','valign'=>'center','align'=>'center'],
+						'PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'UANG_MAKAN' =>['font-size'=>'8','width'=>'13','valign'=>'center','align'=>'center'],
+						'TTL_PAGI' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'TTL_LEMBUR' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+						'TTL_POT_TELAT' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'POT_DIVISI' =>['font-size'=>'8','width'=>'15','valign'=>'center','align'=>'center'],
+						'TOTAL' =>['font-size'=>'8','width'=>'10','valign'=>'center','align'=>'center'],
+					]						
+				],
+				'contentStyle'=>[
+					[						
+						'KAR_ID' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'KAR_NM' =>['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'CABANG' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'DEPARTMENT' => ['font-size'=>'8','valign'=>'center','align'=>'left'],
+						'UPAH_HARIAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'PERIODE_MULAI' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PERIODE_AKHIR' =>['font-size'=>'8','valign'=>'center','align'=>'center'],
+						'PAGI' =>['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'UANG_MAKAN' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_PAGI' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_LEMBUR' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TTL_POT_TELAT' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'POT_DIVISI' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+						'TOTAL' => ['font-size'=>'8','valign'=>'center','align'=>'right'],
+					]
+				],
+               'oddCssClass' => Postman4ExcelBehavior::getCssClass("odd"),
+               'evenCssClass' => Postman4ExcelBehavior::getCssClass("even"),
+			]
+		];
+		$excel_file = "Payroll-list-Data";
+		$this->export4excel($excel_content, $excel_file,0);
+	}
 	
 	/**
      * TEMPORARY : CREATE

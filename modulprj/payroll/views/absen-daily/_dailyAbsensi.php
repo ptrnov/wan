@@ -296,7 +296,7 @@ use modulprj\master\models\Machine;
 		'panel'=>[
 			//'heading'=>$pageNm.'  '.tombolCreate().' '.tombolExportFormat($paramUrl).' '.tombolUpload().' '.tombolSync(),					
 			//'heading'=>tombolRefresh().' '.tombolClear().' '.tombolCreateTmp().' IMPORT RULE '.tombolExportFormat($paramUrl).' -> '.tombolUpload().' -> '.tombolSync(),					
-			'heading'=>tombolPrintAll().' '.tombolCreatePeriode().' '.$perode.' '.tombolCheckUlang(),
+			'heading'=>tombolPrintAll().' '.tombolExportExcel().' '.tombolCreatePeriode().' '.$perode.' '.tombolCheckUlang(),
 			'type'=>'info',
 			'after'=>false,
 			'before'=>false,

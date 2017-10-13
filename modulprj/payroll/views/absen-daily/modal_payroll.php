@@ -157,13 +157,35 @@ $this->registerCss("
 	/*
 	 * LINK BUTTON : Button - EXPORT EXCEL.
 	*/
+	function tombolExportExcelPaid(){
+		// if(getPermission()){
+			// if(getPermission()->BTN_PROCESS1==1){
+				$title1 = Yii::t('app', ' Export Excel');
+				$url = Url::toRoute(['/payroll/absen-daily/export-paid']);
+				$options1 = [
+							'id'=>'export-excel-paid',
+							'data-pjax' => true,
+							'class'=>"btn btn-default btn-sm",
+							'title'=>'Export To Excel',							
+				];
+				$icon1 = '<span class="fa fa-file-excel-o fa-lg"></span>';
+				$label1 = $icon1 . ' ' . $title1;
+				$content = Html::a($label1,$url,$options1);
+				return $content;
+			// }
+		// }
+	}	
+	
+	/*
+	 * LINK BUTTON : Button - EXPORT EXCEL.
+	*/
 	function tombolExportExcel(){
 		// if(getPermission()){
 			// if(getPermission()->BTN_PROCESS1==1){
 				$title1 = Yii::t('app', ' Export Excel');
-				$url = Url::toRoute(['/payroll/absen-daily/export-excel']);
+				$url = Url::toRoute(['/payroll/absen-daily/export-list']);
 				$options1 = [
-							'id'=>'export-excel-',
+							'id'=>'export-excel-notpaid',
 							'data-pjax' => true,
 							'class'=>"btn btn-default btn-sm",
 							'title'=>'Export To Excel',							
