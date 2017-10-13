@@ -576,10 +576,10 @@ class AbsenImportController extends Controller
 										$modelTmp->FINGER_ID=str_replace("'","",(string)$srcRows['B']);									//FINGER
 										$modelTmp->IN_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL MASUK
 										$modelTmp->IN_WAKTU=self::checkWaktu($srcRows[$IN]);											//WAKTU MASUK
-										$modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));			//TGL KELUAR
-										// $modelTmp->OUT_TGL=self::formulaTglOut(self::formulaOut($srcRows[$OUT]),$srcRows[$i]);		//TGL KELUAR
-										// $modelTmp->OUT_WAKTU=self::formulaOut($srcRows[$OUT]);										//WAKTU KELUAR
-										$modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
+										// $modelTmp->OUT_TGL=date('Y-m-d', strtotime(str_replace("'","",(string)$srcRows[$i])));		//TGL KELUAR
+										$modelTmp->OUT_TGL=self::formulaTglOut(self::formulaOut($srcRows[$OUT]),$srcRows[$i]);			//TGL KELUAR
+										$modelTmp->OUT_WAKTU=self::formulaOut($srcRows[$OUT]);										//WAKTU KELUAR
+										// $modelTmp->OUT_WAKTU=self::checkWaktu($srcRows[$OUT]);											//WAKTU KELUAR
 										$modelTmp->STT_LEMBUR=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->LEBIH_WAKTU=self::formulaStt($srcRows[$IN],$srcRows[$OUT]);							//VALDASASI STT
 										$modelTmp->save();										
@@ -597,7 +597,7 @@ class AbsenImportController extends Controller
 	// POSISI INSERT STS_LEMBUR DAN IJIN
 	private function formulaStt($valWaktuIn,$valWaktuOut){
 		if(self::checkWaktu($valWaktuIn) AND self::checkWaktu($valWaktuOut)){
-			if(self::checkWaktu($valWaktuOut)>'08:00' AND self::checkWaktu($valWaktuOut)<='12:00'){
+			if(self::checkWaktu($valWaktuOut)>'08:00' AND self::checkWaktu($valWaktuOut)<='17:00'){
 				return '7'; 																						// LEWAT WAKTU DI TENTUKAN
 			}else{
 				return '0';
@@ -635,7 +635,7 @@ class AbsenImportController extends Controller
 	private function formulaOut($valWaktuOut){
 		if(self::checkWaktu($valWaktuOut)){
 			$timeOUT=self::checkWaktu($valWaktuOut);
-			if ($timeOUT >='08:00' AND $timeOUT <='12:00'){
+			if ($timeOUT >'07:00' AND $timeOUT <='08:00'){
 				return '07:00';
 			}else{
 				return $timeOUT;
