@@ -163,7 +163,7 @@ $this->sideCorp="Employee";
 	
 	$this->registerJs("
 		 $.fn.modal.Constructor.prototype.enforceFocus = function(){};
-		 $('#modalUpdateButtonSalary').on('show.bs.modal', function (event) {
+		 $('#modal-update-button-salary').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget)
 			var modal = $(this)
 			var title = button.data('title')
@@ -177,8 +177,8 @@ $this->sideCorp="Employee";
 			})
 	",$this::POS_READY);
     Modal::begin([
-        'id' => 'modalUpdateButtonSalary',
-		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-book"></div><div><h4 class="modal-title">Create Items Sku</h4></div>',
+        'id' => 'modal-update-button-salary',
+		'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-money"></div><div><h4 class="modal-title">EDIT SALARY</h4></div>',
 		'headerOptions'=>[
 				'style'=> 'border-radius:5px; background-color: rgba(97, 211, 96, 0.3)',
 		],

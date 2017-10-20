@@ -148,7 +148,7 @@ class PayrollSalaryController extends Controller
     public function actionCreate()
     {
         $model = new PayrollSalary();
-
+		$model->scenario = "create";
 		if(!$model->load(Yii::$app->request->post())){
 			return $this->renderAjax('_form', [
 						'model' => $model,
@@ -174,14 +174,14 @@ class PayrollSalaryController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionEditing($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ID]);
+            return $this->redirect(['index', 'id' => $model->KAR_ID]);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('view', [
                 'model' => $model,
             ]);
         }
