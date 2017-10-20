@@ -9,7 +9,15 @@ use kartik\tabs\TabsX;
 use kartik\date\DatePicker;
 use kartik\builder\Form;
 use yii\helpers\Url;
- 
+ $this->registerCss("
+		#salary-id .kv-panel {
+			//min-height: 340px;
+			height: 300px;
+		}
+		#salary-id .kv-grid-container{
+			height:500px
+		}
+	");
 	$aryField= [
 		['ID' =>0, 'ATTR' =>['FIELD'=>'empNm','SIZE' => '20px','label'=>'Employee','align'=>'left']],
 		['ID' =>1, 'ATTR' =>['FIELD'=>'PAY_DAY','SIZE' => '10px','label'=>'Upah Harian','align'=>'left']],
@@ -70,12 +78,15 @@ use yii\helpers\Url;
 										]). '</li>' . PHP_EOL;
 			},
 			'update' =>function($url, $model, $key){
-					return  '<li>' . Html::button(Yii::t('app', 'Edit'),
-											['value'=>url::to(['master/payroll-salary/update','id'=>$model->ID]),
-											'id'=>'modalUpdateButtonSalary',
-											'class'=>"btn btn-success btn-xs",			
-											'style'=>['width'=>'100%', 'height'=>'25px'],
-										]). '</li>' . PHP_EOL;
+					return  '<li>' . Html::a('<span class="fa fa-eye fa-dm"></span>'.Yii::t('app', 'Edit'),
+															['/master/payroll-salary/editing','id'=>$model->ID],[
+															'data-toggle'=>"modal",
+															'data-target'=>"#modal-update-button-salary",
+															'data-title'=> $model->ID,
+															]). '</li>' . PHP_EOL;
+															
+															
+															
 			}
 		],
 		'headerOptions'=>[					

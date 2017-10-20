@@ -22,7 +22,8 @@ class PayrollSalary extends \yii\db\ActiveRecord
 {
 	public $cAB_ID;
 	public $dEP_ID;
-	
+	const SCENARIO_CREATE = 'create';
+	const SCENARIO_UPDATE = 'update';
     /**
      * @inheritdoc
      */
@@ -38,7 +39,7 @@ class PayrollSalary extends \yii\db\ActiveRecord
     {
         return [
             [['KAR_ID'], 'required'],
-			['KAR_ID','findKarids'],
+			[['KAR_ID'],'findKarids','on'=>self::SCENARIO_CREATE],
             [['PAY_DAY', 'PAY_MONTH', 'PAY_TUNJANGAN', 'PAY_TRANPORT', 'PAY_EAT', 'BONUS', 'PAY_ENTERTAIN'], 'safe'],
             [['STATUS_ACTIVE'], 'integer'],
             [['CREATE_BY','UPDATE_BY'], 'string'],
